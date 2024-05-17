@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./ForgetPassword.module.scss";
 
-import logo from "../../../assets/images/logoYumhub.png"
+import logo from "../../../../assets/images/logoYumhub.png"
 const cx = classNames.bind(styles);
 function ForgetPassword() {
   return (
