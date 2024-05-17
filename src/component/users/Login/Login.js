@@ -44,23 +44,25 @@ function Login() {
   }
   return (
     <div className={cx("container")}>
-      <div className={cx('leftBackground')}>
-        <div className={cx('logoContainer')}>
-            <div className={cx('logo')}>
-              <img src={logo} alt="Logo YumHub" width={95} height={98}/>
-              <p className={cx('textLogo')}>YumHub</p>
-            </div>
+      <div className={cx("leftBackground")}>
+        <div className={cx("logoContainer")}>
+          <div className={cx("logo")}>
+            <img src={logo} alt="Logo YumHub" width={95} height={98} />
+            <p className={cx("textLogo")}>YumHub</p>
+          </div>
           <div>
-            <p className={cx('slogen')}>Opportunities don't happen, you create them</p>
+            <p className={cx("slogen")}>
+              Opportunities don't happen, you create them
+            </p>
           </div>
         </div>
-        <div className={cx('title')}>
-          <p className={cx('textTitle')}>Get Your Food Delivered Home</p>
+        <div className={cx("title")}>
+          <p className={cx("textTitle")}>Get Your Food Delivered Home</p>
         </div>
       </div>
-      <div className={cx('rightBackground')}>
+      <div className={cx("rightBackground")}>
         <div>
-          <p className={cx('titleLogin')}>TIME TO CONNERT</p>
+          <p className={cx("titleLogin")}>TIME TO CONNERT</p>
         </div>
         <div className={cx("enterInfo")}>
           <img src={icon_username} alt="Username" className={cx("iconStart")} />

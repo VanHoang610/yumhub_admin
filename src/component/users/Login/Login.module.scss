@@ -16,13 +16,36 @@
 .textRemember {
   color: #4F4E4E;
   font-size: 14px;
+<<<<<<< HEAD
+=======
   font-weight: 400;
   font-family: "Poppins", sans-serif;
 }
 
 .rememberPassword {
+  width: 321px;
+  height: 21px;
+  display: flex;
+  margin-left: 300px;
+  margin-top: -6px;
+}
+
+.textLogin {
+  color: #fff;
+  text-align: center;
+  font-size: 24px;
+>>>>>>> main
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+}
+
+<<<<<<< HEAD
+.rememberPassword {
   width: 321px; 
   height: 21px;
+=======
+.btnLogin {
+>>>>>>> main
   display: flex;
   margin-left: 300px;
   margin-top: -6px;
@@ -31,6 +54,15 @@
 .btnLogin {
   margin-left: 156px;
   margin-top: 25px;
+<<<<<<< HEAD
+=======
+  background-color: #19D6E5;
+  justify-content: center;
+
+  &:hover {
+    background-color: #22e3f1;
+  }
+>>>>>>> main
 }
 
 .iconEnd {
@@ -61,6 +93,7 @@
     margin-left: 56px;
     border: none;
     outline: none;
+    color: #323232  ;
   }
 }
 .titleLogin {
