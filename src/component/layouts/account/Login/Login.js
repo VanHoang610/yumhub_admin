@@ -1,13 +1,15 @@
 import React from "react";
 import { Link, useNavigate  } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState} from "react";
+
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
-import logo from "../../../assets/images/logoYumhub.png";
-import icon_username from "../../../assets/images/iconUsername.png";
-import icon_password from "../../../assets/images/iconPassword.png";
-import cricle from "../../../assets/images/icon_circle.png";
-import eye from "../../../assets/images/icon_eye.png";
+import logo from "../../../../assets/images/logoYumhub.png"
+import icon_username from "../../../../assets/images/iconUsername.png"
+import icon_password from "../../../../assets/images/iconPassword.png"
+import cricle from "../../../../assets/images/icon_circle.png"
+import eye from "../../../../assets/images/icon_eye.png"
+
 const cx = classNames.bind(styles);
 function Login() {
   let navigate = useNavigate();
