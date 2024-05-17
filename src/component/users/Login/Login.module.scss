@@ -1,23 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-.textLogin {
-  color: #fff;
-  text-align: center;
-  font-size: 24px;
+.textReset {
+  color: #257EE7;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+  margin-left: 5px;
+  margin-top: 13.5px;
+
+  &:hover {
+    color: #4295f4;
+  }
+}
+.textRemember {
+  color: #4F4E4E;
+  font-size: 14px;
   font-weight: 400;
   font-family: "Poppins", sans-serif;
 }
-.btnLogin {
+
+.rememberPassword {
+  width: 321px; 
+  height: 21px;
   display: flex;
-  width: 568px;
-  height: 48px;
-  border-radius: 10px;
-  align-items: center;
+  margin-left: 300px;
+  margin-top: -6px;
+}
+
+.btnLogin {
   margin-left: 156px;
   margin-top: 25px;
-  background-color: #19D6E5;
-  justify-content: center;
 }
 
 .iconEnd {
@@ -36,13 +49,13 @@
   display: flex;
   width: 568px;
   height: 48px;
-  background-color: #FBFBFB;
+  background-color: #fbfbfb;
   border-radius: 10px;
   align-items: center;
   margin-left: 156px;
   margin-top: 25px;
 
-  input{
+  input {
     width: 385px;
     height: 25px;
     margin-left: 56px;
@@ -50,10 +63,10 @@
     outline: none;
   }
 }
-.titleLogin { 
+.titleLogin {
   width: 412px;
   height: 39px;
-  color: #577BF9;
+  color: #577bf9;
   font-size: 35px;
   font-weight: 900;
   margin-top: 319px;
@@ -66,7 +79,7 @@
 }
 
 .textTitle {
-  color: #F2F2F2;
+  color: #f2f2f2;
   font-weight: 700;
   font-size: 64px;
   font-family: "Montserrat Alternates", sans-serif;
@@ -107,7 +120,7 @@
   height: 100vh;
   width: 100%;
   position: relative;
-  background-image: url('../../../assets/images/backgroundLogin.png');
+  background-image: url("../../../assets/images/backgroundLogin.png");
   background-size: cover;
   display: flex;
 }
