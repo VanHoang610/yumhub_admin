@@ -1,10 +1,10 @@
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
-import logo from "../../../assets/images/logoYumhub.png"
-import username from "../../../assets/images/iconUsername.png"
-import password from "../../../assets/images/iconPassword.png"
-import cricle from "../../../assets/images/icon_circle.png"
-import eye from "../../../assets/images/icon_eye.png"
+import logo from "../../../../assets/images/logoYumhub.png"
+import username from "../../../../assets/images/iconUsername.png"
+import password from "../../../../assets/images/iconPassword.png"
+import cricle from "../../../../assets/images/icon_circle.png"
+import eye from "../../../../assets/images/icon_eye.png"
 const cx = classNames.bind(styles);
 function Login() {
   return (

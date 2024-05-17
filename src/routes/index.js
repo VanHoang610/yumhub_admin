@@ -1,10 +1,10 @@
 
-import Login from "../component/account/Login/Login"
-import ForgetPassword from "../component/account/ForgetPassword/ForgetPassword"
-import OTP from "../component/account/OTP/OTP"
-import ResetPassword from "../component/account/ResetPassword/ResetPassword"
-import ChangePassword from "../component/account/ChangePassword/ChangePassword"
-import Home from '../component/yumhub/Home/Home'
+import Login from "../component/layouts/account/Login/Login"
+import ForgetPassword from "../component/layouts/account/ForgetPassword/ForgetPassword"
+import OTP from "../component/layouts/account/OTP/OTP"
+import ResetPassword from "../component/layouts/account/ResetPassword/ResetPassword"
+import ChangePassword from "../component/layouts/account/ChangePassword/ChangePassword"
+import Home from '../component/layouts/yumhub/Home/Home'
 // public routes
 const publicRoutes = [
     { path: '/', component: Login }, 
