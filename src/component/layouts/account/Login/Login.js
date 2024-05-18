@@ -31,7 +31,6 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log(username);
   const handleSubmit = () => {
     const user = info.find(
       (user) => user.username === username && user.password === password
