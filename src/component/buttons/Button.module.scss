@@ -20,6 +20,16 @@
   font-size: 24px;
   font-weight: 400;
   font-family: "Poppins", sans-serif;
+
+  &.forget_btn {
+    width: 550px;
+    height: 46px;
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: #46e1e9;
+  }
 }
 
 .backLogin {
@@ -33,6 +43,13 @@
   font-size: 24px;
   font-weight: 400;
   font-family: "Poppins", sans-serif;
+
+  
+  &.forget_btn {
+    width: 550px;
+    height: 46px;
+    font-size: 20px;
+  }
 
   &:hover {
     background-color: #c8fde3;
