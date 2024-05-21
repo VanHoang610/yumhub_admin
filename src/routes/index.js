@@ -7,6 +7,8 @@ import ChangePassword from "../component/layouts/account/ChangePassword/ChangePa
 import Home from '../component/layouts/yumhub/Home/Home'
 import Header from '../component/layouts/header/header'
 import Sidebar from '../component/layouts/sidebar/sidebar'
+import NewMerchant from '../component/layouts/yumhub/NewMerchant/NewMerchant'
+import AllMerchant from '../component/layouts/yumhub/AllMerchant/AllMerchant'
 // public routes
 const publicRoutes = [
     { path: '/', component: Login }, 
@@ -16,6 +18,9 @@ const publicRoutes = [
     { path: '/changePassword', component: ChangePassword }, 
     { path: '/header', component: Header },
     { path: '/sidebar', component: Sidebar },
+    { path: '/newMerchant', component: NewMerchant },
+    { path: '/allMerchant', component: AllMerchant },
+    
 ]
 
 const privateRoutes = [
