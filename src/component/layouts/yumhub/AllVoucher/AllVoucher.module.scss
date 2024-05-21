@@ -26,13 +26,13 @@
   
   .table th,
   .table td {
-    border: 1px solid #ddd;
+    border: 1px solid #dddddd;
     padding: 8px;
     text-align: left;
   }
   
   .table th {
-    background-color: #f2f2f2;
+    background-color: #ffffae;
   }
   
   .table tr:nth-child(even) {
@@ -79,4 +79,48 @@
   .action-icon:focus {
     outline: none;
   }
+
+  // Styles for Modal
+.modal {
+  background: white;
+  border-radius: 8px;
+  max-width: 600px;
+  padding: 20px;
+  margin: auto;
+  position: relative;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.75);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal p {
+  margin: 10px 0;
+}
+
+.modal button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
   

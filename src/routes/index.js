@@ -20,6 +20,7 @@ const publicRoutes = [
     { path: '/otp', component: OTP}, 
     { path: '/resetPassword', component: ResetPassword}, 
     { path: '/changePassword', component: ChangePassword }, 
+
 ]
 
 const privateRoutes = [
@@ -28,6 +29,7 @@ const privateRoutes = [
     { path: "/add-voucher", component: AddVoucher, layout: DefaultLayout },
     { path: '/newMerchant', component: NewMerchant, layout: DefaultLayout  },
     { path: '/allMerchant', component: AllMerchant, layout: DefaultLayout  },
+
 ]
 
 export { publicRoutes, privateRoutes } 
