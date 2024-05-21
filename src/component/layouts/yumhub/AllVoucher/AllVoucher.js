@@ -1,6 +1,7 @@
 
 import React from "react";
-import axios from "../../../../api/axiosConfig";
+
+import AxiosInstance from "../../../../utils/AxiosInstance";
 import { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 import classNames from "classnames/bind";
@@ -22,7 +23,7 @@ function AllVoucher() {
     // Hàm gọi API
     const fetchVouchers = async () => {
       try {
-        const response = await axios.get("/vouchers/allVoucher"); // Thay đổi endpoint này theo API của bạn
+        const response = await AxiosInstance.get("/vouchers/allVoucher"); // Thay đổi endpoint này theo API của bạn
         setVouchers(response.data);
       } catch (err) {
         setError(err.message);

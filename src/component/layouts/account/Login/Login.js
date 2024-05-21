@@ -31,7 +31,7 @@ function Login() {
 
       if (response.data.result === true) {
         alert("Đăng nhập thành công");
-        navigate("/allMerchant");
+        navigate("/all-merchants");
       } else {
         alert("Đăng nhập thất bại");
       }
