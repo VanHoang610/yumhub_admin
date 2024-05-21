@@ -49,7 +49,7 @@ function AddVoucher() {
 
   return (
     <div className={cx("container")}>
-      <h1 className={cx("title")}>Add voucher</h1>
+      <h1 className={cx("title")}>Add Voucher</h1>
       <div className={cx("form-container")}>
         <form onSubmit={handleSubmit}>
           <div className={cx("form-group")}>
@@ -114,12 +114,12 @@ function AddVoucher() {
               onChange={handleChange}
             >
               <option value="">Please Select</option>
-              <option value="15000">15000</option>
-              <option value="20000">20000</option>
-              <option value="40000">40000</option>
-              <option value="50000">50000</option>
-              <option value="80000">80000</option>
-              <option value="100000">100000</option>
+              <option value="30000">Đơn hàng trên 30.000 vnđ</option>
+              <option value="50000">Đơn hàng trên 50.000 vnđ</option>
+              <option value="75000">Đơn hàng trên 75.000 vnđ</option>
+              <option value="100000">Đơn hàng trên 100.000 vnđ</option>
+              <option value="120000">Đơn hàng trên 120.000 vnđ</option>
+              <option value="150000">Đơn hàng trên 150.000 vnđ</option>
             </select>
           </div>
           <div className={cx("form-group")}>
@@ -130,8 +130,8 @@ function AddVoucher() {
               onChange={handleChange}
             >
               <option value="">Please Select</option>
-              <option value="type1">Type 1</option>
-              <option value="type2">Type 2</option>
+              <option value="Giảm giá trên đơn hàng">Giảm giá trên đơn hàng</option>
+              <option value="Giảm giá trên phí ship">Giảm giá trên phí ship</option>
             </select>
           </div>
           <div className={cx("form-actions")}>

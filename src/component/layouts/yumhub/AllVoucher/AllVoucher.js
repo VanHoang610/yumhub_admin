@@ -1,4 +1,4 @@
-// component/yumhub/AllVoucher/AllVoucher.js
+
 import React from "react";
 import axios from "../../../../api/axiosConfig";
 import { useState, useEffect } from "react";
@@ -6,12 +6,17 @@ import { FaEdit } from "react-icons/fa";
 import classNames from "classnames/bind";
 import styles from "./AllVoucher.module.scss";
 import { format } from 'date-fns';
+import Modal from "react-modal"; // Import thư viện Modal
+
 const cx = classNames.bind(styles);
 
+Modal.setAppElement('#root');
 function AllVoucher() {
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State để quản lý việc hiển thị hộp thoại
 
   useEffect(() => {
     // Hàm gọi API
@@ -29,17 +34,25 @@ function AllVoucher() {
     fetchVouchers();
   }, []);
 
+  const handleRowClick = (voucher) => {
+    // Khi một trường được click, set thông tin của trường đó vào state selectedVoucher
+    setSelectedVoucher(voucher);
+    setIsModalOpen(true); // Mở hộp thoại khi một trường được click
+  };
+  const closeModal = () => {
+    setIsModalOpen(false); // Đóng hộp thoại
+  };
   const getStatus = (endDate) => {
     const now = new Date();
     const end = new Date(endDate);
-    return end >= now ? "valid" : "not-valid";
+    return end >= now ? "Valid" : "Not-valid";
   };
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className={cx("container")}>
-      <div className={cx("title")}>All voucher</div>
+      <div className={cx("title")}>All Voucher</div>
       <div className={cx("table-container")}>
         <table className={cx("table")}>
           <thead>
@@ -55,7 +68,7 @@ function AllVoucher() {
           </thead>
           <tbody>
             {vouchers.map((voucher) => (
-              <tr key={voucher._id}>
+              <tr key={voucher._id} onClick={() => handleRowClick(voucher)}>
                 <td>{voucher._id}</td>
                 <td>{voucher.nameVoucher}</td>
                 <td>{voucher.code}</td>
@@ -78,6 +91,28 @@ function AllVoucher() {
             ))}
           </tbody>
         </table>
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          contentLabel="Voucher Details"
+          className={cx("modal")}
+          overlayClassName={cx("overlay")}
+        >
+          {selectedVoucher && (
+            <div>
+              <h2>Voucher Details</h2>
+              <p>ID: {selectedVoucher._id}</p>
+              <p>Name: {selectedVoucher.nameVoucher}</p>
+              <p>Code: {selectedVoucher.code}</p>
+              <p>Start Date: {format(new Date(selectedVoucher.startDate), "dd/MM/yyyy")}</p>
+              <p>End Date: {format(new Date(selectedVoucher.endDate), "dd/MM/yyyy")}</p>
+              <p>Status: {getStatus(selectedVoucher.endDate)}</p>
+              <p>Discount: {selectedVoucher.discountAmount}</p>
+              <p>Discount Type: {selectedVoucher.typeOfVoucherID}</p>
+              <button onClick={closeModal}>Close</button>
+            </div>
+          )}
+        </Modal>
       </div>
     </div>
   );

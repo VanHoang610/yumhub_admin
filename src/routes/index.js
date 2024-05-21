@@ -15,14 +15,13 @@ const publicRoutes = [
     { path: '/otp', component: OTP}, 
     { path: '/resetPassword', component: ResetPassword}, 
     { path: '/changePassword', component: ChangePassword }, 
-    { path: "/home", component: Home, layout: DefaultLayout },
-  { path: "/all-vouchers", component: AllVoucher, layout: DefaultLayout },
-  { path: "/add-voucher", component: AddVoucher, layout: DefaultLayout },
+   
 ]
 
 const privateRoutes = [
-    // { path: '/', component: Home }, 
-    // { path: '/all-vouchers', component: AllVoucher },
+  { path: "/home", component: Home, layout: DefaultLayout },
+  { path: "/all-vouchers", component: AllVoucher, layout: DefaultLayout },
+  { path: "/add-voucher", component: AddVoucher, layout: DefaultLayout },
 ]
 
 export { publicRoutes, privateRoutes } 
