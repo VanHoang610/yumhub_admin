@@ -30,8 +30,7 @@ function Login() {
       setAuthToken(token);
 
       if (response.data.result === true) {
-        alert("Đăng nhập thành công");
-        navigate("/allMerchant");
+        navigate("/home");
       } else {
         alert("Đăng nhập thất bại");
       }

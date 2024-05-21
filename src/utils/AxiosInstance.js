@@ -3,7 +3,7 @@ import axios from 'axios';
 let authToken = localStorage.getItem('authToken');
 
 const AxiosInstance = axios.create({
-    baseURL: 'http://localhost:3000/'
+    baseURL: 'http://localhost:3001/'
 });
 
 AxiosInstance.interceptors.request.use(
