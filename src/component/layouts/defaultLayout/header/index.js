@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./header.module.scss";
+import styles from "./Header.module.scss";
 import classNames from "classnames/bind";
-import logo from "../../../../src/assets/images/logoYumhub.png";
+import logo from "../../../../assets/images/logoYumhub.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell as faBellRegular, faUser} from '@fortawesome/free-regular-svg-icons'; // Import regular bell icon
 import { faMagnifyingGlass, faCog, faBars } from "@fortawesome/free-solid-svg-icons";
