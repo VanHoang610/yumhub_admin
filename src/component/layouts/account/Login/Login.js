@@ -18,7 +18,6 @@ function Login() {
   const [user, setUser] = useState({});
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   const handleSubmit = async () => {
     try {
       const response = await AxiosInstance.post("admin/loginAdmin", {
