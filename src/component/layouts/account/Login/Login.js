@@ -2,7 +2,8 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-import Button from '../../../buttons/index'
+import AxiosInstance, { setAuthToken } from "../../../../utils/AxiosInstance";
+import Button from "../../../buttons/index";
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
@@ -14,32 +15,28 @@ import eye from "../../../../assets/images/icon_eye.png";
 const cx = classNames.bind(styles);
 function Login() {
   let navigate = useNavigate();
-  const [info] = useState([
-    {
-      username: "vanhoang",
-      password: "123123",
-    },
-    {
-      username: "bason",
-      password: "123",
-    },
-    {
-      username: "thanhhoa",
-      password: "123",
-    },
-  ]);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState({});
+  const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const handleSubmit = async () => {
+    try {
+      const response = await AxiosInstance.post("admin/loginAdmin", {
+        userName,
+        password,
+      });
+      setUser(response.data.data.admin);
 
-  const handleSubmit = () => {
-    const user = info.find(
-      (user) => user.username === username && user.password === password
-    );
-    if (user) {
-      navigate("/home");
-     
-    } else {
-      alert("Invalid username or password");
+      const token = response.data.data.token;
+      setAuthToken(token);
+
+      if (response.data.result === true) {
+        alert("Đăng nhập thành công");
+        navigate("/allMerchant");
+      } else {
+        alert("Đăng nhập thất bại");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -68,7 +65,7 @@ function Login() {
           <img src={icon_username} alt="Username" className={cx("iconStart")} />
           <input
             placeholder="lv.hoang610@gmail.com"
-            value={username}
+            value={userName}
             onChange={(e) => setUsername(e.target.value)}
           />
           <img src={cricle} alt="Cricle" className={cx("iconEnd")} />
