@@ -26,8 +26,8 @@ const privateRoutes = [
     { path: "/home", component: Home, layout: DefaultLayout },
     { path: "/all-vouchers", component: AllVoucher, layout: DefaultLayout },
     { path: "/add-voucher", component: AddVoucher, layout: DefaultLayout },
-    { path: '/new-Merchant', component: NewMerchant, layout: DefaultLayout  },
-    { path: '/all-Merchant', component: AllMerchant, layout: DefaultLayout  },
+    { path: '/new-merchant', component: NewMerchant, layout: DefaultLayout  },
+    { path: '/all-merchants', component: AllMerchant, layout: DefaultLayout  },
 
 ]
 
