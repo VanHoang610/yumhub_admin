@@ -36,8 +36,8 @@ function Login() {
       (user) => user.username === username && user.password === password
     );
     if (user) {
-      navigate("/Header");
-      // navigate("/Sidebar");
+      navigate("/home");
+     
     } else {
       alert("Invalid username or password");
     }

@@ -3,10 +3,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 17px 19px;
-    width: 1920px;
-    height: 76px;
+    width: 100%;
+    min-height: 76px;
     background-color: #0072B2;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 10px;
+    margin-right: 20px;
 
     .inner {
       display: flex;
