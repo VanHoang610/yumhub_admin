@@ -23,7 +23,7 @@ function AllVoucher() {
     // Hàm gọi API
     const fetchVouchers = async () => {
       try {
-        const response = await AxiosInstance.get("/vouchers/allVoucher"); // Thay đổi endpoint này theo API của bạn
+        const response = await AxiosInstance.get("vouchers/allVoucher"); // Thay đổi endpoint này theo API của bạn
         setVouchers(response.data);
       } catch (err) {
         setError(err.message);

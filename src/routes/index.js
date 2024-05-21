@@ -6,10 +6,9 @@ import ResetPassword from "../component/layouts/account/ResetPassword/ResetPassw
 import ChangePassword from "../component/layouts/account/ChangePassword/ChangePassword"
 import Home from '../component/layouts/yumhub/Home/Home'
 
-
 import DefaultLayout from "../component/layouts/defaultLayout/defaultLayout"
 import NewMerchant from '../component/layouts/yumhub/NewMerchant/NewMerchant'
-import AllMerchant from "../component/layouts/yumhub/AllMerchant/AllMerchant"
+import AllMerchant from '../component/layouts/yumhub/AllMerchant/AllMerchant'
 import AllVoucher from "../component/layouts/yumhub/AllVoucher/AllVoucher"
 import AddVoucher from "../component/layouts/yumhub/AddVoucher/AddVoucher"
 
