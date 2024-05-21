@@ -9,7 +9,7 @@ import Home from '../component/layouts/yumhub/Home/Home'
 
 import DefaultLayout from "../component/layouts/defaultLayout/defaultLayout"
 import NewMerchant from '../component/layouts/yumhub/NewMerchant/NewMerchant'
-import AllMerchant from '../component/layouts/yumhub/AllMerchant/AllMerchan'
+import AllMerchant from "../component/layouts/yumhub/AllMerchant/AllMerchant"
 import AllVoucher from "../component/layouts/yumhub/AllVoucher/AllVoucher"
 import AddVoucher from "../component/layouts/yumhub/AddVoucher/AddVoucher"
 
@@ -27,8 +27,8 @@ const privateRoutes = [
     { path: "/home", component: Home, layout: DefaultLayout },
     { path: "/all-vouchers", component: AllVoucher, layout: DefaultLayout },
     { path: "/add-voucher", component: AddVoucher, layout: DefaultLayout },
-    { path: '/newMerchant', component: NewMerchant, layout: DefaultLayout  },
-    { path: '/allMerchant', component: AllMerchant, layout: DefaultLayout  },
+    { path: '/new-merchant', component: NewMerchant, layout: DefaultLayout  },
+    { path: '/all-merchants', component: AllMerchant, layout: DefaultLayout  },
 
 ]
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./AddVoucher.module.scss";
 import classNames from "classnames/bind";
-import axios from "../../../../api/axiosConfig";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 const cx = classNames.bind(styles);
 
 function AddVoucher() {
@@ -38,7 +38,7 @@ function AddVoucher() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/vouchers/createVoucher", voucher); // Thay đổi đường dẫn của API thêm voucher
+      const response = await AxiosInstance.post("/vouchers/createVoucher", voucher); // Thay đổi đường dẫn của API thêm voucher
       console.log("Voucher Added:", response.data); // In ra dữ liệu voucher đã được thêm
       // Xử lý logic sau khi thêm voucher thành công 
     } catch (error) {
