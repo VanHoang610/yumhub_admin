@@ -1,0 +1,122 @@
+.container {
+    padding: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    margin-bottom: 20px;
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 250px;
+    cursor: pointer;
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: #f8f8f8;
+
+        .default-shipper {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .info {
+            width: 100%;
+            padding: 5px;
+            display: grid;
+            grid-template-columns: 1fr; /* Để canh theo chiều dọc */
+            justify-items: end;
+            .name {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .phone {
+                font-size: 14px;
+                color: #555;
+            }
+        }
+    }
+
+    .container-card-body {
+        display: flex;
+        flex-direction: row;
+        padding: 5px;
+    }
+
+    .avatar {
+        margin-left: 10px;
+        width: 120px;
+        height: 100px;
+    }
+
+    .card-body { 
+        display: grid;
+        grid-template-columns: 1fr; /* Để canh theo chiều dọc */
+        justify-items: start;
+    }
+
+    .card-footer {
+        padding: 10px;
+        text-align: center;
+        background-color: #f8f8f8;
+
+        .view-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #0056b3;
+            }
+        }
+    }
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.75);
+}
