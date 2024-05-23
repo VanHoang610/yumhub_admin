@@ -13,7 +13,9 @@ function Button({
   detail = false, 
   approve_btn = false, 
   delete_btn = false, 
-  forget_btn = false 
+  forget_btn = false,
+  awaiting = false,
+  reviewed = false
 }) {
   let Comp = "button";
 
@@ -35,7 +37,9 @@ function Button({
     detail,
     approve_btn,
     delete_btn,
-    forget_btn
+    forget_btn,
+    awaiting,
+    reviewed
   });
 
   return (
