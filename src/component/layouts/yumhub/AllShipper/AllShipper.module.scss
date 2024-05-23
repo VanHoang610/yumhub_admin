@@ -1,0 +1,98 @@
+/* src/components/AllShipper.module.scss */
+.container {
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  .table td{
+    cursor: pointer;
+  }
+  .table th {
+    background-color: #f4f4f4;
+    text-align: left;
+  }
+  
+  .info {
+    margin-left: 10px;
+    display: flex;
+    align-items: center; 
+    flex-direction: row; 
+  }
+  .sub-info{
+    margin-left: 20px ;
+  }
+  .name{
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px; /* Khoảng cách dưới name */
+  }
+  .gender-dob{
+    display: flex;
+    gap: 20px; /* Khoảng cách giữa gender và dob */
+    width: 100px;
+  }
+  .gender, .dob {
+    font-size: 16px;
+    justify-content: flex-end;
+}
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .status.active {
+    color: green;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+   align-content: center;
+  }
+  
+  .action-icon {
+    cursor: pointer;
+    padding: 17px 2px;
+  }
+  
+  .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.75);
+  }
+  
