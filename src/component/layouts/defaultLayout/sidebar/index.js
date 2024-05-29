@@ -77,11 +77,12 @@ function Sidebar() {
           <FontAwesomeIcon icon={faUser} className={cx("icon")}/>
           <span className={cx("text")}>Change Password</span>
         </NavLink>
-        <NavLink to="/logout" className={({ isActive }) => cx("nav-link", { active: isActive })}>
+        
+      </nav>
+      <button className={cx("nav-link", "btn")} >
           <FontAwesomeIcon icon={faSignOutAlt} className={cx("icon")}/>
           <span className={cx("text")}>Logout</span>
-        </NavLink>
-      </nav>
+        </button>
     </div>
   );
 }

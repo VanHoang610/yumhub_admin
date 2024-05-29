@@ -12,8 +12,10 @@ function AddVoucher() {
     startDate: "",
     endDate: "",
     conditionsApply: "",
-    typeOfVoucher: "",
+    typeOfVoucherID: "",
   });
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +23,29 @@ function AddVoucher() {
       ...prevVoucher,
       [name]: value,
     }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+  };
+
+  const validateDates = () => {
+    const today = new Date().toISOString().split("T")[0];
+    let valid = true;
+    const newErrors = {};
+
+    if (voucher.startDate < today) {
+      newErrors.startDate = "Start date must be today or later.";
+      valid = false;
+    }
+
+    if (voucher.endDate < voucher.startDate) {
+      newErrors.endDate = "End date must be the same or later than the start date.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
   };
 
   const handleReset = () => {
@@ -31,19 +56,24 @@ function AddVoucher() {
       startDate: "",
       endDate: "",
       conditionsApply: "",
-      typeOfVoucher: "",
+      typeOfVoucherID: "",
     });
+    setErrors({});
+    setSuccessMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateDates()) {
+      return;
+    }
     try {
-      const response = await AxiosInstance.post("/vouchers/createVoucher", voucher); // Thay đổi đường dẫn của API thêm voucher
-      console.log("Voucher Added:", response.data); // In ra dữ liệu voucher đã được thêm
-      // Xử lý logic sau khi thêm voucher thành công 
+      const response = await AxiosInstance.post("/vouchers/createVoucher", voucher);
+      console.log("Voucher Added:", response.data);
+      setSuccessMessage("Voucher");
+      handleReset();
     } catch (error) {
       console.error("Error adding voucher: ", error);
-      // Xử lý lỗi 
     }
   };
 
@@ -81,31 +111,32 @@ function AddVoucher() {
               value={voucher.code}
               onChange={handleChange}
             />
-            <span className={cx("error-message")}>
-              Error Message. Learn more.
-            </span>
+            <span className={cx("error-message")}>{errors.code}</span>
           </div>
           <div className={cx("date-group")}>
             <div className={cx("form-group")}>
               <label>Start Date</label>
-              <input  className={cx("date-input")}
+              <input
+                className={cx("date-input")}
                 type="date"
                 name="startDate"
                 value={voucher.startDate}
                 onChange={handleChange}
               />
+              <span className={cx("error-message")}>{errors.startDate}</span>
             </div>
             <div className={cx("form-group")}>
               <label>End Date</label>
-              <input className={cx("date-input")}
+              <input
+                className={cx("date-input")}
                 type="date"
                 name="endDate"
                 value={voucher.endDate}
                 onChange={handleChange}
               />
+              <span className={cx("error-message")}>{errors.endDate}</span>
             </div>
           </div>
-
           <div className={cx("form-group")}>
             <label>Conditions Apply</label>
             <select
@@ -125,13 +156,13 @@ function AddVoucher() {
           <div className={cx("form-group")}>
             <label>Voucher Type</label>
             <select
-              name="typeOfVoucher"
-              value={voucher.typeOfVoucher}
+              name="typeOfVoucherID"
+              value={voucher.typeOfVoucherID}
               onChange={handleChange}
             >
               <option value="">Please Select</option>
-              <option value="Giảm giá trên đơn hàng">Giảm giá trên đơn hàng</option>
-              <option value="Giảm giá trên phí ship">Giảm giá trên phí ship</option>
+              <option value="6656cfad8913d56206f64e06">Giảm giá trên đơn hàng</option>
+              <option value="6656cfad8913d56206f64e05">Giảm giá trên phí ship</option>
             </select>
           </div>
           <div className={cx("form-actions")}>
@@ -146,6 +177,9 @@ function AddVoucher() {
               Add
             </button>
           </div>
+          {successMessage && (
+            <div className={cx("success-message")}>{successMessage}</div>
+          )}
         </form>
       </div>
     </div>

@@ -123,7 +123,7 @@ function AllVoucher() {
               </p>
               <p>Status: {getStatus(selectedVoucher.endDate)}</p>
               <p>Discount: {selectedVoucher.discountAmount}</p>
-              <p>Discount Type: {selectedVoucher.typeOfVoucherID}</p>
+              <p>Discount Type: {selectedVoucher.typeOfVoucherID==="6656cfad8913d56206f64e05"?"discount by fee shipping":"discount by price food"}</p>
               <button onClick={closeModal}>Close</button>
             </div>
           )}
