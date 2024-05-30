@@ -1,0 +1,232 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.info-container {
+  width: 49.7%;
+  height: 66.2%;
+  border-radius: 35px;
+  background-color: #fff;
+  margin-right: 25px;
+  flex-direction: column;
+  padding-left: 51px;
+  padding-top: 73px;
+  box-sizing: border-box;
+
+  .info {
+    padding-left: 48px;
+  }
+
+  .text-info {
+    color: #272727;
+    font-family: "Montserrat", sans-serif;
+    font-size: 35px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .wrapper-birth-day {
+    display: flex;
+    align-items: center;
+    margin-top: 35px;
+  }
+
+  .title-birth-day {
+    color: #272727;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0; /* Xóa margin mặc định */
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+  }
+
+  .text-birth-day {
+    font-weight: 300;
+    margin-left: 5px; /* Khoảng cách giữa "Gender:" và "Nam" */
+  }
+
+  .wrapper-gender {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+
+  .title-gender {
+    color: #272727;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+  }
+
+  .text-gender {
+    font-weight: 300;
+    margin-left: 5px;
+  }
+
+  .wrapper-address {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+
+  .title-address {
+    color: #272727;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0; 
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  
+  }
+
+  .text-address {
+    font-weight: 300;
+    margin-left: 5px; /* Khoảng cách giữa "Gender:" và "Nam" */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .wrapper-note {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    margin-left: 12px;
+  }
+
+  .title-note {
+    color: #272727;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0; /* Xóa margin mặc định */
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+  }
+
+  .text-note {
+    font-weight: 300;
+    margin-left: 5px; /* Khoảng cách giữa "Gender:" và "Nam" */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.contact {
+  width: 23.85%;
+  height: 66.2%;
+  border-radius: 35px;
+  background-color: #fff;
+  margin-right: 25px;
+  flex-direction: column;
+  padding-left: 51px;
+  padding-top: 73px;
+  box-sizing: border-box;
+
+  .avatar {
+    width: 75%;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  .info {
+    width: 49.7%;
+    height: 66.2%;
+    border-radius: 35px;
+    background-color: #fff;
+  }
+  .wrapper-name {
+    display: flex;
+    .name-info {
+      color: #272727;
+      font-family: "Montserrat", sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .age-info {
+      color: #272727;
+      font-family: "Montserrat", sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      padding-left: 10px;
+      margin: 0;
+    }
+  }
+
+  .position {
+    color: #272727;
+    font-family: "Montserrat", sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    margin-top: 10px;
+  }
+
+  .wrapper-phone {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+
+    .text-phone {
+      color: #272727;
+      font-family: "Montserrat", sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      padding-left: 10px;
+      margin: 0;
+    }
+  }
+
+  .wrapper-email {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+
+    .text-email {
+      color: #272727;
+      font-family: "Montserrat", sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      padding-left: 10px;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .title-email {
+      color: #272727;
+      font-family: "Montserrat", sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0; /* Xóa margin mặc định */
+      display: flex;
+      align-items: center;
+      margin-left: 5px;
+      width: 90%;
+    }
+  }
+}
+
+.container {
+  width: 80vw;
+  height: 100vh;
+  display: flex;
+  background-color: #8bf1f7;
+  border-radius: 40px;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến kích thước */
+}

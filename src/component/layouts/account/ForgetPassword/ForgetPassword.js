@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import AxiosInstance from "../../../../utils/AxiosInstance";
 import background from "../../../../assets/images/backgroundForgetPassword.png";
 import cricle from "../../../../assets/images/icon_circle.png";
 import classNames from "classnames/bind";
@@ -11,14 +12,24 @@ import Button from "../../../buttons";
 
 const cx = classNames.bind(styles);
 
-
 function ForgetPassword() {
-  
   let navigate = useNavigate();
 
-  const handleSubmit = () => {
-    navigate('/otp')
-  }
+  const handleSubmit = async () => {
+    try {
+      const response = await AxiosInstance.post("admin/forgetPassByEmail", {
+        email: username,
+      });
+      if (response.data.result === true) {
+        navigate("/otp",  { state: { username } });
+      
+      } else {
+        alert("Incorrect email!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [username, setUsername] = useState("");
   return (
@@ -47,9 +58,9 @@ function ForgetPassword() {
           <img src={cricle} alt="Cricle" className={cx("iconEnd")} />
         </div>
         <div className={cx("btnSummit")}>
-            <Button login forget_btn onClick={handleSubmit}>
-              SUMMIT
-            </Button>
+          <Button login forget_btn onClick={handleSubmit}>
+            SUMMIT
+          </Button>
         </div>
         <div className={cx("btnBackLogin")}>
           <Link to="/" className={cx("no-underline")}>
