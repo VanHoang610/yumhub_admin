@@ -45,13 +45,14 @@
   }
   
   .info {
-    margin-left: 10px;
     display: flex;
     align-items: center; 
     flex-direction: row; 
+    gap: 10px;
   }
   .sub-info{
-    margin-left: 20px ;
+    margin-left: 10px ;
+    
   }
   .name{
     font-size: 18px;
@@ -61,11 +62,21 @@
   .gender-dob{
     display: flex;
     gap: 20px; /* Khoảng cách giữa gender và dob */
-    width: 100px;
+    width: 200px;
+    background-color: lightgrey;
+    
   }
-  .gender, .dob {
+  .gender{
+    display: flex;
+    // justify-content: flex-end;
     font-size: 16px;
+    
+}
+  .dob {
+    display: flex;
     justify-content: flex-end;
+    font-size: 16px;
+    
 }
 
   .avatar {
