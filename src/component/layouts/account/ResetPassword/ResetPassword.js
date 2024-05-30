@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 import Button from "../../../buttons";
@@ -9,31 +9,46 @@ import icon_password from "../../../../assets/images/iconPassword.png";
 import icon_newpassword from "../../../../assets/images/iconNewPassword.png";
 import logo from "../../../../assets/images/logoYumhub.png";
 import background from "../../../../assets/images/backgroundResetPassword.png";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 
 const cx = classNames.bind(styles);
 
 function ResetPassword() {
   let navigate = useNavigate();
+  const location = useLocation();
+  const { username } = location.state || {};
+
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordNew, setShowPasswordNew] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (password === newPassword) {
-      navigate("/");
+      try {
+        const response = await AxiosInstance.post("admin/resetPass", {
+          email: username,
+          password: password,
+        });
+        if (response.data.result === true) {
+          navigate("/");
+        } else {
+          alert("Reset Password Fail");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      alert("Không trùng mk");
+      alert("No Duplicate Passwords");
     }
   };
 
   const toggolePassword = () => {
-    console.log("sdf");
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
   const toggolePasswordNew = () => {
-    setShowPasswordNew(!showPasswordNew)
-  }
+    setShowPasswordNew(!showPasswordNew);
+  };
   return (
     <div className={cx("container")}>
       <div className={cx("leftBackground")}>
@@ -51,14 +66,19 @@ function ResetPassword() {
           </p>
         </div>
         <div className={cx("enterInfo")}>
-          <img src={icon_password} alt="Pasword" className={cx("iconStart")}/>
-          <input    
+          <img src={icon_password} alt="Pasword" className={cx("iconStart")} />
+          <input
             type={showPassword ? "text" : "password"}
             placeholder="7789BM6X@@H&$K_"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <img src={eye} alt="Cricle" className={cx("iconEnd")} onClick={toggolePassword} />
+          <img
+            src={eye}
+            alt="Cricle"
+            className={cx("iconEnd")}
+            onClick={toggolePassword}
+          />
         </div>
         <div className={cx("enterInfo")}>
           <img
@@ -72,7 +92,12 @@ function ResetPassword() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
-          <img src={eye} alt="Cricle" className={cx("iconEnd")}  onClick={toggolePasswordNew}/>
+          <img
+            src={eye}
+            alt="Cricle"
+            className={cx("iconEnd")}
+            onClick={toggolePasswordNew}
+          />
         </div>
         <div className={cx("btnSummit")}>
           <Button login forget_btn onClick={handleSubmit}>

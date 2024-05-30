@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 import background from "../../../../assets/images/backgroundOTP.png";
@@ -6,11 +6,16 @@ import classNames from "classnames/bind";
 import styles from "./OTP.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import Button from "../../../buttons";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import e from "cors";
 
 const cx = classNames.bind(styles);
 
 function OTP() {
-let navigate = useNavigate();
+  const location = useLocation();
+  const { username } = location.state || {};
+
+  let navigate = useNavigate();
   const [otp, setOtp] = useState(["", "", "", ""]);
   const handleChange = (e, index) => {
     const value = e.target.value;
@@ -27,14 +32,27 @@ let navigate = useNavigate();
     }
   };
   const handleKeyDown = (e, index) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-input${index - 1}`).focus();
     }
   };
 
-  const handleSubmit = () => {
-    navigate('/resetPassword')
-  }
+  const handleSubmit = async () => {
+    try {
+      const otpString = otp.join("").toString();
+      const response = await AxiosInstance.post("admin/checkOTP", {
+        email: username,
+        otp: otpString,
+      });
+      if (response.data.result === true) {
+        navigate("/resetPassword", { state: { username } });
+      } else {
+        alert("Entered Wrong OTP");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className={cx("container")}>
       <div className={cx("leftBackground")}>
@@ -50,12 +68,12 @@ let navigate = useNavigate();
             An authentication code has been sent to your email.
           </p>
         </div>
-        <div className={cx('inputCotainer')}>
+        <div className={cx("inputCotainer")}>
           {otp.map((otp, index) => (
             <input
               key={index}
               id={`otp-input${index}`}
-              className={cx('input-otp')}
+              className={cx("input-otp")}
               type="text"
               value={otp}
               onChange={(e) => handleChange(e, index)}
