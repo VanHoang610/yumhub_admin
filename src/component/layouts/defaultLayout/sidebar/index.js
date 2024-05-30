@@ -25,7 +25,7 @@ function Sidebar() {
 
   const handleLogout = async () => {
     await logoutUser();
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -130,7 +130,10 @@ function Sidebar() {
           <span className={cx("text")}>Change Password</span>
         </NavLink>
 
-        <button className={cx("nav-link", "logout-button")} onClick={handleLogout}>
+        <button
+          className={cx("nav-link", "logout-button")}
+          onClick={handleLogout}
+        >
           <FontAwesomeIcon icon={faSignOutAlt} className={cx("icon")} />
           <span className={cx("text")}>Logout</span>
         </button>

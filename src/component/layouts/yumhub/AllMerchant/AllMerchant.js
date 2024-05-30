@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
+import Tippy from '@tippyjs/react/headless';
+
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -183,13 +185,21 @@ function AllMerchant() {
     <div className={cx("contaienr")}>
       <div className={cx("content")}>
         <p className={cx("title")}>All Merchant</p>
-        <div className={cx("inputSearch")}>
-          <FontAwesomeIcon
-            icon={faMagnifyingGlass}
-            className={cx("icon-search")}
-          />
-          <input className={cx("input")} placeholder="Đồ ăn chay" />
-        </div>
+        <Tippy
+          render={(attrs) => (
+            <div className="box" tabIndex="-1" {...attrs}>
+              My tippy box
+            </div>
+          )}
+        >
+          <div className={cx("inputSearch")}>
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              className={cx("icon-search")}
+            />
+            <input className={cx("input")} placeholder="Đồ ăn chay" />
+          </div>
+        </Tippy>
         <div className={cx("line-background")} />
         <div className={cx("box-container")}>
           <table className={cx("table")}>
@@ -205,7 +215,11 @@ function AllMerchant() {
             </thead>
             <tbody>
               {data.map((item, index) => (
-                <tr key={index} className={cx("table-row")} onClick={() => handleView(item._id)}>
+                <tr
+                  key={index}
+                  className={cx("table-row")}
+                  onClick={() => handleView(item._id)}
+                >
                   <td>{index + 1}</td>
                   <td>{item.name}</td>
                   <td>{item.address}</td>
@@ -312,7 +326,7 @@ function AllMerchant() {
                         onChange={(e) => setAddress(e.target.value)}
                       />
                     ) : (
-                      address|| "N/A"
+                      address || "N/A"
                     )}
                   </p>
                 </div>
@@ -327,7 +341,7 @@ function AllMerchant() {
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     ) : (
-                      email|| "N/A"
+                      email || "N/A"
                     )}
                   </p>
                 </div>
@@ -342,7 +356,7 @@ function AllMerchant() {
                         onChange={(e) => setFullName(e.target.value)}
                       />
                     ) : (
-                      fullName|| "N/A"
+                      fullName || "N/A"
                     )}
                   </p>
                 </div>
@@ -357,7 +371,7 @@ function AllMerchant() {
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                     ) : (
-                      phoneNumber|| "N/A"
+                      phoneNumber || "N/A"
                     )}
                   </p>
                 </div>
@@ -372,7 +386,7 @@ function AllMerchant() {
                         onChange={(e) => setOpenTime(e.target.value)}
                       />
                     ) : (
-                      openTime|| "N/A"
+                      openTime || "N/A"
                     )}
                   </p>
                 </div>
@@ -387,7 +401,7 @@ function AllMerchant() {
                         onChange={(e) => setCloseTime(e.target.value)}
                       />
                     ) : (
-                      closeTime|| "N/A"
+                      closeTime || "N/A"
                     )}
                   </p>
                 </div>
