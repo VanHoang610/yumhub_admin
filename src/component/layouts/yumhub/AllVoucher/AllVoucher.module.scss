@@ -1,87 +1,90 @@
-// component/yumhub/AllVoucher/AllVoucher.module.scss
 .container {
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .table-container {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table th,
-  .table td {
-    border: 1px solid #dddddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .table th {
-    background-color: #ffffae;
-  }
-  
-  .table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .table tr:hover {
-    background-color: #ddd;
-  }
-  
-  .status {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 4px;
-    color: #fff;
-    
-  }
-  
-  .status.Valid {
-    background-color: #4caf50;
-  }
-  
-  .status.Not-valid {
-    background-color: #f44336;
-  }
-  
-  .actions {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .action-icon {
-    cursor: pointer;
-    color: #007bff;
-    outline: none;
-    font-size: 22px; /* Kích thước biểu tượng */
-    padding: 6px;
-    transition: color 0.3s ease;
-  }
-  
-  .action-icon:hover {
-    color: #0056b3; /* Màu khi hover */
-  }
-  
-  .action-icon:focus {
-    outline: none;
-  }
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  min-height: 700px;
+  max-height: 80vh; // Set max height to control overall height
+  overflow-y: auto; // Enable vertical scrolling
+}
 
-  // Styles for Modal
+.title {
+  font-size: 26px;
+  font-weight: bolder;
+  margin-bottom: 20px;
+  color: #004974;
+}
+
+.table-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-height: 100%; // Ensure the table container does not overflow its parent
+  overflow-y: auto; // Enable vertical scrolling within the table container
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #ffffae;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #ddd;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.status.Valid {
+  background-color: #4caf50;
+}
+
+.status.Not-valid {
+  background-color: #f44336;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+}
+
+.action-icon {
+  cursor: pointer;
+  color: #007bff;
+  outline: none;
+  font-size: 22px;
+  transition: color 0.3s ease;
+}
+
+.action-icon:hover {
+  color: #0056b3;
+}
+
+.action-icon:focus {
+  outline: none;
+}
+
+// Styles for Modal
 .modal {
   background: white;
   border-radius: 8px;
@@ -89,7 +92,6 @@
   padding: 20px;
   margin: auto;
   position: relative;
-  
 }
 
 .overlay {
@@ -124,6 +126,4 @@
 
 .modal button:hover {
   background-color: #0056b3;
-  
 }
-  

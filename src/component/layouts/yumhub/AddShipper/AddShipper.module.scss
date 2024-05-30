@@ -1,11 +1,18 @@
 .container {
+    background-color: #f5f5f5;
     padding: 20px;
-}
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-height: 700px;
+    max-height: 80vh; // Set max height to control overall height
+    overflow-y: auto; // Enable vertical scrolling
+  }
 
 .title {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 26px;
+    font-weight: bolder;
     margin-bottom: 20px;
+    color: #004974;
 }
 
 .search-bar {
@@ -22,7 +29,9 @@
 .card-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 50px;
+    gap: 30px;
+    max-height: 100%; // Ensure the table container does not overflow its parent
+    overflow-y: auto; // Enable vertical scrolling within the table container
 }
 
 .card {
