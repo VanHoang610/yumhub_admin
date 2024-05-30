@@ -20,13 +20,10 @@ function AddShipper() {
       try {
         const response = await AxiosInstance.get(
           "shippers/listShipperApproval"
-        );
-        if (response.data && Array.isArray(response.data.listShipperApproval)) {
-          setShippers(response.data.listShipperApproval);
-        } else {
-          setError("Invalid data format from API");
+        )
+          setShippers(response.data.listMerchantApproval);
         }
-      } catch (err) {
+       catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);

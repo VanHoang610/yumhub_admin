@@ -20,10 +20,13 @@ function AllShipper() {
     const fetchShippers = async () => {
       try {
         const response = await AxiosInstance.get("shippers/getAllShipper");
-
+        console.log(response);
         // Kiểm tra và xử lý dữ liệu từ API
-        if (response.data && Array.isArray(response.data)) {
-          setShippers(response.data);
+        if (response.data.AllShipper
+          && Array.isArray(response.data.AllShipper
+          )) {
+          setShippers(response.data.AllShipper
+          );
         } else {
           setError("Invalid data format from API");
         }

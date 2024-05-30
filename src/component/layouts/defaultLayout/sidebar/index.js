@@ -129,6 +129,7 @@ function Sidebar() {
           <FontAwesomeIcon icon={faUser} className={cx("icon")} />
           <span className={cx("text")}>Change Password</span>
         </NavLink>
+
         <button className={cx("nav-link", "logout-button")} onClick={handleLogout}>
           <FontAwesomeIcon icon={faSignOutAlt} className={cx("icon")} />
           <span className={cx("text")}>Logout</span>
