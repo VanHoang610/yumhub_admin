@@ -99,13 +99,16 @@ function NewMerchant() {
         <div className={cx("line-background")} />
         <div className={cx("grid-container")}>
           {data.map((item) => (
-            <div className={cx("box")} key={item._id}>
+            <div
+              className={cx("box")}
+              key={item._id}
+            >
               <div className={cx("titleBox")}>
                 <img src={logo} alt="logoMerchant" className={cx("logo")} />
                 <div className={cx("line")} />
                 <div className={cx("textTitle")}>
                   <p className={cx("nameMerchant")}>{item.name}</p>
-                  <p className={cx("type")}>{item.type.name}</p>
+                  <p className={cx("type")}>{item.type ? item.type.name: "N/A"}</p>
                 </div>
               </div>
               <div className={cx("line-bottom")} />
@@ -181,11 +184,15 @@ function NewMerchant() {
                 <p className={cx("content-merchant")}>{closeTime}</p>
               </div>
               <div className={cx("wrapper-image-content")}>
-                  <p className={cx("title-merchant")}>Document:</p>
-                  <p className={cx("content-merchant")}>
-                    <img src={document} alt="Document" className={cx("image-document")}/>
-                  </p>
-                </div>
+                <p className={cx("title-merchant")}>Document:</p>
+                <p className={cx("content-merchant")}>
+                  <img
+                    src={document}
+                    alt="Document"
+                    className={cx("image-document")}
+                  />
+                </p>
+              </div>
               <div className={cx("btn-delete")}>
                 <Button approve_btn>Approval</Button>
               </div>

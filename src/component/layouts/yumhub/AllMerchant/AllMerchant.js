@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
-
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -37,7 +36,6 @@ function AllMerchant() {
   const [typeId, setTypeId] = useState("");
   const [types, setTypes] = useState([]);
 
-  // load data show lên page
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,7 +55,6 @@ function AllMerchant() {
     fetchData();
   }, []);
 
-  //load data hiển thị lên modal
   useEffect(() => {
     if (selectMerchantById) {
       setName(selectMerchantById.name || "");
@@ -73,8 +70,9 @@ function AllMerchant() {
       setDocument(
         selectMerchantById.document ? selectMerchantById.document.image : ""
       );
-      setEmail(selectMerchantById.user ? selectMerchantById.user.email : "");
-      setType(selectMerchantById.type ? selectMerchantById.type.name : ""); // show type
+      setTypeId(selectMerchantById.type ? selectMerchantById.type._id : "");
+      setEmail(selectMerchantById.user ? selectMerchantById.user.email : "N/A");
+      setType(selectMerchantById.type ? selectMerchantById.type.name : "N/A");
     }
   }, [selectMerchantById]);
 
@@ -207,7 +205,7 @@ function AllMerchant() {
             </thead>
             <tbody>
               {data.map((item, index) => (
-                <tr key={index} className={cx("table-row")}>
+                <tr key={index} className={cx("table-row")} onClick={() => handleView(item._id)}>
                   <td>{index + 1}</td>
                   <td>{item.name}</td>
                   <td>{item.address}</td>
@@ -222,19 +220,28 @@ function AllMerchant() {
                   <td>
                     <button
                       className={cx("action-button")}
-                      onClick={() => handleEdit(item._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(item._id);
+                      }}
                     >
                       <FontAwesomeIcon icon={faEdit} />
                     </button>
                     <button
                       className={cx("action-button")}
-                      onClick={() => handleDelete(item._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item._id);
+                      }}
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                     <button
                       className={cx("action-button")}
-                      onClick={() => handleView(item._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleView(item._id);
+                      }}
                     >
                       <FontAwesomeIcon icon={faEye} />
                     </button>
@@ -305,7 +312,7 @@ function AllMerchant() {
                         onChange={(e) => setAddress(e.target.value)}
                       />
                     ) : (
-                      address
+                      address|| "N/A"
                     )}
                   </p>
                 </div>
@@ -320,7 +327,7 @@ function AllMerchant() {
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     ) : (
-                      email
+                      email|| "N/A"
                     )}
                   </p>
                 </div>
@@ -335,7 +342,7 @@ function AllMerchant() {
                         onChange={(e) => setFullName(e.target.value)}
                       />
                     ) : (
-                      fullName
+                      fullName|| "N/A"
                     )}
                   </p>
                 </div>
@@ -350,7 +357,7 @@ function AllMerchant() {
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                     ) : (
-                      phoneNumber
+                      phoneNumber|| "N/A"
                     )}
                   </p>
                 </div>
@@ -365,7 +372,7 @@ function AllMerchant() {
                         onChange={(e) => setOpenTime(e.target.value)}
                       />
                     ) : (
-                      openTime
+                      openTime|| "N/A"
                     )}
                   </p>
                 </div>
@@ -380,14 +387,22 @@ function AllMerchant() {
                         onChange={(e) => setCloseTime(e.target.value)}
                       />
                     ) : (
-                      closeTime
+                      closeTime|| "N/A"
                     )}
                   </p>
                 </div>
                 <div className={cx("wrapper-image-content")}>
                   <p className={cx("title-merchant")}>Document:</p>
                   <p className={cx("content-merchant")}>
-                    {isEditModal ? "" : <img src={document} alt="Document" className={cx("image-document")}/>}
+                    {isEditModal ? (
+                      "N/A"
+                    ) : (
+                      <img
+                        src={document}
+                        alt="Document"
+                        className={cx("image-document")}
+                      />
+                    )}
                   </p>
                 </div>
                 <div className={cx("btn-delete")}>
