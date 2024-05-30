@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
+import Tippy from "@tippyjs/react/headless";
+
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faClockRotateLeft,
   faEdit,
   faEye,
   faMagnifyingGlass,
@@ -15,11 +18,12 @@ import logo from "../../../../assets/images/logoYumhub.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
-
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import AccountItem from "../../../AccountItem";
 const cx = classNames.bind(styles);
 
 function AllCustomer() {
-    // lấy ra ngày tháng năm trong api
+  // lấy ra ngày tháng năm trong api
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
     const day = date.getUTCDate();
@@ -28,30 +32,21 @@ function AllCustomer() {
     return `${day}-${month}-${year}`;
   };
 
+  const [searchResult, setSearchResult] = useState([]);
+  const [tippyVisible, setTippyVisible] = useState(false);
   const [detailCustomer, setDetailCustomer] = useState({});
-  const [detailAddress, setDetailAddress] = useState({});
-  const [isEditModal, setIsEditModal] = useState(false);
-
+  const [detailAddress, setDetailAddress] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [closeTime, setCloseTime] = useState("");
-  const [openTime, setOpenTime] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [type, setType] = useState("");
-  const [document, setDocument] = useState("");
-  const [typeId, setTypeId] = useState("");
-  const [types, setTypes] = useState([]);
+  const [showModalHistory, setShowModalHistory] = useState(false);
   const [data, setData] = useState([]);
+  const [dataHistory, setDataHistory] = useState([]);
 
+  //lấy danh sách customer
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get("customers/getAllCustomer");
         const customers = response.data.customer;
-        console.log(customers);
         setData(customers);
       } catch (error) {
         console.log(error);
@@ -61,6 +56,7 @@ function AllCustomer() {
   }, []);
 
   const handleView = async (id) => {
+    setSearchResult([]);
     try {
       const response = await AxiosInstance.get(`customers/?id=${id}`);
       const detailCustomer = response.data;
@@ -69,9 +65,8 @@ function AllCustomer() {
           ...detailCustomer.customer,
           joinDay: formatDate(detailCustomer.customer.joinDay),
         });
-        setDetailAddress(detailCustomer.address);
+        setDetailAddress(detailCustomer.address || []);
         setShowModal(true);
-        setIsEditModal(false);
       } else {
         console.log("Không tìm thấy thông tin ");
       }
@@ -80,8 +75,31 @@ function AllCustomer() {
     }
   };
 
-  const handleEdit = async (id) => {
+  const handle = (a) => {
+    console.log(a);
+  };
+
+  // show history customer
+  const handleHistory = async (id) => {
     try {
+      const response = await AxiosInstance.get(
+        `customers/getHistoryCustomer/?id=${id}`
+      );
+      console.log(response);
+      if (
+        Array.isArray(response.data.history) &&
+        response.data.history.length === 0
+      ) {
+        // Nếu history là một mảng rỗng, tức là không có đơn hàng
+        Swal.fire({
+          icon: "info",
+          title: "No orders placed",
+          text: "No orders have been placed!",
+        });
+      } else {
+        setDataHistory(response.data.history);
+        setShowModalHistory(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -105,6 +123,12 @@ function AllCustomer() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          const response = await AxiosInstance.get(
+            `customers/deleteCustomer/?id=${id}`
+          );
+          console.log(response);
+          setData(data.filter((customer) => customer._id !== id));
+          Swal.fire("Deleted!", "Your merchant has been deleted.", "success");
         } catch (error) {
           console.error("Failed to delete customer:", error);
           Swal.fire("Error!", "Failed to delete customer.", "error");
@@ -113,23 +137,85 @@ function AllCustomer() {
     });
   };
 
+  //đóng mở modal
   const handleModalClose = () => {
     setShowModal(false);
-    setIsEditModal(false);
+    setShowModalHistory(false);
   };
+
+  // search
+  const handleSearch = async (e) => {
+    const keyword = e.target.value;
+    if (keyword) {
+      try {
+        const response = await AxiosInstance.post("/customers/findCustomer", {
+          keyword,
+        });
+        if (response.data.result && response.data.customers.length > 0) {
+          setSearchResult(response.data.customers);
+          setTippyVisible(true);
+        } else {
+          setSearchResult([]);
+          setTippyVisible(false);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setSearchResult([]);
+        setTippyVisible(false);
+      }
+    } else {
+      setSearchResult([]);
+      setTippyVisible(false);
+    }
+  };
+
+  // nhấn ra ngoài thanh search
+  const handleClickOutSide = () => {
+    setSearchResult([]);
+  };
+
   return (
     <div className={cx("contaienr")}>
       <div className={cx("content")}>
-        <p className={cx("title")}>All Shipper</p>
-        <div className={cx("inputSearch")}>
-          <FontAwesomeIcon
-            icon={faMagnifyingGlass}
-            className={cx("icon-search")}
-          />
-          <input
-            className={cx("input")}
-            placeholder="Trương Minh Thi, Đoàn Thanh Hòa"
-          />
+        <p className={cx("title")}>All Customers</p>
+        <div>
+          <Tippy
+            animation="fade"
+            interactive
+            placement="bottom"
+            onClickOutside={handleClickOutSide}
+            visible={tippyVisible}
+            render={(attrs) => (
+              <div tabIndex="-1" {...attrs}>
+                {searchResult.length > 0 && (
+                  <div className={cx("wrapper")}>
+                    <h4 className={cx("search-title")}>Accounts</h4>
+                    {searchResult.length > 0
+                      ? searchResult.map((customer) => (
+                          <AccountItem
+                            key={customer._id}
+                            customer={customer}
+                            handleView={handleView}
+                          />
+                        ))
+                      : setTippyVisible(false)}
+                  </div>
+                )}
+              </div>
+            )}
+          >
+            <div className={cx("inputSearch")}>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className={cx("icon-search")}
+              />
+              <input
+                className={cx("input")}
+                placeholder="Search by name"
+                onChange={handleSearch}
+              />
+            </div>
+          </Tippy>
         </div>
         <div className={cx("line-background")} />
         <div className={cx("box-container")}>
@@ -167,10 +253,10 @@ function AllCustomer() {
                       className={cx("action-button")}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEdit(item._id);
+                        handleHistory(item._id);
                       }}
                     >
-                      <FontAwesomeIcon icon={faEdit} />
+                      <FontAwesomeIcon icon={faClockRotateLeft} />
                     </button>
                     <button
                       className={cx("action-button")}
@@ -196,12 +282,14 @@ function AllCustomer() {
             </tbody>
           </table>
         </div>
+
+        {/*Modal show customer*/}
         <Modal
           isOpen={showModal}
           onRequestClose={handleModalClose}
           contentLabel="Customer"
-          className={cx("modal")}
-        >
+          className={cx("modal-wrapper")}
+        > 
           {detailCustomer && (
             <div className={cx("modal-container")}>
               <div className={cx("logo-merchant")}>
@@ -217,28 +305,9 @@ function AllCustomer() {
                 <div className={cx("container-content")}>
                   <p className={cx("name-merchant")}>
                     {detailCustomer.fullName}
-                    {/* <input
-                      className={cx("name-merchant")}
-                      name="name"
-                      defaultValue={name}
-                      onChange={(e) => setName(e.target.value)}
-                    /> */}
                   </p>
                   <div className={cx("line")}></div>
-                  <p className={cx("type-merchant")}>
-                    {detailCustomer.sex}
-                    {/* <select
-                      className={cx("type-merchant")}
-                      value={typeId}
-                      onChange={(e) => setTypeId(e.target.value)}
-                    >
-                      {types.map((type) => (
-                        <option key={type._id} value={type._id}>
-                          {type.name}
-                        </option>
-                      ))}
-                    </select> */}
-                  </p>
+                  <p className={cx("type-merchant")}>{detailCustomer.sex}</p>
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant")}>Address:</p>
@@ -253,81 +322,86 @@ function AllCustomer() {
                       ].join(", ") || "N/A"}
                     </p>
                   ))}
-                  {/* <input
-                      className={cx("content-merchant")}
-                      name="address"
-                      defaultValue={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    /> */}
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant")}>Email:</p>
                   <p className={cx("content-merchant")}>
-                    {" "}
                     {detailCustomer.email}
-                    {/* <input
-                      className={cx("content-merchant")}
-                      name="email"
-                      defaultValue={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    /> */}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant")}>Birth Day:</p>
                   <p className={cx("content-merchant")}>
                     {detailCustomer.birthDay}
-                    {/* <input
-                      className={cx("content-merchant")}
-                      name="fullName"
-                      defaultValue={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                    /> */}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant")}>Phone Number:</p>
                   <p className={cx("content-merchant")}>
                     {detailCustomer.phoneNumber}
-                    {/* <input
-                      className={cx("content-merchant")}
-                      name="phoneNumber"
-                      defaultValue={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                    /> */}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant")}>Join Day:</p>
                   <p className={cx("content-merchant")}>
                     {detailCustomer.joinDay}
-                    {/* <input
-                      className={cx("content-merchant")}
-                      name="openTime"
-                      defaultValue={openTime}
-                      onChange={(e) => setOpenTime(e.target.value)}
-                    /> */}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant")}>Rating:</p>
                   <p className={cx("content-merchant")}>
                     {detailCustomer.rating}
-                    {/* <input
-                      className={cx("content-merchant")}
-                      name="closeTime"
-                      defaultValue={closeTime}
-                      onChange={(e) => setCloseTime(e.target.value)}
-                    /> */}
                   </p>
                 </div>
-
                 <div className={cx("btn-delete")}>
-                  <Button delete_btn>Deleted</Button>
+                  <Button
+                    approve_btn
+                    onClick={() => {
+                      handleHistory(detailCustomer._id);
+                    }}
+                  >
+                    History
+                  </Button>
                 </div>
               </div>
             </div>
           )}
+        </Modal>
+
+        {/*Modal show history customer */}
+        <Modal
+          isOpen={showModalHistory}
+          onRequestClose={handleModalClose}
+          contentLabel="HistoryCustomer"
+          className={cx("modal-history")}
+        >
+          <div className={cx("box-history")}>
+            <h2 className={cx("title-history")}>History Customer</h2>
+            <table className={cx("table")}>
+              <thead className={cx("table-row-history")}>
+                <tr>
+                  <th>#</th>
+                  <th>Name Merchant</th>
+                  <th>Name Shipper </th>
+                  <th>Delivery Address</th>
+                  <th>Time Book</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+              <tbody className={cx("table-row-history")}>
+                {dataHistory.map((item, index) => (
+                  <tr key={index} onClick={() => handleView(item._id)}>
+                    <td>{index + 1}</td>
+                    <td>{item.merchantID ? item.merchantID.name : "N/A"}</td>
+                    <td>{item.shipperID ? item.shipperID.fullName : "N/A"}</td>
+                    <td>{item ? item.deliveryAddress : "N/A"}</td>
+                    <td>{item ? item.timeBook : "N/A"}</td>
+                    <td>{item ? item.totalPaid + " đ" : "N/A"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Modal>
       </div>
     </div>
