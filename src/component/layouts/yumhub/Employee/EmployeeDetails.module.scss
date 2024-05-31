@@ -20,6 +20,7 @@
     flex: 1;
     text-align: center;
     padding: 20px;
+    min-width: 400px;
   }
   
   .avatar {
@@ -27,7 +28,6 @@
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 15px;
   }
   
   .name {
@@ -50,7 +50,7 @@
   .info-container {
     flex: 2;
     padding: 20px;
-    padding-left: 120px;
+    padding-left: 80px;
     font-size: larger;
   }
   
@@ -70,4 +70,7 @@
   .info{
     margin-top: 50px;
   }
-  
+  .id{
+    font-size: xx-small;
+    margin-bottom: 15px;
+  }

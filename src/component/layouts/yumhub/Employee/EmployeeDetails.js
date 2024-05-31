@@ -26,6 +26,9 @@ function EmployeeDetails() {
             alt={employee.fullName}
             className={cx("avatar")}
           />
+          <p className={cx("id")}>
+            <i className="fas fa-phone-alt"></i>id: {employee._id}
+          </p>
           <h2 className={cx("name")}>{employee.fullName}</h2>
           <p className={cx("contact")}>
             <i className="fas fa-phone-alt"></i> {employee.phoneNumber}
