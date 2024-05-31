@@ -62,15 +62,11 @@
   .gender-dob{
     display: flex;
     gap: 20px; /* Khoảng cách giữa gender và dob */
-    width: 200px;
-    background-color: lightgrey;
-    
   }
   .gender{
     display: flex;
-    // justify-content: flex-end;
+    width: 60px;
     font-size: 16px;
-    
 }
   .dob {
     display: flex;

@@ -1,0 +1,73 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e0f7fa;
+  }
+  
+  .card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+  }
+  
+  .profile {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  .name {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .role {
+    color: #888;
+    margin-bottom: 20px;
+  }
+  
+  .contact {
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #555;
+  }
+  
+  .info-container {
+    flex: 2;
+    padding: 20px;
+    padding-left: 120px;
+    font-size: larger;
+  }
+  
+  .info-container h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+  
+  .info-container p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .info-container p strong {
+    font-weight: bold;
+  }
+  .info{
+    margin-top: 50px;
+  }
+  
