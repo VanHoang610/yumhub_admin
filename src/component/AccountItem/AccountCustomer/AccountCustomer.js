@@ -1,11 +1,9 @@
 import classNames from "classnames/bind";
 import styles from "./AccountItem.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 const cx = classNames.bind(styles);
 
-const AccountItem = ({ customer, handleView }) => {
+const AccountItemCustomer = ({ customer, handleView }) => {
   return (
     <div className={cx("wrapper")} onClick={() => handleView(customer._id)}>
       <img
@@ -23,4 +21,4 @@ const AccountItem = ({ customer, handleView }) => {
   );
 };
 
-export default AccountItem;
+export default AccountItemCustomer;

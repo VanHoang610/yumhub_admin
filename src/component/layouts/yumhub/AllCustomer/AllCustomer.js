@@ -7,29 +7,23 @@ import AxiosInstance from "../../../../utils/AxiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClockRotateLeft,
-  faEdit,
   faEye,
   faMagnifyingGlass,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames/bind";
 import styles from "./AllCustomer.module.scss";
-import logo from "../../../../assets/images/logoYumhub.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import AccountItem from "../../../AccountItem";
+import AccountItem from "../../../AccountItem/AccountCustomer/AccountCustomer";
 const cx = classNames.bind(styles);
 
 function AllCustomer() {
-  // lấy ra ngày tháng năm trong api
-  const formatDate = (isoDateString) => {
-    const date = new Date(isoDateString);
-    const day = date.getUTCDate();
-    const month = date.getUTCMonth() + 1; // getUTCMonth() trả về tháng từ 0 đến 11
-    const year = date.getUTCFullYear();
-    return `${day}-${month}-${year}`;
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
   };
 
   const [searchResult, setSearchResult] = useState([]);
@@ -38,8 +32,8 @@ function AllCustomer() {
   const [detailAddress, setDetailAddress] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showModalHistory, setShowModalHistory] = useState(false);
-  const [data, setData] = useState([]);
   const [dataHistory, setDataHistory] = useState([]);
+  const [data, setData] = useState([]);
 
   //lấy danh sách customer
   useEffect(() => {
@@ -75,10 +69,6 @@ function AllCustomer() {
     }
   };
 
-  const handle = (a) => {
-    console.log(a);
-  };
-
   // show history customer
   const handleHistory = async (id) => {
     try {
@@ -97,8 +87,14 @@ function AllCustomer() {
           text: "No orders have been placed!",
         });
       } else {
-        setDataHistory(response.data.history);
-        setShowModalHistory(true);
+        if (Array.isArray(response.data.history)) {
+          const updatedHistory = response.data.history.map((item) => ({
+            ...item,
+            timeBook: formatDate(item.timeBook),
+          }));
+          setDataHistory(updatedHistory);
+          setShowModalHistory(true);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -186,9 +182,9 @@ function AllCustomer() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs}>
+              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
                 {searchResult.length > 0 && (
-                  <div className={cx("wrapper")}>
+                  <ProperWrapper>
                     <h4 className={cx("search-title")}>Accounts</h4>
                     {searchResult.length > 0
                       ? searchResult.map((customer) => (
@@ -199,7 +195,7 @@ function AllCustomer() {
                           />
                         ))
                       : setTippyVisible(false)}
-                  </div>
+                  </ProperWrapper>
                 )}
               </div>
             )}
@@ -289,7 +285,7 @@ function AllCustomer() {
           onRequestClose={handleModalClose}
           contentLabel="Customer"
           className={cx("modal-wrapper")}
-        > 
+        >
           {detailCustomer && (
             <div className={cx("modal-container")}>
               <div className={cx("logo-merchant")}>

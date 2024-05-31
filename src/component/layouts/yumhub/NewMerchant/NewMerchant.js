@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
+import Tippy from "@tippyjs/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 import Button from "../../../buttons/index";
+import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
 import {
   faClock,
   faMagnifyingGlass,
   faMap,
 } from "@fortawesome/free-solid-svg-icons";
-import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./NewMerchant.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
@@ -17,9 +20,11 @@ import ellipse from "../../../../assets/images/ellipse.png";
 
 const cx = classNames.bind(styles);
 function NewMerchant() {
+  
   const [data, setData] = useState([]);
   const [selectMerchantById, setSelectMerchantId] = useState({});
-  const [isEditModal, setIsEditModal] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
+  const [tippyVisible, setTippyVisible] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
@@ -34,12 +39,12 @@ function NewMerchant() {
 
   const selectDetail = async (id) => {
     try {
+      setSearchResult([]);
       const response = await AxiosInstance.get(`merchants/?id=${id}`);
       const { detailMerchant } = response.data;
       if (detailMerchant) {
         setSelectMerchantId(detailMerchant);
         setShowModal(true);
-        setIsEditModal(false);
       } else {
         console.log("Không tìm thấy thông tin ");
       }
@@ -85,30 +90,94 @@ function NewMerchant() {
     fetchData();
   }, []);
 
+  // nhấn ra ngoài thanh search
+  const handleClickOutSide = () => {
+    setSearchResult([]);
+  };
+
+  // search
+  const handleSearch = async (e) => {
+    const keyword = e.target.value;
+    if (keyword) {
+      try {
+        const response = await AxiosInstance.post("/merchants/findApproveMerchant", {
+          keyword,
+        });
+        console.log(response);
+        if (response.data.result && response.data.merchants.length > 0) {
+          setSearchResult(response.data.merchants);
+          setTippyVisible(true);
+        } else {
+          setSearchResult([]);
+          setTippyVisible(false);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setSearchResult([]);
+        setTippyVisible(false);
+      }
+    } else {
+      setSearchResult([]);
+      setTippyVisible(false);
+    }
+  };
+
+
   return (
     <div className={cx("contaienr")}>
       <div className={cx("content")}>
         <p className={cx("title")}>Stores Awaiting Approval</p>
-        <div className={cx("inputSearch")}>
-          <FontAwesomeIcon
-            icon={faMagnifyingGlass}
-            className={cx("icon-search")}
-          />
-          <input className={cx("input")} placeholder="Đồ ăn chay" />
+        <div>
+          <Tippy
+            animation="fade"
+            interactive
+            placement="bottom"
+            onClickOutside={handleClickOutSide}
+            visible={tippyVisible}
+            render={(attrs) => (
+              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+                {searchResult.length > 0 && (
+                  <ProperWrapper>
+                    <h4 className={cx("search-title")}>Accounts</h4>
+                    {searchResult.length > 0
+                      ? searchResult.map((merchant) => (
+                          <AccountItemMerchant
+                            key={merchant._id}
+                            merchant={merchant}
+                            handleView={selectDetail}
+                          />
+                        ))
+                      : setTippyVisible(false)}
+                  </ProperWrapper>
+                )}
+              </div>
+            )}
+          >
+            <div className={cx("inputSearch")}>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className={cx("icon-search")}
+              />
+              <input
+                className={cx("input")}
+                placeholder="Search by name"
+                onChange={handleSearch}
+              />
+            </div>
+          </Tippy>
         </div>
         <div className={cx("line-background")} />
         <div className={cx("grid-container")}>
           {data.map((item) => (
-            <div
-              className={cx("box")}
-              key={item._id}
-            >
+            <div className={cx("box")} key={item._id}>
               <div className={cx("titleBox")}>
                 <img src={logo} alt="logoMerchant" className={cx("logo")} />
                 <div className={cx("line")} />
                 <div className={cx("textTitle")}>
                   <p className={cx("nameMerchant")}>{item.name}</p>
-                  <p className={cx("type")}>{item.type ? item.type.name: "N/A"}</p>
+                  <p className={cx("type")}>
+                    {item.type ? item.type.name : "N/A"}
+                  </p>
                 </div>
               </div>
               <div className={cx("line-bottom")} />
