@@ -19,6 +19,7 @@ import FoodRequest from "../component/layouts/yumhub/FoodRequest/FoodRequest"
 import DeletedShipper from "../component/layouts/yumhub/DeletedShipper/DeletedShipper"
 import Employee from "../component/layouts/yumhub/Employee/Employee"
 import EmployeeDetails from "../component/layouts/yumhub/Employee/EmployeeDetails"
+import AddAdmin from "../component/layouts/yumhub/Employee/AddAdmin"
 
 
 // public routes
@@ -45,7 +46,7 @@ const privateRoutes = [
     { path: '/deleted-shippers', component: DeletedShipper, layout: DefaultLayout },
     { path: '/employee', component: Employee, layout: DefaultLayout },
     { path: '/employee/:id', component: EmployeeDetails, layout: DefaultLayout },
-    
+    { path: '/add-admin', component: AddAdmin, layout: DefaultLayout },
 ]
 
 export { publicRoutes, privateRoutes } 
