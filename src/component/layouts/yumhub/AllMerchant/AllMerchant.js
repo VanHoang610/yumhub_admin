@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
-import Tippy from '@tippyjs/react/headless';
+import Tippy from "@tippyjs/react/headless";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import AxiosInstance from "../../../../utils/AxiosInstance";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faEye,
@@ -17,15 +17,27 @@ import logo from "../../../../assets/images/logoYumhub.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
+import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
 
 const cx = classNames.bind(styles);
 
 function AllMerchant() {
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
+  };
+
   const [data, setData] = useState([{}]);
   const [selectMerchantById, setSelectMerchantId] = useState({});
   const [isEditModal, setIsEditModal] = useState(false);
 
+  const [searchResult, setSearchResult] = useState([]);
+  const [tippyVisible, setTippyVisible] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
+
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [closeTime, setCloseTime] = useState("");
@@ -37,7 +49,10 @@ function AllMerchant() {
   const [document, setDocument] = useState("");
   const [typeId, setTypeId] = useState("");
   const [types, setTypes] = useState([]);
+  const [showModalHistory, setShowModalHistory] = useState(false);
+  const [dataHistory, setDataHistory] = useState([]);
 
+  //gọi api allMerchant
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,8 +72,10 @@ function AllMerchant() {
     fetchData();
   }, []);
 
+  //load data lên màn hình
   useEffect(() => {
     if (selectMerchantById) {
+      setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
@@ -129,9 +146,11 @@ function AllMerchant() {
   const handleModalClose = () => {
     setShowModal(false);
     setIsEditModal(false);
+    setShowModalHistory(false);
   };
 
   const handleView = async (id) => {
+    setSearchResult([]);
     try {
       const response = await AxiosInstance.get(`merchants/?id=${id}`);
       const { detailMerchant } = response.data;
@@ -181,25 +200,112 @@ function AllMerchant() {
     }
   };
 
+  // search
+  const handleSearch = async (e) => {
+    const keyword = e.target.value;
+    if (keyword) {
+      try {
+        const response = await AxiosInstance.post("/merchants/findMerchant", {
+          keyword,
+        });
+        console.log(response);
+        if (response.data.result && response.data.merchants.length > 0) {
+          setSearchResult(response.data.merchants);
+          setTippyVisible(true);
+        } else {
+          setSearchResult([]);
+          setTippyVisible(false);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setSearchResult([]);
+        setTippyVisible(false);
+      }
+    } else {
+      setSearchResult([]);
+      setTippyVisible(false);
+    }
+  };
+
+  // nhấn ra ngoài thanh search
+  const handleClickOutSide = () => {
+    setSearchResult([]);
+  };
+
+  // show history customer
+  const handleHistory = async (id) => {
+    try {
+      const response = await AxiosInstance.get(
+        `merchants/getHistoryMerchant/?id=${id}`
+      );
+      if (
+        Array.isArray(response.data.history) &&
+        response.data.history.length === 0
+      ) {
+        // Nếu history là một mảng rỗng, tức là không có đơn hàng
+        Swal.fire({
+          icon: "info",
+          title: "No orders placed",
+          text: "No orders have been placed!",
+        });
+      } else {
+        if (Array.isArray(response.data.history)) {
+          const updatedHistory = response.data.history.map((item) => ({
+            ...item,
+            timeBook: formatDate(item.timeBook),
+          }));
+          setDataHistory(updatedHistory);
+          setShowModalHistory(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className={cx("contaienr")}>
       <div className={cx("content")}>
         <p className={cx("title")}>All Merchant</p>
-        <Tippy
-          render={(attrs) => (
-            <div className="box" tabIndex="-1" {...attrs}>
-              My tippy box
+        <div>
+          <Tippy
+            animation="fade"
+            interactive
+            placement="bottom"
+            onClickOutside={handleClickOutSide}
+            visible={tippyVisible}
+            render={(attrs) => (
+              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+                {searchResult.length > 0 && (
+                  <ProperWrapper>
+                    <h4 className={cx("search-title")}>Accounts</h4>
+                    {searchResult.length > 0
+                      ? searchResult.map((merchant) => (
+                          <AccountItemMerchant
+                            key={merchant._id}
+                            merchant={merchant}
+                            handleView={handleView}
+                          />
+                        ))
+                      : setTippyVisible(false)}
+                  </ProperWrapper>
+                )}
+              </div>
+            )}
+          >
+            <div className={cx("inputSearch")}>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className={cx("icon-search")}
+              />
+              <input
+                className={cx("input")}
+                placeholder="Search by name"
+                onChange={handleSearch}
+              />
             </div>
-          )}
-        >
-          <div className={cx("inputSearch")}>
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className={cx("icon-search")}
-            />
-            <input className={cx("input")} placeholder="Đồ ăn chay" />
-          </div>
-        </Tippy>
+          </Tippy>
+        </div>
         <div className={cx("line-background")} />
         <div className={cx("box-container")}>
           <table className={cx("table")}>
@@ -425,12 +531,50 @@ function AllMerchant() {
                       Update
                     </Button>
                   ) : (
-                    <Button delete_btn>Deleted</Button>
+                    <Button approve_btn onClick={() => handleHistory(id)}>
+                      History
+                    </Button>
                   )}
                 </div>
               </div>
             </div>
           )}
+        </Modal>
+
+        {/*Modal show history merchants */}
+        <Modal
+          isOpen={showModalHistory}
+          onRequestClose={handleModalClose}
+          contentLabel="HistoryMerchant"
+          className={cx("modal-history")}
+        >
+          <div className={cx("box-history")}>
+            <h2 className={cx("title-history")}>History Merchant</h2>
+            <table className={cx("table")}>
+              <thead className={cx("table-row-history")}>
+                <tr>
+                  <th>#</th>
+                  <th>Name Merchant</th>
+                  <th>Name Shipper </th>
+                  <th>Delivery Address</th>
+                  <th>Time Book</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+              <tbody className={cx("table-row-history")}>
+                {dataHistory.map((item, index) => (
+                  <tr key={index} onClick={() => handleView(item._id)}>
+                    <td>{index + 1}</td>
+                    <td>{item.merchantID ? item.merchantID.name : "N/A"}</td>
+                    <td>{item.shipperID ? item.shipperID.fullName : "N/A"}</td>
+                    <td>{item ? item.deliveryAddress : "N/A"}</td>
+                    <td>{item ? item.timeBook : "N/A"}</td>
+                    <td>{item ? item.priceFood + " đ" : "N/A"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Modal>
       </div>
     </div>
