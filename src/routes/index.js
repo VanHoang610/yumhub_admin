@@ -15,6 +15,10 @@ import AddShipper from "../component/layouts/yumhub/AddShipper/AddShipper"
 import Infomation from "../component/layouts/yumhub/Infomation/Info"
 import ChangePassword from "../component/layouts/yumhub/ChangePassword/ChangePassword"
 import AllCustomer from "../component/layouts/yumhub/AllCustomer/AllCustomer"
+import FoodRequest from "../component/layouts/yumhub/FoodRequest/FoodRequest"
+import DeletedShipper from "../component/layouts/yumhub/DeletedShipper/DeletedShipper"
+import Employee from "../component/layouts/yumhub/Employee/Employee"
+import EmployeeDetails from "../component/layouts/yumhub/Employee/EmployeeDetails"
 
 
 // public routes
@@ -37,7 +41,11 @@ const privateRoutes = [
     { path: '/infomation', component: Infomation, layout: DefaultLayout  },
     { path: '/change-password', component: ChangePassword, layout: DefaultLayout },
     { path: '/all-customers', component: AllCustomer, layout: DefaultLayout },
-
+    { path: '/food-requests', component: FoodRequest, layout: DefaultLayout },
+    { path: '/deleted-shippers', component: DeletedShipper, layout: DefaultLayout },
+    { path: '/employee', component: Employee, layout: DefaultLayout },
+    { path: '/employee/:id', component: EmployeeDetails, layout: DefaultLayout },
+    
 ]
 
 export { publicRoutes, privateRoutes } 

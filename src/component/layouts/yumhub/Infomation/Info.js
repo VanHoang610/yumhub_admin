@@ -23,7 +23,7 @@ function Infomation() {
           <img src={user ? user.avatar : ""} alt="Avatar" className={cx("avatar")} />
         </div>
         <div className={cx("wrapper-name")}>
-          <p className={cx("name-info")}>{user ? user.fullName : ""},</p>
+          <p className={cx("name-info")}>{user ? user.fullName : ""}</p>
           <p className={cx("age-info")}>{user ? user.age : ""}</p>
         </div>
         <div>
