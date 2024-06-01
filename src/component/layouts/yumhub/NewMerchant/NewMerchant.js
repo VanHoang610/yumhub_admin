@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Tippy from "@tippyjs/react";
+import Swal from "sweetalert2";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
@@ -20,13 +21,13 @@ import ellipse from "../../../../assets/images/ellipse.png";
 
 const cx = classNames.bind(styles);
 function NewMerchant() {
-  
   const [data, setData] = useState([]);
   const [selectMerchantById, setSelectMerchantId] = useState({});
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [closeTime, setCloseTime] = useState("");
@@ -56,6 +57,7 @@ function NewMerchant() {
   //load data hiển thị lên modal
   useEffect(() => {
     if (selectMerchantById) {
+      setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
@@ -100,9 +102,12 @@ function NewMerchant() {
     const keyword = e.target.value;
     if (keyword) {
       try {
-        const response = await AxiosInstance.post("/merchants/findApproveMerchant", {
-          keyword,
-        });
+        const response = await AxiosInstance.post(
+          "/merchants/findApproveMerchant",
+          {
+            keyword,
+          }
+        );
         console.log(response);
         if (response.data.result && response.data.merchants.length > 0) {
           setSearchResult(response.data.merchants);
@@ -122,6 +127,34 @@ function NewMerchant() {
     }
   };
 
+  // xác nhận merchant
+  const handleApproval = async (id) => {
+    try {
+      const response = await AxiosInstance.patch(
+        `merchants/updateMerchant?id=${id}`,
+        { status: 3 }
+      );
+      if (response.data.result === false) {
+        setShowModal(false);
+        Swal.fire({
+          icon: "info",
+          title: "Approval Failed",
+          text: "There was an error updating the merchant!",
+        });
+      } else {
+        setShowModal(false);
+        Swal.fire({
+          icon: "success",
+          title: "Approval Successful",
+          text: "The merchant has been successfully updated!",
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={cx("contaienr")}>
@@ -263,7 +296,9 @@ function NewMerchant() {
                 </p>
               </div>
               <div className={cx("btn-delete")}>
-                <Button approve_btn>Approval</Button>
+                <Button approve_btn onClick={() => handleApproval(id)}>
+                  Approval
+                </Button>
               </div>
             </div>
           </div>
