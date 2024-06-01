@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
@@ -7,7 +8,8 @@
   width: 1100px;
   height: 100%;
   max-height: 80vh;
-  background-color: rgb(249, 244, 244);
+  border-radius: 8px;
+  background-color: #fff;
   overflow: auto;
   scrollbar-width: none;
 
@@ -165,25 +167,49 @@
   height: 270px;
 }
 
+// container
+.content-food {
+  width: 50%;
+  height: 100%;
+}
+.image-food {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .food-request {
+        width: 60%;
+        height: 80%;
+    }
+}
+
+.line-content-food {
+    display: flex;
+    width: 2px;
+    height: 80px;
+    justify-content: flex-end;
+    margin-top: 35px;
+    background-color: #f0f5fa;
+}
+
 .line-background {
   display: flex;
   height: 0.5px;
   background-color: #939292;
   margin-top: 35px;
 }
-
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 cột */
+  grid-template-columns: repeat(3, 1fr); /* 4 cột */
   column-gap: 40px; /* Khoảng cách giữa các cột */
-  row-gap: 24px; /* Khoảng cách giữa các hàng */
+  row-gap: 44px; /* Khoảng cách giữa các hàng */
   margin-top: 35px;
+  
 }
-
 .btn-detail {
   display: flex;
   justify-content: flex-end;
-  margin-top: 30px;
+  margin-top: 6px;
   margin-right: 9px;
 }
 
@@ -210,6 +236,7 @@
 }
 
 .contentBox {
+  display: flex;
   margin-left: 15px;
   margin-top: 8.5px;
 }
@@ -265,8 +292,8 @@
 }
 
 .box {
-  width: 227px;
-  height: 216px;
+  width: 257px;
+  height: 230px;
   border-radius: 6px;
   background-color: #fff;
 }

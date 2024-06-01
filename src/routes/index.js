@@ -22,6 +22,7 @@ import EmployeeDetails from "../component/layouts/yumhub/Employee/EmployeeDetail
 import AddAdmin from "../component/layouts/yumhub/Employee/AddAdmin"
 
 
+
 // public routes
 const publicRoutes = [
     { path: "/", component: Login, layout: null },
@@ -42,11 +43,13 @@ const privateRoutes = [
     { path: '/infomation', component: Infomation, layout: DefaultLayout  },
     { path: '/change-password', component: ChangePassword, layout: DefaultLayout },
     { path: '/all-customers', component: AllCustomer, layout: DefaultLayout },
-    { path: '/food-requests', component: FoodRequest, layout: DefaultLayout },
+    { path: '/food-request', component: FoodRequest, layout: DefaultLayout },
+
     { path: '/deleted-shippers', component: DeletedShipper, layout: DefaultLayout },
     { path: '/employee', component: Employee, layout: DefaultLayout },
     { path: '/employee/:id', component: EmployeeDetails, layout: DefaultLayout },
     { path: '/add-admin', component: AddAdmin, layout: DefaultLayout },
+
 ]
 
 export { publicRoutes, privateRoutes } 
