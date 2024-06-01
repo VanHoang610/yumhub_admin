@@ -1,16 +1,30 @@
 /* src/components/AllShipper.module.scss */
 .container {
-    padding: 20px;
-  }
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  min-height: 700px;
+  max-height: 80vh; // Set max height to control overall height
+  overflow-y: auto; // Enable vertical scrolling
+}
   
-  .title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
+.title {
+  font-size: 26px;
+  font-weight: bolder;
+  margin-bottom: 20px;
+  color: #004974;
+}
   
   .table-container {
     overflow-x: auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-height: 700px;
+    max-height: 100%; // Ensure the table container does not overflow its parent
+    overflow-y: auto; // Enable vertical scrolling within the table container
   }
   
   .table {
@@ -31,13 +45,14 @@
   }
   
   .info {
-    margin-left: 10px;
     display: flex;
     align-items: center; 
     flex-direction: row; 
+    gap: 10px;
   }
   .sub-info{
-    margin-left: 20px ;
+    margin-left: 10px ;
+    
   }
   .name{
     font-size: 18px;
@@ -47,11 +62,17 @@
   .gender-dob{
     display: flex;
     gap: 20px; /* Khoảng cách giữa gender và dob */
-    width: 100px;
   }
-  .gender, .dob {
+  .gender{
+    display: flex;
+    width: 60px;
     font-size: 16px;
+}
+  .dob {
+    display: flex;
     justify-content: flex-end;
+    font-size: 16px;
+    
 }
 
   .avatar {

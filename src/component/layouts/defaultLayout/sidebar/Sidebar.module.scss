@@ -1,11 +1,17 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .sidebar {
-    width: 250px;
+    width: 280px;
     background-color: #68D2E8;
     color: #fff;
     display: flex;
     flex-direction: column;
     padding-top: 21px;
     padding: 28px;
+    height: 740px;
     
     .nav {
       display: flex;
@@ -27,7 +33,7 @@
           background: #FDEE73;;
           color: #004974;
           margin-left: -14px;
-          width: 247px;
+          width: 250px;
           transform: scale(1.1);
           .text{
             margin-left: 14px;
@@ -44,7 +50,7 @@
           font-weight: bold;
           margin-top: 4px;
           margin-left: -14px;
-          width: 247px;
+          width: 250px;
           transform: scale(1.1);
           .text{
             margin-left: 20px;

@@ -57,7 +57,7 @@ function AddShipper() {
           <div key={shipper._id} className={cx("card")}>
             <div className={cx("card-header")}>
               <img
-                src={"/default-avatar.png"}
+                src={"https://th.bing.com/th/id/OIP.bbvSNRBEMEPuujn-OZ-aVgHaHa?rs=1&pid=ImgDetMain"}
                 alt={shipper.fullName}
                 className={cx("default-shipper")}
               />
