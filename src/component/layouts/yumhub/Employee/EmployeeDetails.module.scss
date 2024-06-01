@@ -5,12 +5,17 @@
     height: 100vh;
     background-color: #e0f7fa;
   }
-  
+  .profile-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .card {
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-direction: column;
     padding: 20px;
     max-width: 800px;
     width: 100%;
@@ -74,3 +79,29 @@
     font-size: xx-small;
     margin-bottom: 15px;
   }
+  .btn{
+    display: flex;
+    justify-content: space-between;
+    margin-inline-start: 180px;
+    margin-inline-end: 180px;
+  }
+  .btn-edit,
+  .btn-delete {
+    width: 100px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .divider {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+    flex-direction: row;
+    align-items: center;
+    .label{
+      margin-right: 10px;
+    }
+  }
+  
