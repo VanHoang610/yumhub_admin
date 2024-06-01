@@ -11,18 +11,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../../buttons";
 import classNames from "classnames/bind";
-import styles from "./FoodRequet.module.scss";
+import styles from "./FoodRequest.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import Tippy from "@tippyjs/react";
-import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import AccountItemFood from "../../../AccountItem/AccountFood/AccountFood";
 
 const cx = classNames.bind(styles);
 
-function FoodRequet() {
+function FoodRequest() {
   const [tippyVisible, setTippyVisible] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -31,12 +30,10 @@ function FoodRequet() {
   const [detailFood, setDetailFood] = useState({});
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
-  const [type, setType] = useState("");
   const [address, setAddress] = useState("");
   const [imageBackground, setImageBackground] = useState("");
   const [nameFood, setNameFood] = useState("");
   const [priceFood, setPriceFood] = useState("");
-  const [typeFood, setTypeFood] = useState("");
   const [imageFood, setImageFood] = useState("");
 
   //load data
@@ -290,4 +287,4 @@ function FoodRequet() {
   );
 }
 
-export default FoodRequet;
+export default FoodRequest;

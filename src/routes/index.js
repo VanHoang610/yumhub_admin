@@ -15,7 +15,7 @@ import AddShipper from "../component/layouts/yumhub/AddShipper/AddShipper"
 import Infomation from "../component/layouts/yumhub/Infomation/Info"
 import ChangePassword from "../component/layouts/yumhub/ChangePassword/ChangePassword"
 import AllCustomer from "../component/layouts/yumhub/AllCustomer/AllCustomer"
-import FoodRequet from "../component/layouts/yumhub/FoodRequet/FoodRequet"
+import FoodRequest from "../component/layouts/yumhub/FoodRequest/FoodRequest"
 
 
 // public routes
@@ -38,7 +38,7 @@ const privateRoutes = [
     { path: '/infomation', component: Infomation, layout: DefaultLayout  },
     { path: '/change-password', component: ChangePassword, layout: DefaultLayout },
     { path: '/all-customers', component: AllCustomer, layout: DefaultLayout },
-    { path: '/food-request', component: FoodRequet, layout: DefaultLayout },
+    { path: '/food-request', component: FoodRequest, layout: DefaultLayout },
 
 ]
 
