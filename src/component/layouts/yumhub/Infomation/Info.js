@@ -31,7 +31,7 @@ function Infomation() {
         </div>
         <div className={cx("wrapper-phone")}>
           <FontAwesomeIcon icon={faPhone} className={cx("icon-phone")} />
-          <p className={cx("text-phone")}>SDT : 0776616818</p>
+          <p className={cx("text-phone")}>{user.phoneNumber}</p>
         </div>
         <div className={cx("wrapper-email")}>
           <FontAwesomeIcon icon={faEnvelope} className={cx("icon-email")} />
