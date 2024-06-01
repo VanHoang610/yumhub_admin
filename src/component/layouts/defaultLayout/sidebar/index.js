@@ -70,7 +70,7 @@ function Sidebar() {
           <span className={cx("text")}>All Merchants</span>
         </NavLink>
         <NavLink
-          to="/food-requests"
+          to="/food-request"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faUtensils} className={cx("icon")} />
