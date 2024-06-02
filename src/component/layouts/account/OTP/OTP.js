@@ -7,7 +7,6 @@ import styles from "./OTP.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import Button from "../../../buttons";
 import AxiosInstance from "../../../../utils/AxiosInstance";
-import e from "cors";
 
 const cx = classNames.bind(styles);
 
