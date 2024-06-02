@@ -12,9 +12,15 @@ const AccountItemFood = ({ food, handleView }) => {
         className={cx("avatar")}
       />
       <div className={cx("info")}>
-        <h4 className={cx("name")}>
-          <span>{food.nameFood}</span>
-        </h4>
+        <div className={cx("name-info")}>
+          <h4 className={cx("name-food")}>
+            <span>{food.nameFood}</span>
+          </h4>
+          <div className={cx("line")} />
+          <h4 className={cx("name-merchant")}>
+            <span>{food.nameMerchant}</span>
+          </h4>
+        </div>
         <span className={cx("user-name")}>{food.price}</span>
       </div>
     </div>

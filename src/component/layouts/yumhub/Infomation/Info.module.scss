@@ -1,6 +1,82 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+// modal
+.modal {
+  display: flex;
+  width: 30%;
+  height: 50%;
+  background-color: #caf1f1;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+  .modal-container {
+    flex: 1;
+  }
+
+  .title-modal {
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+
+  .input-modal {
+    display: flex;
+    width: 308px;
+    height: 48px;
+    background-color: #fbfbfb;
+    border-radius: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: center;
+    border: 2px solid #004974;
+    margin-left: 80px;
+
+    .icon-modal {
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+    }
+
+    input {
+      flex: 1;
+      margin-left: 10px;
+      margin-top: 10px;
+      border: none;
+      outline: none;
+      color: #323232;
+    }
+  }
+
+  .select-gender {
+    // background-color: #004974;
+    flex: 1;
+    margin: 0;
+    border: none;
+    outline: none;
+  }
+}
+
+.btn-update {
+  width: 115px;
+  height: 50px;
+  background-color: #004974;
+  align-items: center;
+  display: flex;
+  border-radius: 10px;
+  margin-top: 30px;
+  margin-left: 350px;
+  .text-btn {
+    width: 100%;
+    height: 100%;
+    font-size: 22px;
+    font-family: "Montserrat", sans-serif;
+  }
+}
 .info-container {
   width: 49.7%;
   height: 66.2%;
@@ -16,21 +92,22 @@
     padding-left: 48px;
   }
 
-  .text-info {
+  .text-info-container {
     color: #272727;
     font-family: "Montserrat", sans-serif;
     font-size: 35px;
     font-weight: 600;
     margin: 0;
+    margin-bottom: 35px;
   }
 
   .wrapper-birth-day {
     display: flex;
     align-items: center;
-    margin-top: 35px;
+    margin-top: 15px;
   }
 
-  .title-birth-day {
+  .title {
     color: #272727;
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
@@ -41,18 +118,13 @@
     margin-left: 5px;
   }
 
-  .text-birth-day {
-    font-weight: 300;
-    margin-left: 5px; /* Khoảng cách giữa "Gender:" và "Nam" */
-  }
-
   .wrapper-gender {
     display: flex;
     align-items: center;
     margin-top: 15px;
   }
 
-  .title-gender {
+  .title-info {
     color: #272727;
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
@@ -60,11 +132,6 @@
     margin: 0;
     display: flex;
     align-items: center;
-    margin-left: 5px;
-  }
-
-  .text-gender {
-    font-weight: 300;
     margin-left: 5px;
   }
 
@@ -79,21 +146,12 @@
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
     font-weight: 600;
-    margin: 0; 
+    margin: 0;
     display: flex;
     align-items: center;
     margin-left: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
-  
-  }
-
-  .text-address {
-    font-weight: 300;
-    margin-left: 5px; /* Khoảng cách giữa "Gender:" và "Nam" */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .wrapper-note {
@@ -103,23 +161,17 @@
     margin-left: 12px;
   }
 
-  .title-note {
-    color: #272727;
-    font-family: "Montserrat", sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0; /* Xóa margin mặc định */
-    display: flex;
-    align-items: center;
-    margin-left: 5px;
-  }
-
-  .text-note {
-    font-weight: 300;
-    margin-left: 5px; /* Khoảng cách giữa "Gender:" và "Nam" */
+  .text-info {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: #272727;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    padding-left: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

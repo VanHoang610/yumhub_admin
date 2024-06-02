@@ -134,6 +134,7 @@
     display: flex;
     align-items: center;
     margin: 0;
+    margin-top: 20px;
   }
 
   .name-merchant {
@@ -285,6 +286,7 @@
   font-family: "Poppins", sans-serif;
   font-size: 36px;
   font-weight: 600;
+  margin-bottom: 26px;
 }
 
 .inputSearch {
@@ -303,7 +305,8 @@
 }
 
 .input {
-  width: 80%;
+  margin: 0;
+  flex-grow: 1;
   color: #90a0b7;
   font-family: "Poppins", "sans-serif";
   border: none;

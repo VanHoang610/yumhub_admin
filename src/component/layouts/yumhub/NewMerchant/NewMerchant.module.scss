@@ -182,9 +182,12 @@
 
 .btn-detail {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
-  margin-right: 9px;
+  font-family: "Poppins", sans-serif;
+  width: 80px;
+  height: 24px;
+  align-items: center;
+  margin-top: 50px;
+  margin-left: 125px;
 }
 
 .textContent {
@@ -207,6 +210,7 @@
 .item {
   display: flex;
   align-items: center;
+  margin-bottom: 12px;
 }
 
 .contentBox {
@@ -232,6 +236,7 @@
 }
 
 .textTitle {
+  margin-top: 16px;
   width: 55%;
   padding-left: 18px;
   overflow: hidden;
@@ -288,6 +293,7 @@
   font-family: "Poppins", sans-serif;
   font-size: 36px;
   font-weight: 600;
+  margin-bottom: 26px;
 }
 
 .inputSearch {
@@ -295,6 +301,7 @@
   height: 60px;
   background-color: #fff;
   align-items: center;
+  justify-content: center;
 }
 
 .icon-search {
@@ -303,10 +310,12 @@
   height: 20px;
   background-color: transparent;
   padding: 20px 36px;
+  
 }
 
 .input {
-  width: 80%;
+  margin: 0;
+  flex-grow: 1;
   color: #90a0b7;
   font-family: "Poppins", "sans-serif";
   border: none;
