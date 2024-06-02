@@ -61,9 +61,6 @@ function AddAdmin() {
     setLoading(true);
     setApiError(null);
     try {
-        console.log('====================================');
-        console.log(formData);
-        console.log('====================================');
       await AxiosInstance.post("/admin/createAdmin", formData);
       navigate("/employee");
     } catch (err) {
