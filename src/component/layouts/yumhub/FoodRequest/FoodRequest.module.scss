@@ -168,6 +168,16 @@
 }
 
 // container
+
+.merchant-name-title {
+  display: flex;
+  color: #1cdf3d7d;
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  justify-content: start;
+  margin-top: 50px;
+}
 .content-food {
   width: 50%;
   height: 100%;
@@ -198,19 +208,22 @@
   background-color: #939292;
   margin-top: 35px;
 }
+
 .grid-container {
+  display: flex;
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 4 cột */
   column-gap: 40px; /* Khoảng cách giữa các cột */
   row-gap: 44px; /* Khoảng cách giữa các hàng */
   margin-top: 35px;
-  
+ margin-left: 60px;
 }
 .btn-detail {
   display: flex;
-  justify-content: flex-end;
+  width: 100%;
   margin-top: 6px;
   margin-right: 9px;
+  align-items: center;
 }
 
 .textContent {
@@ -233,6 +246,7 @@
 .item {
   display: flex;
   align-items: center;
+  margin-bottom: 5px;
 }
 
 .contentBox {
@@ -260,6 +274,7 @@
 
 .textTitle {
   width: 55%;
+  margin-top: 15px;
   padding-left: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -293,7 +308,7 @@
 
 .box {
   width: 257px;
-  height: 230px;
+  height: 240px;
   border-radius: 6px;
   background-color: #fff;
 }
@@ -315,6 +330,7 @@
   font-family: "Poppins", sans-serif;
   font-size: 36px;
   font-weight: 600;
+  margin-bottom: 26px;
 }
 
 .inputSearch {
@@ -333,7 +349,8 @@
 }
 
 .input {
-  width: 80%;
+  margin: 0;
+  flex-grow: 1;
   color: #90a0b7;
   font-family: "Poppins", "sans-serif";
   border: none;

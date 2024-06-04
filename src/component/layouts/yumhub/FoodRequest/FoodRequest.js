@@ -90,8 +90,8 @@ function FoodRequest() {
         const response = await AxiosInstance.post("/food/findApproveFood", {
           keyword,
         });
+        console.log(response.data);
         if (response.data.result && response.data.foods.length > 0) {
-          console.log(response + 115);
           setSearchResult(response.data.foods);
           setTippyVisible(true);
         } else {
@@ -137,6 +137,24 @@ function FoodRequest() {
       console.log(error);
     }
   };
+
+  // lọc ra food của từng merchant
+  const groupByMerchant = (data) => {
+    return data.reduce((acc, item) => { // acc là 1 {} rỗng
+      const merchantId = item.merchantID._id;
+
+      if (!acc[merchantId]) {
+        acc[merchantId] = {
+          merchant: item.merchantID,
+          items: [],
+        };
+      }
+      acc[merchantId].items.push(item);
+      return acc;
+    }, {});
+  };
+
+  const groupedData = groupByMerchant(data);
   return (
     <div className={cx("contaienr")}>
       <div className={cx("content")}>
@@ -182,51 +200,73 @@ function FoodRequest() {
           </Tippy>
         </div>
         <div className={cx("line-background")} />
-        <div className={cx("grid-container")}>
-          {data.map((item, index) => (
-            <div className={cx("box")} key={index}>
-              <div className={cx("titleBox")}>
-                <img src={logo} alt="logoMerchant" className={cx("logo")} />
-                <div className={cx("line")} />
-                <div className={cx("textTitle")}>
-                  <p className={cx("nameMerchant")}>{item.merchantID.name}</p>
-                  <p className={cx("type")}>{item.merchantID.address}</p>
-                </div>
-              </div>
-              <div className={cx("line-bottom")} />
-              <div className={cx("contentBox")}>
-                <div className={cx("content-food")}>
-                  <div className={cx("item")}>
-                    <FontAwesomeIcon icon={faBowlFood} className={cx("icon")} />
-                    <p className={cx("textContent")}>{item.nameFood}</p>
+        {Object.keys(groupedData).map((merchantId) => (
+          // <div className={cx("grid-container")}>
+          <div key={merchantId}>
+            <h2 className={cx("merchant-name-title")}>
+              {groupedData[merchantId].merchant.name}
+            </h2>
+            <div className={cx("grid-container")}>
+              {groupedData[merchantId].items.map((item, index) => (
+                <div className={cx("box")} key={index}>
+                  <div className={cx("titleBox")}>
+                    <img src={logo} alt="logoMerchant" className={cx("logo")} />
+                    <div className={cx("line")} />
+                    <div className={cx("textTitle")}>
+                      <p className={cx("nameMerchant")}>
+                        {groupedData[merchantId].merchant.name}
+                      </p>
+                      <p className={cx("type")}>
+                        {groupedData[merchantId].merchant.address}
+                      </p>
+                    </div>
                   </div>
-                  <div className={cx("item")}>
-                    <FontAwesomeIcon icon={faDollar} className={cx("icon")} />
-                    <p className={cx("textContent")}>{item.price} đ</p>
+                  <div className={cx("line-bottom")} />
+                  <div className={cx("contentBox")}>
+                    <div className={cx("content-food")}>
+                      <div className={cx("item")}>
+                        <FontAwesomeIcon
+                          icon={faBowlFood}
+                          className={cx("icon")}
+                        />
+                        <p className={cx("textContent")}>{item.nameFood}</p>
+                      </div>
+                      <div className={cx("item")}>
+                        <FontAwesomeIcon
+                          icon={faDollar}
+                          className={cx("icon")}
+                        />
+                        <p className={cx("textContent")}>{item.price} đ</p>
+                      </div>
+                      <div className={cx("item")}>
+                        <FontAwesomeIcon
+                          icon={faUtensils}
+                          className={cx("icon")}
+                        />
+                        <p className={cx("textContent")}>Cơm</p>
+                      </div>
+                    </div>
+                    <div className={cx("line-content-food")} />
+                    <div className={cx("image-food")}>
+                      <img
+                        src={item.image}
+                        alt="food"
+                        className={cx("food-request")}
+                      ></img>
+                    </div>
                   </div>
-                  <div className={cx("item")}>
-                    <FontAwesomeIcon icon={faUtensils} className={cx("icon")} />
-                    <p className={cx("textContent")}>Cơm</p>
+                  <div className={cx("line-bottom")} />
+                  <div className={cx("btn-detail")}>
+                    <Button detail onClick={() => handleDetailFood(item._id)}>
+                      Detail
+                    </Button>
                   </div>
                 </div>
-                <div className={cx("line-content-food")} />
-                <div className={cx("image-food")}>
-                  <img
-                    src={item.image}
-                    alt="food-image"
-                    className={cx("food-request")}
-                  ></img>
-                </div>
-              </div>
-              <div className={cx("line-bottom")} />
-              <div className={cx("btn-detail")}>
-                <Button detail onClick={() => handleDetailFood(item._id)}>
-                  Detail
-                </Button>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+          // </div>
+        ))}
       </div>
       <Modal
         isOpen={showModal}
@@ -288,4 +328,3 @@ function FoodRequest() {
 }
 
 export default FoodRequest;
-

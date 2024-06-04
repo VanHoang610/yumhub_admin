@@ -7,7 +7,6 @@
   font-weight: 400;
   font-family: "Poppins", sans-serif;
   margin-left: 5px;
-  margin-top: 13.5px;
 
   &:hover {
     color: #4295f4;
@@ -26,6 +25,8 @@
   display: flex;
   margin-left: 300px;
   margin-top: -6px;
+  justify-content: center;
+  margin-top: 13.5px;
 }
 
 .textLogin {
@@ -44,11 +45,11 @@
   align-items: center;
   margin-left: 156px;
   margin-top: 25px;
-  background-color: #19D6E5;
+  background-color: #fff;
   justify-content: center;
 
   &:hover {
-    background-color: #22e3f1;
+    background-color: #19D6E5;
   }
 }
 
@@ -78,9 +79,11 @@
     width: 385px;
     height: 25px;
     margin-left: 56px;
+    margin-top: 10px;
     border: none;
     outline: none;
-    color: #323232  ;
+    color: #323232;
+
   }
 }
 .titleLogin { 
