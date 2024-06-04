@@ -15,7 +15,6 @@ import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 const cx = classNames.bind(styles);
 function Infomation() {
   const { user } = useContext(UserContext);
-  console.log(user);
   return (
     <div className={cx("container")}>
       <div className={cx("contact")}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link} from "react-router-dom";
 import styles from "./Header.module.scss";
 import classNames from "classnames/bind";
@@ -6,10 +6,13 @@ import logo from "../../../../assets/images/logoYumhub.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell as faBellRegular, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faMagnifyingGlass, faCog, faBars } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "../../../contexts/UserContext";
 
 const cx = classNames.bind(styles);
 
 function Header() {
+  const { user } = useContext(UserContext);
+  console.log(user);
   return (
     <header className={cx("wrapper")}>
       <div className={cx("inner")}>
@@ -40,13 +43,13 @@ function Header() {
           </button>
           <div className={cx("profile")}>
             <img
-              src="https://via.placeholder.com/50"
+              src={user ? user.avatar : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj30rv2Vdg9loKSSeT0j7S5ga-ZevdBRDp9Q&s"}
               alt="Profile"
               className={cx("profile-img")}
             />
             <div className={cx("profile-info")}>
-              <p className={cx("profile-name")}>Name test</p>
-              <p className={cx("profile-position")}>position test</p>
+              <p className={cx("profile-name")}>{user ? user.fullName : ""}</p>
+              <p className={cx("profile-position")}>{user ? user.position : ""}</p>
             </div>
           </div>
         </div>
