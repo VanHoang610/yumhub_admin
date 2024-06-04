@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styles from "./AddVoucher.module.scss";
 import classNames from "classnames/bind";
 import AxiosInstance from "../../../../utils/AxiosInstance";
+import { FaRandom } from "react-icons/fa"; // Import icon mới
+
 const cx = classNames.bind(styles);
 
 function AddVoucher() {
@@ -70,11 +72,29 @@ function AddVoucher() {
     try {
       const response = await AxiosInstance.post("/vouchers/createVoucher", voucher);
       console.log("Voucher Added:", response.data);
-      setSuccessMessage("Voucher");
+      setSuccessMessage("Voucher Added Successfully!");
       handleReset();
     } catch (error) {
       console.error("Error adding voucher: ", error);
     }
+  };
+
+  const generateRandomCode = () => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const length = Math.floor(Math.random() * 4) + 3; // Random length between 3 and 6
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  };
+
+  const handleRandomCodeClick = () => {
+    const randomCode = generateRandomCode();
+    setVoucher((prevVoucher) => ({
+      ...prevVoucher,
+      code: randomCode,
+    }));
   };
 
   return (
@@ -102,15 +122,22 @@ function AddVoucher() {
               onChange={handleChange}
             />
           </div>
-          <div className={cx("form-group")}>
+          <div className={cx("form-group", "code-group")}>
             <label>Code Voucher</label>
-            <input
-              type="text"
-              name="code"
-              placeholder="Placeholder"
-              value={voucher.code}
-              onChange={handleChange}
-            />
+            <div className={cx("code-input-group")}>
+              <input
+                type="text"
+                name="code"
+                placeholder="Placeholder"
+                value={voucher.code}
+                onChange={handleChange}
+              />
+              <FaRandom
+                className={cx("random-code-icon")}
+                title="Generate Random Code"
+                onClick={handleRandomCodeClick}
+              />
+            </div>
             <span className={cx("error-message")}>{errors.code}</span>
           </div>
           <div className={cx("date-group")}>

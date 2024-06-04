@@ -48,6 +48,7 @@ function Infomation() {
 
   const { user } = useContext(UserContext);
 
+
   useEffect(() => {
     if (user) {
       setUserName(user.userName || "N/A");
@@ -62,6 +63,7 @@ function Infomation() {
       setBirthDay(formatDate(user.dob) || "N/A");
     }
   }, [user]);
+
   return (
     <div className={cx("container")}>
       <div className={cx("contact")}>
