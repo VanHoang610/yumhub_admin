@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import styles from "./AddVoucher.module.scss";
 import classNames from "classnames/bind";
 import AxiosInstance from "../../../../utils/AxiosInstance";
-import { FaRandom } from "react-icons/fa"; // Import icon mới
+import { FaRandom } from "react-icons/fa";
+import Modal from "react-modal";
 
 const cx = classNames.bind(styles);
+
+Modal.setAppElement('#root'); // Set the root element for accessibility
 
 function AddVoucher() {
   const [voucher, setVoucher] = useState({
@@ -17,7 +20,9 @@ function AddVoucher() {
     typeOfVoucherID: "",
   });
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +34,19 @@ function AddVoucher() {
       ...prevErrors,
       [name]: "",
     }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!voucher.nameVoucher) newErrors.nameVoucher = "Name Voucher is required";
+    if (!voucher.code) newErrors.code = "Code Voucher is required";
+    if (!voucher.discountAmount) newErrors.discountAmount = "Discount Amount is required";
+    if (!voucher.startDate) newErrors.startDate = "Start Date is required";
+    if (!voucher.endDate) newErrors.endDate = "End Date is required";
+    if (!voucher.conditionsApply) newErrors.conditionsApply = "Conditions Apply is required";
+    if (!voucher.typeOfVoucherID) newErrors.typeOfVoucherID = "Voucher Type is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const validateDates = () => {
@@ -46,7 +64,7 @@ function AddVoucher() {
       valid = false;
     }
 
-    setErrors(newErrors);
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
     return valid;
   };
 
@@ -61,27 +79,41 @@ function AddVoucher() {
       typeOfVoucherID: "",
     });
     setErrors({});
-    setSuccessMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateDates()) {
+    if (!validateForm() || !validateDates()) {
       return;
     }
+    
     try {
       const response = await AxiosInstance.post("/vouchers/createVoucher", voucher);
-      console.log("Voucher Added:", response.data);
-      setSuccessMessage("Voucher Added Successfully!");
-      handleReset();
+      setModalTitle("Success");
+      
+      
+      setModalIsOpen(true);
+      // handleReset();
+      setTimeout(() => {
+        setModalMessage("Voucher Added Successfully!");
+      }, 3000);
     } catch (error) {
-      console.error("Error adding voucher: ", error);
+      if (error.response && error.response.data === "Mã đã tồn tại") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          code: "Voucher code already exists.",
+        }));
+      } else {
+        setModalTitle("Error");
+        setModalMessage("Error adding voucher. Please try again.");
+        setModalIsOpen(true);
+      }
     }
   };
 
   const generateRandomCode = () => {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    const length = Math.floor(Math.random() * 4) + 3; // Random length between 3 and 6
+    const length = Math.floor(Math.random() * 4) + 3;
     let result = "";
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * characters.length));
@@ -95,6 +127,10 @@ function AddVoucher() {
       ...prevVoucher,
       code: randomCode,
     }));
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
   };
 
   return (
@@ -111,6 +147,7 @@ function AddVoucher() {
               value={voucher.nameVoucher}
               onChange={handleChange}
             />
+            <span className={cx("error-message")}>{errors.nameVoucher}</span>
           </div>
           <div className={cx("form-group")}>
             <label>Discount Amount</label>
@@ -121,6 +158,7 @@ function AddVoucher() {
               value={voucher.discountAmount}
               onChange={handleChange}
             />
+            <span className={cx("error-message")}>{errors.discountAmount}</span>
           </div>
           <div className={cx("form-group", "code-group")}>
             <label>Code Voucher</label>
@@ -179,6 +217,7 @@ function AddVoucher() {
               <option value="120000">Đơn hàng trên 120.000 vnđ</option>
               <option value="150000">Đơn hàng trên 150.000 vnđ</option>
             </select>
+            <span className={cx("error-message")}>{errors.conditionsApply}</span>
           </div>
           <div className={cx("form-group")}>
             <label>Voucher Type</label>
@@ -191,6 +230,7 @@ function AddVoucher() {
               <option value="6656cfad8913d56206f64e06">Giảm giá trên đơn hàng</option>
               <option value="6656cfad8913d56206f64e05">Giảm giá trên phí ship</option>
             </select>
+            <span className={cx("error-message")}>{errors.typeOfVoucherID}</span>
           </div>
           <div className={cx("form-actions")}>
             <button
@@ -204,11 +244,23 @@ function AddVoucher() {
               Add
             </button>
           </div>
-          {successMessage && (
-            <div className={cx("success-message")}>{successMessage}</div>
-          )}
         </form>
       </div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Voucher Modal"
+        className={cx("modal")}
+        overlayClassName={cx("overlay")}
+      >
+        <div className={cx("modal-content")}>
+          <h2>{modalTitle}</h2>
+          <p>{modalMessage}</p>
+          <button onClick={closeModal} className={cx("modal-button")}>
+            OK
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
