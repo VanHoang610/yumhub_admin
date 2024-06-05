@@ -18,7 +18,9 @@ function AddShipper() {
   useEffect(() => {
     const fetchShippers = async () => {
       try {
-        const response = await AxiosInstance.get("shippers/listShipperApproval");
+        const response = await AxiosInstance.get(
+          "shippers/listShipperApproval"
+        );
         setShippers(response.data.listMerchantApproval);
       } catch (err) {
         setError(err.message);
@@ -91,60 +93,77 @@ function AddShipper() {
       >
         {selectedShipper && (
           <div className={cx("modal-content")}>
-            <div className={cx("modal-header")}>
-              <div className={cx("modal-avatar-container")}>
-                <img
-                  src={selectedShipper.avatar || "/default-avatar.png"}
-                  alt={selectedShipper.fullName}
-                  className={cx("modal-avatar")}
-                />
+            <div className={cx("info-main")}>
+              <div className={cx("modal-header")}>
+                <div className={cx("modal-avatar-container")}>
+                  <img
+                    src={selectedShipper.avatar || "/default-avatar.png"}
+                    alt={selectedShipper.fullName}
+                    className={cx("modal-avatar")}
+                  />
+                </div>
+                <div className={cx("modal-info")}>
+                  <p className={cx("modal-balance")}>
+                    <strong>Balance:</strong> {selectedShipper.balance} VND
+                  </p>
+                  <p className={cx("modal-rating")}>
+                    <strong>Rating:</strong> {selectedShipper.rating} ★
+                  </p>
+                </div>
               </div>
-              <div className={cx("modal-info")}>
-                <p className={cx("modal-balance")}>
-                  <strong>Balance:</strong> {selectedShipper.balance} VND
-                </p>
-                <p className={cx("modal-rating")}>
-                  <strong>Rating:</strong> 0 ★
-                </p>
+              <div className={cx("modal-body")}>
+                <div className={cx("modal-section")}>
+                  <label>FullName</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.fullName}
+                    readOnly
+                  />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Email</label>
+                  <input type="text" value={selectedShipper.email} readOnly />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Phone Number</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.phoneNumber}
+                    readOnly
+                  />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Day of Birth</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.dayOfBirth}
+                    readOnly
+                  />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Join Date</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.joinDate}
+                    readOnly
+                  />
+                </div>
               </div>
             </div>
-            <div className={cx("modal-body")}>
-              <div className={cx("modal-section")}>
-                <label>FullName</label>
-                <input type="text" value={selectedShipper.fullName} readOnly />
-              </div>
-              <div className={cx("modal-section")}>
-                <label>Email</label>
-                <input type="text" value={selectedShipper.email} readOnly />
-              </div>
-              <div className={cx("modal-section")}>
-                <label>Phone Number</label>
-                <input
-                  type="text"
-                  value={selectedShipper.phoneNumber}
-                  readOnly
-                />
-              </div>
-              <div className={cx("modal-section")}>
-                <label>Day of Birth</label>
-                <input
-                  type="text"
-                  value={selectedShipper.dayOfBirth}
-                  readOnly
-                />
-              </div>
-              <div className={cx("modal-section")}>
-                <label>Join Date</label>
-                <input type="text" value={selectedShipper.joinDate} readOnly />
-              </div>
-            </div>
+
             <div className={cx("modal-documents")}>
               <h3>Document</h3>
               <div className={cx("document-container")}>
                 <div className={cx("document-item")}>
                   <h4>National identity card</h4>
-                  <img src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg" alt="Front ID" />
-                  <img src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg" alt="Back ID" />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Front ID"
+                  />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Back ID"
+                  />
                 </div>
                 <div className={cx("document-item")}>
                   <h4>Vehicle registration papers</h4>
@@ -152,12 +171,21 @@ function AddShipper() {
                     src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
                     alt="Front Vehicle"
                   />
-                  <img src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg" alt="Back Vehicle" />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Back Vehicle"
+                  />
                 </div>
                 <div className={cx("document-item")}>
                   <h4>Driver's license</h4>
-                  <img src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg" alt="Front License" />
-                  <img src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg" alt="Back License" />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Front License"
+                  />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Back License"
+                  />
                 </div>
               </div>
             </div>

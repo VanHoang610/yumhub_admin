@@ -20,6 +20,7 @@ import DeletedShipper from "../component/layouts/yumhub/DeletedShipper/DeletedSh
 import Employee from "../component/layouts/yumhub/Employee/Employee"
 import EmployeeDetails from "../component/layouts/yumhub/Employee/EmployeeDetails"
 import AddAdmin from "../component/layouts/yumhub/Employee/AddAdmin"
+import Orders from "../component/layouts/yumhub/Order/Order"
 
 
 
@@ -44,7 +45,7 @@ const privateRoutes = [
     { path: '/change-password', component: ChangePassword, layout: DefaultLayout },
     { path: '/all-customers', component: AllCustomer, layout: DefaultLayout },
     { path: '/food-request', component: FoodRequest, layout: DefaultLayout },
-
+    { path: '/order', component: Orders, layout: DefaultLayout },
     { path: '/deleted-shippers', component: DeletedShipper, layout: DefaultLayout },
     { path: '/employee', component: Employee, layout: DefaultLayout },
     { path: '/employee/:id', component: EmployeeDetails, layout: DefaultLayout },
