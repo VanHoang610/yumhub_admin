@@ -37,6 +37,7 @@ function AllMerchant() {
 
   const [showModal, setShowModal] = useState(false);
 
+  const [orderStatuses, setOrderStatuses] = useState([]);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -94,6 +95,20 @@ function AllMerchant() {
       setType(selectMerchantById.type ? selectMerchantById.type.name : "N/A");
     }
   }, [selectMerchantById]);
+
+  // gọi api lấy orderStatus
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await AxiosInstance.get("orders/getAllOrderStatus");
+        console.log(response);
+        setOrderStatuses(response.data.orderStatus);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleEdit = async (id) => {
     try {
@@ -253,7 +268,9 @@ function AllMerchant() {
           const updatedHistory = response.data.history.map((item) => ({
             ...item,
             timeBook: formatDate(item.timeBook),
+            nameStatus: getOrderStatusName(item.status),
           }));
+          console.log(updatedHistory);
           setDataHistory(updatedHistory);
           setShowModalHistory(true);
         }
@@ -262,6 +279,14 @@ function AllMerchant() {
       console.log(error);
     }
   };
+
+  function getOrderStatusName(statusId) {
+    console.log(orderStatuses);
+    const matchingStatus = orderStatuses.find(
+      (status) => status._id === statusId
+    );
+    return matchingStatus ? matchingStatus.name : "N/A";
+  }
 
   return (
     <div className={cx("contaienr")}>
@@ -559,6 +584,7 @@ function AllMerchant() {
                   <th>Delivery Address</th>
                   <th>Time Book</th>
                   <th>Total Price</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody className={cx("table-row-history")}>
@@ -570,6 +596,19 @@ function AllMerchant() {
                     <td>{item ? item.deliveryAddress : "N/A"}</td>
                     <td>{item ? item.timeBook : "N/A"}</td>
                     <td>{item ? item.priceFood + " đ" : "N/A"}</td>
+
+                    <td>
+                      <p
+                        className={cx(
+                          "status", // Base class for all status elements
+                          item.nameStatus === "cancel"
+                            ? "status-cancel"
+                            : "status-work"
+                        )}
+                      >
+                        {item.nameStatus}
+                      </p>
+                    </td>
                   </tr>
                 ))}
               </tbody>

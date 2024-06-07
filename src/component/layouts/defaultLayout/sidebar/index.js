@@ -76,6 +76,13 @@ function Sidebar() {
           <FontAwesomeIcon icon={faUtensils} className={cx("icon")} />
           <span className={cx("text")}>Food Requests</span>
         </NavLink>
+        <NavLink
+          to="/deleted-merchants"
+          className={({ isActive }) => cx("nav-link", { active: isActive })}
+        >
+          <FontAwesomeIcon icon={faUtensils} className={cx("icon")} />
+          <span className={cx("text")}>Deleted Merchants</span>
+        </NavLink>
         <p className={cx("title")}>Shipper manager</p>
         <NavLink
           to="/new-shipper"

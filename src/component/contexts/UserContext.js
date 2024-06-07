@@ -7,8 +7,13 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (storedUser &&  storedUser !== 'undefined') {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Invalid JSON in localStorage: ", error);
+        localStorage.removeItem("user"); // Xóa dữ liệu không hợp lệ
+      }
     }
   }, []);
 
@@ -23,7 +28,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, loginUser, logoutUser }}>
+    <UserContext.Provider value={{ user, setUser, loginUser, logoutUser }}>
       {children}
     </UserContext.Provider>
   );

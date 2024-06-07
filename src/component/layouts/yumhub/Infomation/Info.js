@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../contexts/UserContext";
 import Modal from "react-modal";
+import Swal from "sweetalert2";
+
 import classNames from "classnames/bind";
 import styles from "./Info.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,14 +20,17 @@ import {
   faUserTie,
 } from "@fortawesome/free-solid-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 
 const cx = classNames.bind(styles);
+
 function Infomation() {
   const formatDate = (date) => {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
   };
 
+  const [id, setId] = useState("");
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -46,11 +51,12 @@ function Infomation() {
     }
   };
 
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
 
   useEffect(() => {
     if (user) {
+      setId(user._id || "N/A");
       setUserName(user.userName || "N/A");
       setFullName(user.fullName || "N/A");
       setAvatar(user.avatar || "N/A");
@@ -63,6 +69,42 @@ function Infomation() {
       setBirthDay(formatDate(user.dob) || "N/A");
     }
   }, [user]);
+
+  //updateUser
+  const handleUpdateUser = async () => {
+    try {
+      const response = await AxiosInstance.post(`admin/updateAdmin/?id=${id}`, {
+        fullName,
+        address,
+        gender,
+        dob: birthDay,
+      });
+      if (response.data.result) {
+        Swal.fire({
+          icon: "success",
+          title: "Update user success",
+          text: "User has been successfully repaired ",
+        });
+        
+        setUser((prevUser) => ({
+          ...prevUser,
+          fullName,
+          address,
+          gender,
+          dob: birthDay,
+        }));
+
+        setShowModal(false);
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "warning",
+        title: "Update user failed",
+        text: "User has been failed repaired ",
+      });
+    }
+  };
 
   return (
     <div className={cx("container")}>
@@ -203,8 +245,13 @@ function Infomation() {
               type="date"
               className={cx("input")}
               defaultValue={birthDay}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={(e) => setBirthDay(e.target.value)}
             />
+          </div>
+          <div className={cx("btn-update-modal")}>
+            <button className={cx("btn-text-modal")} onClick={handleUpdateUser}>
+              Update
+            </button>
           </div>
         </div>
       </Modal>

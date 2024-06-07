@@ -68,6 +68,7 @@ function ResetPassword() {
         <div className={cx("enterInfo")}>
           <img src={icon_password} alt="Pasword" className={cx("iconStart")} />
           <input
+          className={cx('input')}
             type={showPassword ? "text" : "password"}
             placeholder="7789BM6X@@H&$K_"
             value={password}
