@@ -12,16 +12,18 @@ function Employee() {
   const [Admins, setAdmin] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const inputRef = useRef(null);
 
-  const fetchAdmins = async (searchQuery = '') => {
+  const fetchAdmins = async (searchQuery = "") => {
     setLoading(true);
     setError(null);
     try {
       let response;
       if (searchQuery) {
-        response = await AxiosInstance.get(`admin/search?search=${searchQuery}`);
+        response = await AxiosInstance.get(
+          `admin/search?search=${searchQuery}`
+        );
       } else {
         response = await AxiosInstance.get("admin/showAll");
       }
@@ -45,13 +47,19 @@ function Employee() {
   }, [search, debouncedFetchAdmins]);
 
   useEffect(() => {
-    // Focus input sau mỗi lần tìm kiếm được kích hoạt
+    // Focus input chỉ khi component mount lần đầu
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [Admins]); // Trigger focus after Admins state updates
+  }, []); // Only run once after the initial render
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className={cx("container")}>
+        <div className={cx("title")}>Listing Admin Active</div>
+        <p className={cx("loading")}>Loading...</p>
+      </div>
+    );
   if (error) return <p>Error: {error}</p>;
 
   const handleClick = (admin) => {
@@ -59,23 +67,26 @@ function Employee() {
   };
 
   const handleAddAdminClick = () => {
-    navigate('/add-admin');
+    navigate("/add-admin");
   };
 
   return (
     <div className={cx("container")}>
       <div className={cx("title")}>Listing Admin Active</div>
       <div className={cx("search-bar")}>
+        <button
+          onClick={handleAddAdminClick}
+          className={cx("add-admin-button")}
+        >
+          Add New Admin
+        </button>
         <input
           ref={inputRef}
           type="text"
-          placeholder="ID, userName, fullName, phoneNumber"
+          placeholder="Search by ID, userName, fullName, phoneNumber"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button onClick={handleAddAdminClick} className={cx("add-admin-button")}>
-          Add New Admin
-        </button>
       </div>
       <div className={cx("card-container")}>
         {Admins.map((admin) => (
@@ -86,14 +97,19 @@ function Employee() {
           >
             <div className={cx("card-header")}>
               <img
-                src={admin.avatar || "https://th.bing.com/th/id/OIP.bbvSNRBEMEPuujn-OZ-aVgHaHa?rs=1&pid=ImgDetMain"}
+                src={
+                  admin.avatar ||
+                  "https://th.bing.com/th/id/OIP.bbvSNRBEMEPuujn-OZ-aVgHaHa?rs=1&pid=ImgDetMain"
+                }
                 alt={admin.fullName}
                 className={cx("avatar")}
               />
               <div className={cx("info")}>
                 <div className={cx("name")}>{admin.fullName}</div>
                 <div className={cx("email")}>Email: {admin.email}</div>
-                <div className={cx("phone")}>PhoneNumber: {admin.phoneNumber}</div>
+                <div className={cx("phone")}>
+                  PhoneNumber: {admin.phoneNumber}
+                </div>
                 <div className={cx("position")}>Position: {admin.position}</div>
               </div>
             </div>

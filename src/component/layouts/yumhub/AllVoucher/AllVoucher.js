@@ -47,10 +47,14 @@ function AllVoucher() {
   const closeModal = () => {
     setIsModalOpen(false); // Đóng hộp thoại
   };
-  const getStatus = (endDate) => {
+  const getStatus = (startDate,endDate) => {
     const now = new Date();
     const end = new Date(endDate);
-    return end >= now ? "Valid" : "Not-valid";
+    const start = new Date(startDate);
+    if (now <= start|| now >= end) {
+      return "Not-valid";
+    }else
+    return "Valid";
   };
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -82,11 +86,11 @@ function AllVoucher() {
                 <td>
                   <span
                     className={cx("status", {
-                      Valid: getStatus(voucher.endDate) === "Valid",
-                      "Not-valid": getStatus(voucher.endDate) === "Not-valid",
+                      "Valid": getStatus(voucher.startDate, voucher.endDate) === "Valid",
+                      "Not-valid": getStatus(voucher.startDate, voucher.endDate) === "Not-valid",
                     })}
                   >
-                    {getStatus(voucher.endDate)}
+                    {getStatus(voucher.startDate,voucher.endDate)}
                   </span>
                 </td>
                 <td className={cx("actions")}>

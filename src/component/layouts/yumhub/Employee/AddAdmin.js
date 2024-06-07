@@ -3,8 +3,15 @@ import { useNavigate } from "react-router-dom";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./AddAdmin.module.scss";
-import DatePicker from "react-datepicker";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import "react-datepicker/dist/react-datepicker.css";
+import Button from "@mui/material/Button"; // Importing Button from MUI
 
 const cx = classNames.bind(styles);
 
@@ -24,6 +31,10 @@ function AddAdmin() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,12 +68,23 @@ function AddAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    setConfirmDialogOpen(true);
+  };
 
+  const handleConfirmAdd = async () => {
     setLoading(true);
     setApiError(null);
+    setConfirmDialogOpen(false);
     try {
       await AxiosInstance.post("/admin/createAdmin", formData);
-      navigate("/employee");
+      setSnackbarMessage("Admin added successfully.");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      setLoading(false);
+
+      setTimeout(() => {
+        navigate("/employee");
+      }, 1000);
     } catch (err) {
       if (err.response && err.response.data) {
         const { message } = err.response.data;
@@ -74,6 +96,17 @@ function AddAdmin() {
     }
   };
 
+  const handleCancel = () => {
+    const isFormFilled = Object.values(formData).some((value) => value !== "");
+    if (isFormFilled) {
+      if (window.confirm("You have unsaved changes. Are you sure you want to leave?")) {
+        navigate("/employee");
+      }
+    } else {
+      navigate("/employee");
+    }
+  };
+
   return (
     <div className={cx("container")}>
       <h2>Add New Admin</h2>
@@ -82,12 +115,12 @@ function AddAdmin() {
         <input
           type="text"
           name="userName"
-          placeholder="userName"
+          placeholder="Username"
           value={formData.userName}
           onChange={handleChange}
           required
         />
-        <span className={cx("error-message")}>{errors.username}</span>
+        <span className={cx("error-message")}>{errors.userName}</span>
 
         <input
           type="text"
@@ -125,11 +158,12 @@ function AddAdmin() {
           onChange={handleChange}
           required
         >
-
-        <option value="">Select position</option>
+          <option value="">Select Position</option>
           <option value="employee">Employee</option>
           <option value="manager">Manager</option>
         </select>
+        <span className={cx("error-message")}>{errors.position}</span>
+
         <select
           name="gender"
           value={formData.gender}
@@ -144,16 +178,17 @@ function AddAdmin() {
         <span className={cx("error-message")}>{errors.gender}</span>
 
         <div className={cx("form-group")}>
-              <label>Day of birth</label>
-              <input
-                className={cx("date-input")}
-                type="date"
-                name="dob"
-                value={formData.dob}
-                onChange={handleChange}
-              />
-              <span className={cx("error-message")}>{errors.dob}</span>
-            </div>
+          <label>Date of Birth</label>
+          <input
+            className={cx("date-input")}
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            required
+          />
+          <span className={cx("error-message")}>{errors.dob}</span>
+        </div>
 
         <input
           type="text"
@@ -171,10 +206,47 @@ function AddAdmin() {
           onChange={handleChange}
         />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Adding..." : "Add Admin"}
-        </button>
+        <div className={cx("buttons")}>
+          <button type="submit" disabled={loading}>
+            {loading ? "Adding..." : "Add Admin"}
+          </button>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
       </form>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
+        <DialogTitle>Confirm Add Admin</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to add this admin?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleConfirmAdd} color="primary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for Success/Error Messages */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

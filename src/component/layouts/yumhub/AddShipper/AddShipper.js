@@ -20,10 +20,9 @@ function AddShipper() {
       try {
         const response = await AxiosInstance.get(
           "shippers/listShipperApproval"
-        )
-          setShippers(response.data.listMerchantApproval);
-        }
-       catch (err) {
+        );
+        setShippers(response.data.listMerchantApproval);
+      } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -33,8 +32,7 @@ function AddShipper() {
     fetchShippers();
   }, []);
 
-  const handleViewClick = (e, shipper) => {
-    e.stopPropagation();
+  const handleCardClick = (shipper) => {
     setSelectedShipper(shipper);
     setIsModalOpen(true);
   };
@@ -54,41 +52,34 @@ function AddShipper() {
       </div>
       <div className={cx("card-container")}>
         {shippers.map((shipper) => (
-          <div key={shipper._id} className={cx("card")}>
+          <div
+            key={shipper._id}
+            className={cx("card")}
+            onClick={() => handleCardClick(shipper)}
+          >
             <div className={cx("card-header")}>
-              <img
-                src={"https://th.bing.com/th/id/OIP.bbvSNRBEMEPuujn-OZ-aVgHaHa?rs=1&pid=ImgDetMain"}
-                alt={shipper.fullName}
-                className={cx("default-shipper")}
-              />
+              <div className={cx("avatar-container")}>
+                <img
+                  src={shipper.avatar || "/default-avatar.png"}
+                  alt={shipper.fullName}
+                  className={cx("avatar")}
+                />
+              </div>
               <div className={cx("info")}>
                 <div className={cx("name")}>{shipper.fullName}</div>
                 <div className={cx("phone")}>{shipper.phoneNumber}</div>
               </div>
             </div>
-            <div className={cx("container-card-body")}>
-              {" "}
-              <div className={cx("card-body")}>
-                <div className={cx("bike")}>72G1-12311</div>
-                <div className={cx("cccd")}>077 090 092 014</div>
-                <div className={cx("item")}>065497668</div>
+            <div className={cx("card-body")}>
+              <div className={cx("detail")}>
+                <strong>Bike:</strong> {shipper.idBike}
               </div>
-              <div className={cx("avatar")}>
-                <img
-                  src={shipper.avatar || "/default-avatar.png"}
-                  alt={"avatar"}
-                  className={cx("avatar")}
-                />
+              <div className={cx("detail")}>
+                <strong>ID:</strong> {shipper.cccd}
               </div>
-            </div>
-
-            <div className={cx("card-footer")}>
-              <button
-                className={cx("view-btn")}
-                onClick={(e) => handleViewClick(e, shipper)}
-              >
-                Chi tiết
-              </button>
+              <div className={cx("detail")}>
+                <strong>Item:</strong> {shipper.item}
+              </div>
             </div>
           </div>
         ))}
@@ -101,16 +92,109 @@ function AddShipper() {
         overlayClassName={cx("overlay")}
       >
         {selectedShipper && (
-          <div>
-            <h2>Shipper Details</h2>
-            <p>ID: {selectedShipper._id}</p>
-            <p>Name: {selectedShipper.fullName}</p>
-            <p>Phone: {selectedShipper.phoneNumber}</p>
-            <p>Address: {selectedShipper.address}</p>
-            <p>Bike: {selectedShipper.idBike}</p>
-            <p>Balance: {selectedShipper.balance}</p>
-            <p>Status: {selectedShipper.status}</p>
-            <button onClick={closeModal}>Close</button>
+          <div className={cx("modal-content")}>
+            <div className={cx("info-main")}>
+              <div className={cx("modal-header")}>
+                <div className={cx("modal-avatar-container")}>
+                  <img
+                    src={selectedShipper.avatar || "/default-avatar.png"}
+                    alt={selectedShipper.fullName}
+                    className={cx("modal-avatar")}
+                  />
+                </div>
+                <div className={cx("modal-info")}>
+                  <p className={cx("modal-balance")}>
+                    <strong>Balance:</strong> {selectedShipper.balance} VND
+                  </p>
+                  <p className={cx("modal-rating")}>
+                    <strong>Rating:</strong> {selectedShipper.rating} ★
+                  </p>
+                </div>
+              </div>
+              <div className={cx("modal-body")}>
+                <div className={cx("modal-section")}>
+                  <label>FullName</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.fullName}
+                    readOnly
+                  />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Email</label>
+                  <input type="text" value={selectedShipper.email} readOnly />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Phone Number</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.phoneNumber}
+                    readOnly
+                  />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Day of Birth</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.dayOfBirth}
+                    readOnly
+                  />
+                </div>
+                <div className={cx("modal-section")}>
+                  <label>Join Date</label>
+                  <input
+                    type="text"
+                    value={selectedShipper.joinDate}
+                    readOnly
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className={cx("modal-documents")}>
+              <h3>Document</h3>
+              <div className={cx("document-container")}>
+                <div className={cx("document-item")}>
+                  <h4>National identity card</h4>
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Front ID"
+                  />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Back ID"
+                  />
+                </div>
+                <div className={cx("document-item")}>
+                  <h4>Vehicle registration papers</h4>
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Front Vehicle"
+                  />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Back Vehicle"
+                  />
+                </div>
+                <div className={cx("document-item")}>
+                  <h4>Driver's license</h4>
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Front License"
+                  />
+                  <img
+                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    alt="Back License"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={cx("modal-actions")}>
+              <button className={cx("cancel-btn")} onClick={closeModal}>
+                Cancel
+              </button>
+              <button className={cx("approve-btn")}>Approve</button>
+            </div>
           </div>
         )}
       </Modal>

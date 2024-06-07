@@ -21,6 +21,8 @@ import Employee from "../component/layouts/yumhub/Employee/Employee"
 import EmployeeDetails from "../component/layouts/yumhub/Employee/EmployeeDetails"
 import AddAdmin from "../component/layouts/yumhub/Employee/AddAdmin"
 import DeletedMerchant from "../component/layouts/yumhub/DeletedMerchants/DeletedMerchants"
+import Orders from "../component/layouts/yumhub/Order/Order"
+
 
 
 
@@ -47,6 +49,7 @@ const privateRoutes = [
     { path: '/food-request', component: FoodRequest, layout: DefaultLayout },
     { path: '/deleted-merchants', component: DeletedMerchant, layout: DefaultLayout },
 
+    { path: '/order', component: Orders, layout: DefaultLayout },
     { path: '/deleted-shippers', component: DeletedShipper, layout: DefaultLayout },
     { path: '/employee', component: Employee, layout: DefaultLayout },
     { path: '/employee/:id', component: EmployeeDetails, layout: DefaultLayout },

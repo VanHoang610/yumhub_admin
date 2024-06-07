@@ -67,3 +67,14 @@
   .date-input{
     margin-left: 50px;
   }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-inline-start: 50px;
+    margin-inline-end: 50px;
+    margin-top: 10px;
+  }
+  
+  .date-input {
+    margin-left: 10px;
+  }

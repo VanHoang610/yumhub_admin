@@ -53,6 +53,7 @@ function Infomation() {
 
   const { user, setUser } = useContext(UserContext);
 
+
   useEffect(() => {
     if (user) {
       setId(user._id || "N/A");

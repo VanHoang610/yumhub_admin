@@ -3,8 +3,8 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  min-height: 700px;
-  max-height: 80vh; // Set max height to control overall height
+  min-height: 740px;
+  max-height: 90vh; // Set max height to control overall height
   overflow-y: auto; // Enable vertical scrolling
 }
 
@@ -37,7 +37,8 @@
 }
 
 .table th {
-  background-color: #ffffae;
+  background-color: #004974;
+  color:#ffffff;
 }
 
 .table tr:nth-child(even) {
@@ -52,15 +53,16 @@
   display: inline-block;
   padding: 5px 10px;
   border-radius: 4px;
-  color: #fff;
+  color: #000000;
 }
 
 .status.Valid {
-  background-color: #4caf50;
+  width: 82px;
+  background-color: #79deff;
 }
 
 .status.Not-valid {
-  background-color: #f44336;
+  background-color: #fff79e;
 }
 
 .actions {
