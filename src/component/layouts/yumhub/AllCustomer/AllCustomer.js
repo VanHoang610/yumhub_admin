@@ -25,7 +25,8 @@ function AllCustomer() {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
   };
-
+  
+  const [orderStatuses, setOrderStatuses] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
   const [detailCustomer, setDetailCustomer] = useState({});
@@ -42,6 +43,21 @@ function AllCustomer() {
         const response = await AxiosInstance.get("customers/getAllCustomer");
         const customers = response.data.customer;
         setData(customers);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  
+  // gọi api lấy orderStatus
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await AxiosInstance.get("orders/getAllOrderStatus");
+        console.log(response);
+        setOrderStatuses(response.data.orderStatus);
       } catch (error) {
         console.log(error);
       }
@@ -91,6 +107,7 @@ function AllCustomer() {
           const updatedHistory = response.data.history.map((item) => ({
             ...item,
             timeBook: formatDate(item.timeBook),
+            nameStatus: getOrderStatusName(item.status),
           }));
           setDataHistory(updatedHistory);
           setShowModalHistory(true);
@@ -170,8 +187,16 @@ function AllCustomer() {
     setSearchResult([]);
   };
 
+  function getOrderStatusName(statusId) {
+    console.log(orderStatuses);
+    const matchingStatus = orderStatuses.find(
+      (status) => status._id === statusId
+    );
+    return matchingStatus ? matchingStatus.name : "N/A";
+  }
+
   return (
-    <div className={cx("contaienr")}>
+    <div className={cx("container")}>
       <div className={cx("content")}>
         <p className={cx("title")}>All Customers</p>
         <div>
@@ -382,6 +407,7 @@ function AllCustomer() {
                   <th>Delivery Address</th>
                   <th>Time Book</th>
                   <th>Total Price</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody className={cx("table-row-history")}>
@@ -393,9 +419,22 @@ function AllCustomer() {
                     <td>{item ? item.deliveryAddress : "N/A"}</td>
                     <td>{item ? item.timeBook : "N/A"}</td>
                     <td>{item ? item.totalPaid + " đ" : "N/A"}</td>
+                    <td>
+                      <p
+                        className={cx(
+                          "status", // Base class for all status elements
+                          item.nameStatus === "cancel"
+                            ? "status-cancel"
+                            : "status-work"
+                        )}
+                      >
+                        {item.nameStatus}
+                      </p>
+                    </td>
                   </tr>
                 ))}
               </tbody>
+              <div className={cx('line')}/>
             </table>
           </div>
         </Modal>

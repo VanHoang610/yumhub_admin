@@ -1,3 +1,42 @@
+//date picker
+
+/* YourComponent.module.css */
+.wrapper-date-picker {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+  margin-left: 150px;
+}
+
+.title-date-picker {
+  color: rgb(42, 41, 41);
+  font-size: 16px;
+  margin-right: 15px;
+  font-weight: 600;
+}
+
+.customDatePicker {
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(8, 23, 194, 0.1);
+  transition: all 0.3s ease;
+}
+
+.customDatePicker:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+
+
+
 .container {
   width: 80vw;
   height: 100vh;

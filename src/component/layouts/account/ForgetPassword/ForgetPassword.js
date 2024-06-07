@@ -51,6 +51,7 @@ function ForgetPassword() {
         <div className={cx("enterInfo")}>
           <img src={icon_username} alt="Username" className={cx("iconStart")} />
           <input
+          className={cx('input')}
             placeholder="lv.hoang610@gmail.com"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
