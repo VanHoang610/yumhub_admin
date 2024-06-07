@@ -47,11 +47,11 @@ function Employee() {
   }, [search, debouncedFetchAdmins]);
 
   useEffect(() => {
-    // Focus input sau mỗi lần tìm kiếm được kích hoạt
+    // Focus input chỉ khi component mount lần đầu
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [Admins]); // Trigger focus after Admins state updates
+  }, []); // Only run once after the initial render
 
   if (loading)
     return (
