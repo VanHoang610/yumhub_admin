@@ -47,7 +47,9 @@ function AllMerchant() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
-  const [document, setDocument] = useState("");
+  const [documents, setDocuments] = useState([]);
+  const [idCardDocuments, setIdCardDocuments] = useState([]);
+  const [licenseDriverDocuments, setLicenseDriverDocuments] = useState([]);
   const [typeId, setTypeId] = useState("");
   const [types, setTypes] = useState([]);
   const [showModalHistory, setShowModalHistory] = useState(false);
@@ -76,6 +78,7 @@ function AllMerchant() {
   //load data lên màn hình
   useEffect(() => {
     if (selectMerchantById) {
+      console.log(selectMerchantById);
       setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
       setAddress(selectMerchantById.address || "");
@@ -87,9 +90,16 @@ function AllMerchant() {
       setFullName(
         selectMerchantById.user ? selectMerchantById.user.fullName : ""
       );
-      setDocument(
-        selectMerchantById.document ? selectMerchantById.document.image : ""
+      const filteredDocuments = selectMerchantById.document || [];
+      setIdCardDocuments(
+        filteredDocuments.filter((doc) => doc.documentTypeID.name === "ID Card")
       );
+      setLicenseDriverDocuments(
+        filteredDocuments.filter(
+          (doc) => doc.documentTypeID.name === "Business License"
+        )
+      );
+      setDocuments(filteredDocuments);
       setTypeId(selectMerchantById.type ? selectMerchantById.type._id : "");
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "N/A");
       setType(selectMerchantById.type ? selectMerchantById.type.name : "N/A");
@@ -101,7 +111,6 @@ function AllMerchant() {
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        console.log(response);
         setOrderStatuses(response.data.orderStatus);
       } catch (error) {
         console.log(error);
@@ -167,10 +176,11 @@ function AllMerchant() {
   const handleView = async (id) => {
     setSearchResult([]);
     try {
-      const response = await AxiosInstance.get(`merchants/?id=${id}`);
+      const response = await AxiosInstance.get(
+        `merchants/getMerchantById/?id=${id}`
+      );
       const { detailMerchant } = response.data;
       if (detailMerchant) {
-        console.log(detailMerchant);
         setSelectMerchantId(detailMerchant);
         setShowModal(true);
         setIsEditModal(false);
@@ -281,7 +291,6 @@ function AllMerchant() {
   };
 
   function getOrderStatusName(statusId) {
-    console.log(orderStatuses);
     const matchingStatus = orderStatuses.find(
       (status) => status._id === statusId
     );
@@ -536,19 +545,52 @@ function AllMerchant() {
                     )}
                   </p>
                 </div>
-                <div className={cx("wrapper-image-content")}>
-                  <p className={cx("title-merchant")}>Document:</p>
-                  <p className={cx("content-merchant")}>
-                    {isEditModal ? (
-                      "N/A"
-                    ) : (
-                      <img
-                        src={document}
-                        alt="Document"
-                        className={cx("image-document")}
-                      />
-                    )}
-                  </p>
+                <div>
+                  {idCardDocuments.map((doc, index) => (
+                    <div key={index} className={cx("wrapper-image-content")}>
+                      <div className={cx("wrapper-title-document")}>
+                        <p className={cx("title-merchant")}>
+                          {doc.documentTypeID.name}
+                        </p>
+                      
+                      </div>
+                      <div className={cx("wrapper-document")}>
+                        <img
+                          src={doc.imageFontSide}
+                          alt="Document Front Side"
+                          className={cx("image-document")}
+                        />
+                        <img
+                          src={doc.imageBackSide}
+                          alt="Document Front Side"
+                          className={cx("image-document")}
+                        /> 
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  {licenseDriverDocuments.map((doc, index) => (
+                    <div key={index} className={cx("wrapper-image-content")}>
+                      <div className={cx("wrapper-title-document")}>
+                        <p className={cx("title-merchant")}>
+                          {doc.documentTypeID.name}
+                        </p>
+                      </div>
+                      <div className={cx("wrapper-document")}>
+                        <img
+                          src={doc.imageFontSide}
+                          alt="Document Front Side"
+                          className={cx("image-document")}
+                        />
+                        <img
+                          src={doc.imageBackSide}
+                          alt="Document Front Side"
+                          className={cx("image-document")}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <div className={cx("btn-delete")}>
                   {isEditModal ? (

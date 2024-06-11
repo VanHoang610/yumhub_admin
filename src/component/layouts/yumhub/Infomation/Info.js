@@ -41,6 +41,7 @@ function Infomation() {
   const [createBy, setCreateBy] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [birthDay, setBirthDay] = useState("");
+  const [age, setAge] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   const selectBtnUpdate = () => {
@@ -67,6 +68,13 @@ function Infomation() {
       setCreateBy(user.createBy || "N/A");
       setPhoneNumber(user.phoneNumber || "N/A");
       setBirthDay(formatDate(user.dob) || "N/A");
+      const dob = new Date(user.dob);
+      const currentDate = new Date();
+      let age = currentDate.getFullYear() - dob.getFullYear();
+      if (currentDate.getMonth() < dob.getMonth() || (currentDate.getMonth() === dob.getMonth() && currentDate.getDate() < dob.getDate())) {
+          age--;
+      }
+      setAge(age);
     }
   }, [user]);
 
@@ -114,7 +122,7 @@ function Infomation() {
         </div>
         <div className={cx("wrapper-name")}>
           <p className={cx("name-info")}>{fullName}, </p>
-          <p className={cx("age-info")}>22</p>
+          <p className={cx("age-info")}>{age}</p>
         </div>
         <div>
           <p className={cx("position")}>Admin YumHub</p>

@@ -36,16 +36,29 @@ function NewMerchant() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
-  const [document, setDocument] = useState("");
+  const [documents, setDocuments] = useState([]);
+  const [idCardDocuments, setIdCardDocuments] = useState([]);
+  const [licenseDriverDocuments, setLicenseDriverDocuments] = useState([]);
+  const [checkIDCard, setCheckIDCard] = useState(false);
+  const [checkBusinessLicense, setCheckBusinessLicense] = useState(false);
+  const [overAllIDCard, setOverAllIDCard] = useState();
+  const [messageBusiness, setMessageBusiness] = useState();
 
   const selectDetail = async (id) => {
     try {
+      setCheckIDCard(false);
+      setCheckBusinessLicense(false);
+      setOverAllIDCard(undefined);
+      setMessageBusiness(undefined);
       setSearchResult([]);
-      const response = await AxiosInstance.get(`merchants/?id=${id}`);
+      const response = await AxiosInstance.get(
+        `merchants/getMerchantById/?id=${id}`
+      );
       const { detailMerchant } = response.data;
       if (detailMerchant) {
         setSelectMerchantId(detailMerchant);
         setShowModal(true);
+        console.log(document);
       } else {
         console.log("Không tìm thấy thông tin ");
       }
@@ -68,9 +81,16 @@ function NewMerchant() {
       setFullName(
         selectMerchantById.user ? selectMerchantById.user.fullName : ""
       );
-      setDocument(
-        selectMerchantById.document ? selectMerchantById.document.image : ""
+      const filteredDocuments = selectMerchantById.document || [];
+      setIdCardDocuments(
+        filteredDocuments.filter((doc) => doc.documentTypeID.name === "ID Card")
       );
+      setLicenseDriverDocuments(
+        filteredDocuments.filter(
+          (doc) => doc.documentTypeID.name === "Business License"
+        )
+      );
+      setDocuments(filteredDocuments);
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "");
       setType(selectMerchantById.type ? selectMerchantById.type.name : ""); // show type
     }
@@ -83,7 +103,6 @@ function NewMerchant() {
         const response = await AxiosInstance.get(
           "/merchants/listMerchantApproval"
         );
-        console.log(response.data.listMerchantApproval);
         setData(response.data.listMerchantApproval);
       } catch (error) {
         console.log(error);
@@ -154,6 +173,26 @@ function NewMerchant() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  //check giấy tờ căn cước
+  const handleCheckIDCard = async (image) => {
+    try {
+      const response = await AxiosInstance.post(
+        "merchants/checkIDCardDocument",
+        { image }
+      );
+      setOverAllIDCard(response.data.data[0].overall_score);
+      setCheckIDCard(true);
+    } catch (error) {}
+  };
+
+  //check giấy phép kinh doanh
+  const handleCheckBusinessLicense = async () => {
+    try {
+      setMessageBusiness("Cannot check business license");
+      setCheckBusinessLicense(true);
+    } catch (error) {}
   };
 
   return (
@@ -285,15 +324,88 @@ function NewMerchant() {
                 <p className={cx("title-merchant")}>Close Time:</p>
                 <p className={cx("content-merchant")}>{closeTime}</p>
               </div>
-              <div className={cx("wrapper-image-content")}>
-                <p className={cx("title-merchant")}>Document:</p>
-                <p className={cx("content-merchant")}>
-                  <img
-                    src={document}
-                    alt="Document"
-                    className={cx("image-document")}
-                  />
-                </p>
+              <div>
+                {idCardDocuments.map((doc, index) => (
+                  <div key={index} className={cx("wrapper-image-content")}>
+                    <div className={cx("wrapper-title-document")}>
+                      <p className={cx("title-merchant")}>
+                        {doc.documentTypeID.name}:
+                      </p>
+                      <div
+                        className={cx("btn-check")}
+                        onClick={() => handleCheckIDCard(doc.imageFontSide)}
+                      >
+                        <p className={cx("text-check")}>Check</p>
+                      </div>
+                    </div>
+                    <div className={cx("wrapper-document")}>
+                      <img
+                        src={doc.imageFontSide}
+                        alt="Document Front Side"
+                        className={cx("image-document")}
+                      />
+                      <img
+                        src={doc.imageBackSide}
+                        alt="Document Front Side"
+                        className={cx("image-document")}
+                      />
+                      {checkIDCard ? (
+                        <h2 className={cx("text-overAll-id-card")}>
+                          OverAll:
+                          <span
+                            style={{
+                              color: overAllIDCard < 80 ? "red" : "green",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {overAllIDCard}%
+                          </span>
+                        </h2>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div>
+                {licenseDriverDocuments.map((doc, index) => (
+                  <div key={index} className={cx("wrapper-image-content")}>
+                    <div className={cx("wrapper-title-document")}>
+                      <p className={cx("title-merchant")}>
+                        {doc.documentTypeID.name}:
+                      </p>
+                      <div
+                        className={cx("btn-check")}
+                        onClick={() =>
+                          handleCheckBusinessLicense()
+                        }
+                      >
+                        <p className={cx("text-check")}>Check</p>
+                      </div>
+                    </div>
+                    <div className={cx("wrapper-document")}>
+                      <img
+                        src={doc.imageFontSide}
+                        alt="Document Front Side"
+                        className={cx("image-document")}
+                      />
+                      <img
+                        src={doc.imageBackSide}
+                        alt="Document Front Side"
+                        className={cx("image-document")}
+                      />
+                      {checkBusinessLicense ? (
+                        <h2 className={cx("text-overAll-id-card")}>
+                         {messageBusiness}
+                          
+                        </h2>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
               <div className={cx("btn-delete")}>
                 <Button approve_btn onClick={() => handleApproval(id)}>

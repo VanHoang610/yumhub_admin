@@ -146,6 +146,24 @@
   border: none;
 }
 
+.wrapper-document {
+  display: flex ;
+  flex: 1;
+  margin-left: 30px;
+  margin-top: 20px;
+  // background-color: #4bc2e6;
+}
+
+.text-overAll-id-card {
+  color: #000;
+  margin-top: 20px;
+  margin-left: 50px;
+  width: 200px;
+  font-size: 18px;
+  font-family: "Montserrat Alternates", "sans-serif";
+
+}
+
 .btn-delete {
   display: flex;
   justify-content: flex-end;
@@ -153,16 +171,37 @@
 }
 
 .wrapper-image-content {
-  display: flex;
   width: 90%;
   align-items: left;
   margin-top: 30px;
-  padding: 0; 
+  padding: 0;
+}
+
+.wrapper-title-document {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-check {
+  display: flex;
+  width: 90px;
+  height: 30px;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: "Montserrat Alternates", "sans-serif";
+  background-color: #4bc2e6;
+}
+
+.text-check {
+  color: #fff;
 }
 
 .image-document {
-  width: 240px;
-  height: 270px;
+  width: 120px;
+  height: 180px;
+  margin-left : 20px;
 }
 
 .line-background {
