@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal"
+import Modal from "react-modal";
 import Tippy from "@tippyjs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import {
-  faEye,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../../buttons";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import AxiosInstance from "../../../../utils/AxiosInstance";
@@ -20,8 +17,8 @@ import ellipse from "../../../../assets/images/ellipse.png";
 const cx = classNames.bind(styles);
 
 function DeletedMerchant() {
-    const [data, setData] = useState([{}]);
-    const [searchResult, setSearchResult] = useState([]);
+  const [data, setData] = useState([{}]);
+  const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
   const [selectMerchantById, setSelectMerchantId] = useState({});
 
@@ -34,7 +31,9 @@ function DeletedMerchant() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
-  const [document, setDocument] = useState("");
+  const [documents, setDocuments] = useState([]);
+  const [idCardDocuments, setIdCardDocuments] = useState([]);
+  const [licenseDriverDocuments, setLicenseDriverDocuments] = useState([]);
 
   //gọi api allMerchant đã xóa
   useEffect(() => {
@@ -55,7 +54,7 @@ function DeletedMerchant() {
   const handleView = async (id) => {
     setSearchResult([]);
     try {
-      const response = await AxiosInstance.get(`merchants/?id=${id}`);
+      const response = await AxiosInstance.get(`merchants/getMerchantById?id=${id}`);
       const { detailMerchant } = response.data;
       console.log(response);
       if (detailMerchant) {
@@ -83,9 +82,15 @@ function DeletedMerchant() {
       setFullName(
         selectMerchantById.user ? selectMerchantById.user.fullName : ""
       );
-      setDocument(
-        selectMerchantById.document ? selectMerchantById.document.image : ""
+      const filteredDocuments = selectMerchantById.document || [];
+      setIdCardDocuments(
+        filteredDocuments.filter((doc) => doc.documentTypeID.name === "ID Card")
       );
+      setLicenseDriverDocuments(
+        filteredDocuments.filter(
+          (doc) => doc.documentTypeID.name === "Business License"
+        )
+      );;
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "N/A");
       setType(selectMerchantById.type ? selectMerchantById.type.name : "N/A");
     }
@@ -101,9 +106,12 @@ function DeletedMerchant() {
     const keyword = e.target.value;
     if (keyword) {
       try {
-        const response = await AxiosInstance.post("/merchants/findDeletedMerchant", {
-          keyword,
-        });
+        const response = await AxiosInstance.post(
+          "/merchants/findDeletedMerchant",
+          {
+            keyword,
+          }
+        );
         console.log(response);
         if (response.data.result && response.data.merchants.length > 0) {
           setSearchResult(response.data.merchants);
@@ -123,7 +131,6 @@ function DeletedMerchant() {
     }
   };
 
-  
   const handleModalClose = () => {
     setShowModal(false);
   };
@@ -233,63 +240,83 @@ function DeletedMerchant() {
                   />
                 </div>
                 <div className={cx("content")}>
-                <Button awaiting>Deleted</Button>
+                  <Button awaiting>Deleted</Button>
                   <div className={cx("container-content")}>
-                    <p className={cx("name-merchant")}>
-                      {
-                        name}
-                    </p>
+                    <p className={cx("name-merchant")}>{name}</p>
                     <div className={cx("line")}></div>
-                    <p className={cx("type-merchant")}>
-                      {type}
-                    </p>
+                    <p className={cx("type-merchant")}>{type}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
                     <p className={cx("title-merchant")}>Address:</p>
-                    <p className={cx("content-merchant")}>
-                      {address}
-                    </p>
+                    <p className={cx("content-merchant")}>{address}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
                     <p className={cx("title-merchant")}>Email:</p>
-                    <p className={cx("content-merchant")}>
-                      {email}
-                    </p>
+                    <p className={cx("content-merchant")}>{email}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
                     <p className={cx("title-merchant")}>Store Owner:</p>
-                    <p className={cx("content-merchant")}>
-                      {fullName}
-                    </p>
+                    <p className={cx("content-merchant")}>{fullName}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
                     <p className={cx("title-merchant")}>PhoneNumber:</p>
-                    <p className={cx("content-merchant")}>
-                      {phoneNumber}
-                    </p>
+                    <p className={cx("content-merchant")}>{phoneNumber}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
                     <p className={cx("title-merchant")}>Open Time:</p>
-                    <p className={cx("content-merchant")}>
-                      {openTime}
-                    </p>
+                    <p className={cx("content-merchant")}>{openTime}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
                     <p className={cx("title-merchant")}>Close Time:</p>
-                    <p className={cx("content-merchant")}>
-                      {closeTime}
-                    </p>
+                    <p className={cx("content-merchant")}>{closeTime}</p>
                   </div>
-                  <div className={cx("wrapper-image-content")}>
-                    <p className={cx("title-merchant")}>Document:</p>
-                    <p className={cx("content-merchant")}>
-                      <img
-                          src={document}
-                          alt="Document"
+                  <div>
+                  {idCardDocuments.map((doc, index) => (
+                    <div key={index} className={cx("wrapper-image-content")}>
+                      <div className={cx("wrapper-title-document")}>
+                        <p className={cx("title-merchant")}>
+                          {doc.documentTypeID.name}
+                        </p>
+                      
+                      </div>
+                      <div className={cx("wrapper-document")}>
+                        <img
+                          src={doc.imageFontSide}
+                          alt="Document Front Side"
                           className={cx("image-document")}
                         />
-                    </p>
-                  </div>
+                        <img
+                          src={doc.imageBackSide}
+                          alt="Document Front Side"
+                          className={cx("image-document")}
+                        /> 
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  {licenseDriverDocuments.map((doc, index) => (
+                    <div key={index} className={cx("wrapper-image-content")}>
+                      <div className={cx("wrapper-title-document")}>
+                        <p className={cx("title-merchant")}>
+                          {doc.documentTypeID.name}
+                        </p>
+                      </div>
+                      <div className={cx("wrapper-document")}>
+                        <img
+                          src={doc.imageFontSide}
+                          alt="Document Front Side"
+                          className={cx("image-document")}
+                        />
+                        <img
+                          src={doc.imageBackSide}
+                          alt="Document Front Side"
+                          className={cx("image-document")}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
                 </div>
               </div>
             )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { format, subMonths } from "date-fns";
-import { Bar, Line, PolarArea, Doughnut } from "react-chartjs-2";
+import { Bar, Line, PolarArea } from "react-chartjs-2";
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
 import ChartDataLabels from "chartjs-plugin-datalabels";
@@ -58,7 +58,7 @@ function Home() {
     const fetchData = async () => {
       try {
         const month = formatDate(startDate);
-        console.log("Formatted Month:", month);
+        
         const response = await AxiosInstance.get(
           `orders/revenueFoodDelivery?month=${month}`
         );
@@ -71,7 +71,7 @@ function Home() {
             ship: DATA.thisMonth.totalShip,
             profitMerchant: DATA.thisMonth.totalMerchant,
             profitShipper: DATA.thisMonth.totalShipper,
-            vocher: DATA.thisMonth.totalVocher,
+            vocher: DATA.thisMonth.totalVoucher,
             profit:
               (DATA.thisMonth.totalRevenue || 0) -
               ((DATA.thisMonth.totalShipper || 0) +
