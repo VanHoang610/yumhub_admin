@@ -15,6 +15,13 @@
   color: #004974;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-inline-end: 100px;
+}
+
 .table-container {
   background-color: #ffffff;
   padding: 20px;
@@ -38,7 +45,7 @@
 
 .table th {
   background-color: #004974;
-  color:#ffffff;
+  color: #ffffff;
 }
 
 .table tr:nth-child(even) {
@@ -128,4 +135,39 @@
 
 .modal button:hover {
   background-color: #0056b3;
+}
+
+.edit-modal {
+  margin-inline-start: 30px;
+  margin-inline-end: 30px;
+  width: 600px;
+}
+
+.modal-title {
+  margin-bottom: 20px;
+}
+
+.modal-date {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.input-date {
+  margin-left: 10px;
+}
+.details-table {
+  max-width: 200px;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  margin-top: 30px;
+  td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
 }

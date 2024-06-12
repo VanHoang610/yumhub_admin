@@ -4,6 +4,7 @@ import { FaEdit, FaTrashAlt, FaEye } from "react-icons/fa";
 import classNames from "classnames/bind";
 import styles from "./AllShipper.module.scss";
 import Modal from "react-modal";
+import logo from "../../../../assets/images/logoYumhub.png";
 
 const cx = classNames.bind(styles);
 
@@ -212,33 +213,33 @@ function AllShipper() {
                 <div className={cx("document-item")}>
                   <h4>National identity card</h4>
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.idCard.front||logo}
                     alt="Front ID"
                   />
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.idCard.back||logo}
                     alt="Back ID"
                   />
                 </div>
                 <div className={cx("document-item")}>
                   <h4>Vehicle registration papers</h4>
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.vehicleCertificate.front||logo}
                     alt="Front Vehicle"
                   />
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.vehicleCertificate.back||logo}
                     alt="Back Vehicle"
                   />
                 </div>
                 <div className={cx("document-item")}>
                   <h4>Driver's license</h4>
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.driverLicense.front||logo}
                     alt="Front License"
                   />
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.driverLicense.back||logo}
                     alt="Back License"
                   />
                 </div>
@@ -248,7 +249,7 @@ function AllShipper() {
               <button className={cx("cancel-btn")} onClick={closeModal}>
                 Cancel
               </button>
-              <button className={cx("approve-btn")}>Approve</button>
+              <button className={cx("update-btn")}>Update</button>
             </div>
           </div>
         )}

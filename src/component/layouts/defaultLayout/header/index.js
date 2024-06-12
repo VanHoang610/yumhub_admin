@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Link} from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 import classNames from "classnames/bind";
 import logo from "../../../../assets/images/logoYumhub.png";
@@ -7,12 +7,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell as faBellRegular, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faMagnifyingGlass, faCog, faBars } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../../../contexts/UserContext";
+import Dialog from "../Dialog";
 
 const cx = classNames.bind(styles);
 
 function Header() {
   const { user } = useContext(UserContext);
-  console.log(user);
+  const [showDialog, setShowDialog] = useState(false);
+
+  const handleEmployeeClick = (e) => {
+    if (user.position !== "manager") {
+      e.preventDefault();
+      setShowDialog(true);
+    }
+  };
+
   return (
     <header className={cx("wrapper")}>
       <div className={cx("inner")}>
@@ -32,7 +41,7 @@ function Header() {
             <FontAwesomeIcon icon={faCog} className={cx("icon")} />
             <p className={cx("textHeader")}>Settings</p>
           </Link>
-          <Link to="/employee" className={cx("employee-btn")}>
+          <Link to="/employee" className={cx("employee-btn")} onClick={handleEmployeeClick}>
             <FontAwesomeIcon icon={faUser} className={cx("icon")} />
             <p className={cx("textHeader")}>Employee</p>
           </Link>
@@ -54,6 +63,13 @@ function Header() {
           </div>
         </div>
       </div>
+      {showDialog && (
+        <Dialog
+          title="Warning"
+          message="You do not have permission to access this item. Contact admin for more details"
+          onClose={() => setShowDialog(false)}
+        />
+      )}
     </header>
   );
 }
