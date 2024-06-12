@@ -3,7 +3,7 @@ import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./AddShipper.module.scss";
 import Modal from "react-modal";
-
+import logo from "../../../../assets/images/logoYumhub.png";
 const cx = classNames.bind(styles);
 
 Modal.setAppElement("#root");
@@ -21,7 +21,7 @@ function AddShipper() {
         const response = await AxiosInstance.get(
           "shippers/listShipperApproval"
         );
-        setShippers(response.data.listMerchantApproval);
+        setShippers(response.data.listShipper);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -36,7 +36,11 @@ function AddShipper() {
     setSelectedShipper(shipper);
     setIsModalOpen(true);
   };
-
+  const checkDocuments=(front, back)=>{
+    if(front && back){
+      return "available"
+    }else return "not available"
+  }
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -72,13 +76,13 @@ function AddShipper() {
             </div>
             <div className={cx("card-body")}>
               <div className={cx("detail")}>
-                <strong>Bike:</strong> {shipper.idBike}
+                <strong>ID Card:</strong> {checkDocuments(shipper.idCard.front, shipper.idCard.back)}
               </div>
               <div className={cx("detail")}>
-                <strong>ID:</strong> {shipper.cccd}
+                <strong>Driver License:</strong> {checkDocuments(shipper.driverLicense.front, shipper.driverLicense.back)}
               </div>
               <div className={cx("detail")}>
-                <strong>Item:</strong> {shipper.item}
+                <strong>Vehicle Certificate:</strong> {checkDocuments(shipper.vehicleCertificate.front, shipper.vehicleCertificate.back)}
               </div>
             </div>
           </div>
@@ -157,33 +161,33 @@ function AddShipper() {
                 <div className={cx("document-item")}>
                   <h4>National identity card</h4>
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.idCard.front||logo}
                     alt="Front ID"
                   />
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.idCard.back||logo}
                     alt="Back ID"
                   />
                 </div>
                 <div className={cx("document-item")}>
                   <h4>Vehicle registration papers</h4>
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.vehicleCertificate.front||logo}
                     alt="Front Vehicle"
                   />
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.vehicleCertificate.back||logo}
                     alt="Back Vehicle"
                   />
                 </div>
                 <div className={cx("document-item")}>
                   <h4>Driver's license</h4>
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.driverLicense.front||logo}
                     alt="Front License"
                   />
                   <img
-                    src="https://anhsang.edu.vn/wp-content/uploads/CCCD.jpg"
+                    src={selectedShipper.driverLicense.back||logo}
                     alt="Back License"
                   />
                 </div>
