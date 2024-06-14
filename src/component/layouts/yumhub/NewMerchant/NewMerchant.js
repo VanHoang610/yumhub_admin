@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Tippy from "@tippyjs/react";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
@@ -176,15 +177,30 @@ function NewMerchant() {
   };
 
   //check giấy tờ căn cước
-  const handleCheckIDCard = async (image) => {
+  const handleCheckIDCard = async (imageUrl) => {
     try {
-      const response = await AxiosInstance.post(
-        "merchants/checkIDCardDocument",
-        { image }
-      );
+      const apiKey = "VGqiuXb1bdS2xdBVsCqNk9CWJZCRegTc";
+      const apiUrl = "https://api.fpt.ai/vision/idr/vnm";
+
+      const formData = new FormData();
+      formData.append("image", imageUrl);
+
+      // Gửi FormData đến API
+      const response = await axios.post(
+        apiUrl,
+        { image_url: imageUrl },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "api-key": apiKey,
+          },
+        }
+      );  
       setOverAllIDCard(response.data.data[0].overall_score);
-      setCheckIDCard(true);
-    } catch (error) {}
+          setCheckIDCard(true);
+    } catch (error) {
+      console.error("Error checking ID card:", error);
+    }
   };
 
   //check giấy phép kinh doanh
@@ -377,9 +393,7 @@ function NewMerchant() {
                       </p>
                       <div
                         className={cx("btn-check")}
-                        onClick={() =>
-                          handleCheckBusinessLicense()
-                        }
+                        onClick={() => handleCheckBusinessLicense()}
                       >
                         <p className={cx("text-check")}>Check</p>
                       </div>
@@ -397,8 +411,7 @@ function NewMerchant() {
                       />
                       {checkBusinessLicense ? (
                         <h2 className={cx("text-overAll-id-card")}>
-                         {messageBusiness}
-                          
+                          {messageBusiness}
                         </h2>
                       ) : (
                         ""

@@ -19,12 +19,12 @@ export const UserProvider = ({ children }) => {
 
   const loginUser = (userData) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData)); // Lưu thông tin người dùng vào localStorage
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logoutUser = () => {
     setUser(null);
-    localStorage.removeItem("user"); // Xóa thông tin người dùng khỏi localStorage
+    localStorage.removeItem("user"); 
   };
 
   return (
