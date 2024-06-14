@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import Tippy from "@tippyjs/react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { TailSpin } from "react-loader-spinner";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
@@ -37,14 +38,15 @@ function NewMerchant() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
-  const [documents, setDocuments] = useState([]);
   const [idCardDocuments, setIdCardDocuments] = useState([]);
   const [licenseDriverDocuments, setLicenseDriverDocuments] = useState([]);
   const [checkIDCard, setCheckIDCard] = useState(false);
   const [checkBusinessLicense, setCheckBusinessLicense] = useState(false);
   const [overAllIDCard, setOverAllIDCard] = useState();
   const [messageBusiness, setMessageBusiness] = useState();
+  const [loading, setLoading] = useState(false);
 
+  // hiển thị chi tiết
   const selectDetail = async (id) => {
     try {
       setCheckIDCard(false);
@@ -91,7 +93,6 @@ function NewMerchant() {
           (doc) => doc.documentTypeID.name === "Business License"
         )
       );
-      setDocuments(filteredDocuments);
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "");
       setType(selectMerchantById.type ? selectMerchantById.type.name : ""); // show type
     }
@@ -179,11 +180,9 @@ function NewMerchant() {
   //check giấy tờ căn cước
   const handleCheckIDCard = async (imageUrl) => {
     try {
+      setLoading(true);
       const apiKey = "VGqiuXb1bdS2xdBVsCqNk9CWJZCRegTc";
       const apiUrl = "https://api.fpt.ai/vision/idr/vnm";
-
-      const formData = new FormData();
-      formData.append("image", imageUrl);
 
       // Gửi FormData đến API
       const response = await axios.post(
@@ -195,11 +194,17 @@ function NewMerchant() {
             "api-key": apiKey,
           },
         }
-      );  
+      );
       setOverAllIDCard(response.data.data[0].overall_score);
-          setCheckIDCard(true);
+      setCheckIDCard(true);
     } catch (error) {
+      console.log(overAllIDCard);
+      console.log(checkIDCard);
+      setOverAllIDCard("Cannot check");
+      setCheckIDCard(true);
       console.error("Error checking ID card:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -365,17 +370,43 @@ function NewMerchant() {
                         alt="Document Front Side"
                         className={cx("image-document")}
                       />
+                      {loading && (
+                        <div className={cx("wrapper-loading")}>
+                          <span className={cx("text-loading")}>
+                            Đang loading...
+                          </span>
+                          <TailSpin
+                            height="40"
+                            width="40"
+                            color="#4bc2e6"
+                            ariaLabel="tail-spin-loading"
+                            radius="1"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            visible={true}
+                          />
+                        </div>
+                      )}
                       {checkIDCard ? (
                         <h2 className={cx("text-overAll-id-card")}>
-                          OverAll:
-                          <span
-                            style={{
-                              color: overAllIDCard < 80 ? "red" : "green",
-                              marginLeft: "10px",
-                            }}
-                          >
-                            {overAllIDCard}%
-                          </span>
+                          {overAllIDCard === "Cannot check" ? (
+                            "Cannot check"
+                          ) : (
+                            <>
+                              OverAll:
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(overAllIDCard) < 80
+                                      ? "red"
+                                      : "green",
+                                  marginLeft: "10px",
+                                }}
+                              >
+                                {overAllIDCard}%
+                              </span>
+                            </>
+                          )}
                         </h2>
                       ) : (
                         ""

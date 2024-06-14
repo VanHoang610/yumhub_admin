@@ -232,6 +232,55 @@
   justify-content: space-around;
 }
 
+.wrapper-check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-check {
+  display: flex;
+  width: 70px;
+  height: 30px;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: "Montserrat Alternates", "sans-serif";
+  background-color: #4bc2e6;
+}
+
+.text-check {
+  font-size: 15px;
+  color: #fff;
+}
+
+//loading
+.wrapper-loading {
+  flex: 1;
+  display: flex;
+  margin-top: 30px;
+  margin-left: 30px;
+}
+
+.text-loading {
+  color: #4bc2e6;
+  font-size: 15px;
+  font-family: "Montserrat Alternates", "sans-serif";
+  margin-right: 30px;
+}
+
+.text-overAll-id-card {
+  color: #000;
+  margin-left: 50px;
+  width: 200px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "Montserrat Alternates", "sans-serif";
+  justify-content: center;
+  display: flex;
+}
+
 .document-item {
   text-align: center;
 }
