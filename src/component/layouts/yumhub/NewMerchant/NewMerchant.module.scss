@@ -33,6 +33,21 @@
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 
+  //loading
+  .wrapper-loading {
+    flex: 1;
+    display: flex;
+    margin-top: 30px;
+    margin-left: 30px;
+  }
+
+  .text-loading {
+    color: #4bc2e6;
+    font-size: 15px;
+    font-family: "Montserrat Alternates", "sans-serif";
+    margin-right: 30px;
+  }
+
   // logo
   .logo-merchant {
     width: 48%;
@@ -161,7 +176,6 @@
   width: 200px;
   font-size: 18px;
   font-family: "Montserrat Alternates", "sans-serif";
-
 }
 
 .btn-delete {
