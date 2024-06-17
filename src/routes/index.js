@@ -22,7 +22,7 @@ import EmployeeDetails from "../component/layouts/yumhub/Employee/EmployeeDetail
 import AddAdmin from "../component/layouts/yumhub/Employee/AddAdmin"
 import DeletedMerchant from "../component/layouts/yumhub/DeletedMerchants/DeletedMerchants"
 import Orders from "../component/layouts/yumhub/Order/Order"
-
+import Settings from "../component/layouts/defaultLayout/header/Setting/Setting"
 
 
 
@@ -54,7 +54,7 @@ const privateRoutes = [
     { path: '/employee', component: Employee, layout: DefaultLayout },
     { path: '/employee/:id', component: EmployeeDetails, layout: DefaultLayout },
     { path: '/add-admin', component: AddAdmin, layout: DefaultLayout },
-
+    { path: '/settings', component: Settings, layout: DefaultLayout },
 ]
 
 export { publicRoutes, privateRoutes } 

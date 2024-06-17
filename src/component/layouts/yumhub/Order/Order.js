@@ -31,6 +31,7 @@ function Orders() {
 
   const searchInputRef = useRef(null);
 
+
   const fetchOrders = useCallback(async (query = "") => {
     setLoading(true);
     setError(null);
@@ -185,8 +186,8 @@ function Orders() {
           <option value="shipped">Shipped</option>
           <option value="delivered">Delivered</option>
           <option value="cancel">Cancel</option>
-          <option value="backordered">back ordered</option>
-          <option value="fakeOrder">fake order</option>
+          <option value="backordered">Back Ordered</option>
+          <option value="fakeOrder">Fake Order</option>
         </select>
         <div className={cx("filter-slider-container")}>
           <div className={cx("filter-slider-label")}>Total Paid</div>
@@ -369,12 +370,6 @@ function Orders() {
                 </tr>
               </tbody>
             </table>
-
-            {/* <p>Merchant ID: {selectedMerchant._id}</p>
-            <p>Name: {selectedMerchant.name}</p>
-            <p>Email: {selectedMerchant.email}</p>
-            <p>Phone: {selectedMerchant.phone}</p>
-            <p>Address: {selectedMerchant.address}</p> */}
           </div>
         )}
       </Modal>

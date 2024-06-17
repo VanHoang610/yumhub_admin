@@ -1,66 +1,25 @@
-import React, { Fragment } from "react";
-
-import DefaultLayout from "./component/layouts/defaultLayout/defaultLayout";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { publicRoutes, privateRoutes } from "./routes";
-import { UserProvider } from "../src/component/contexts/UserContext";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import { UserProvider } from "./component/contexts/UserContext";
+import { ThemeProvider } from "./component/layouts/defaultLayout/header/Setting/Context/ThemeContext";
+import { LanguageProvider } from "./component/layouts/defaultLayout/header/Setting/Context/LanguageContext";
+import { FontSizeProvider } from "./component/layouts/defaultLayout/header/Setting/Context/FontSizeContext";
+import Main from './Main'; // Import component Main
 
 function App() {
   return (
     <UserProvider>
-      <Router>
-        <div className="App">
-          <Routes>
-            {/* Public Routes */}
-            {publicRoutes.map((route, index) => {
-              const Page = route.component;
-              let Layout = DefaultLayout;
-
-              if (route.layout) {
-                Layout = route.layout;
-              } else if (route.layout === null) {
-                Layout = Fragment;
-              }
-
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <Layout>
-                      <Page />
-                    </Layout>
-                  }
-                />
-              );
-            })}
-
-            {/* Private Routes */}
-            {privateRoutes.map((route, index) => {
-              const Page = route.component;
-              let Layout = DefaultLayout;
-
-              if (route.layout) {
-                Layout = route.layout;
-              } else if (route.layout === null) {
-                Layout = Fragment;
-              }
-
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <Layout>
-                      <Page />
-                    </Layout>
-                  }
-                />
-              );
-            })}
-          </Routes>
-        </div>
-      </Router>
+      <ThemeProvider>
+        <LanguageProvider>
+          <FontSizeProvider>
+            <Router>
+              <div className="App">
+                <Main />
+              </div>
+            </Router>
+          </FontSizeProvider>
+        </LanguageProvider>
+      </ThemeProvider>
     </UserProvider>
   );
 }
