@@ -181,7 +181,7 @@ function NewMerchant() {
   const handleCheckIDCard = async (imageUrl) => {
     try {
       setLoading(true);
-      const apiKey = "VGqiuXb1bdS2xdBVsCqNk9CWJZCRegTc";
+      const apiKey = "a898FrZpkeYGYYPfz046hRervrSm2woD";
       const apiUrl = "https://api.fpt.ai/vision/idr/vnm";
 
       // Gửi FormData đến API
