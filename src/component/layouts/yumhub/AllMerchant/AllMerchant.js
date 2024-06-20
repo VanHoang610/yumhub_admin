@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import Tippy from "@tippyjs/react/headless";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import AxiosInstance from "../../../../utils/AxiosInstance";
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import {
   faEdit,
   faEye,
   faMagnifyingGlass,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
+import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./AllMerchant.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
-import Button from "../../../buttons";
-import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
-import { Wrapper as ProperWrapper } from "../../../Proper/index";
 
 const cx = classNames.bind(styles);
 
@@ -128,7 +128,11 @@ function AllMerchant() {
         setIsEditModal(true);
         setShowModal(true);
       } else {
-        console.log("Không tìm thấy thông tin ");
+        Swal.fire({
+          icon: "info",
+          title: "Infomation",
+          text: "No infomation found!",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -257,7 +261,7 @@ function AllMerchant() {
     setSearchResult([]);
   };
 
-  // show history customer
+  // show history merchant
   const handleHistory = async (id) => {
     try {
       const response = await AxiosInstance.get(
@@ -298,7 +302,7 @@ function AllMerchant() {
   }
 
   return (
-    <div className={cx("contaienr")}>
+    <div className={cx("container")}>
       <div className={cx("content")}>
         <p className={cx("title")}>All Merchant</p>
         <div>
@@ -367,7 +371,7 @@ function AllMerchant() {
                   <td>
                     <img
                       src={logo}
-                      alt={`${item.name} logo`}
+                      alt={"avatar"}
                       className={cx("logo")}
                     />
                   </td>
@@ -421,7 +425,7 @@ function AllMerchant() {
                   className={cx("img-merchant")}
                 />
               </div>
-              <div className={cx("content")}>
+              <div className={cx("content-modal")}>
                 {!isEditModal ? <Button reviewed>Reviewed</Button> : ""}
                 <div className={cx("container-content")}>
                   <p className={cx("name-merchant")}>
@@ -550,9 +554,8 @@ function AllMerchant() {
                     <div key={index} className={cx("wrapper-image-content")}>
                       <div className={cx("wrapper-title-document")}>
                         <p className={cx("title-merchant")}>
-                          {doc.documentTypeID.name}
+                          {doc.documentTypeID.name}:
                         </p>
-                      
                       </div>
                       <div className={cx("wrapper-document")}>
                         <img
@@ -564,7 +567,7 @@ function AllMerchant() {
                           src={doc.imageBackSide}
                           alt="Document Front Side"
                           className={cx("image-document")}
-                        /> 
+                        />
                       </div>
                     </div>
                   ))}
@@ -574,7 +577,7 @@ function AllMerchant() {
                     <div key={index} className={cx("wrapper-image-content")}>
                       <div className={cx("wrapper-title-document")}>
                         <p className={cx("title-merchant")}>
-                          {doc.documentTypeID.name}
+                          {doc.documentTypeID.name}:
                         </p>
                       </div>
                       <div className={cx("wrapper-document")}>
@@ -621,7 +624,7 @@ function AllMerchant() {
               <thead className={cx("table-row-history")}>
                 <tr>
                   <th>#</th>
-                  <th>Name Merchant</th>
+                  <th>Name Customer</th>
                   <th>Name Shipper </th>
                   <th>Delivery Address</th>
                   <th>Time Book</th>
@@ -633,7 +636,9 @@ function AllMerchant() {
                 {dataHistory.map((item, index) => (
                   <tr key={index} onClick={() => handleView(item._id)}>
                     <td>{index + 1}</td>
-                    <td>{item.merchantID ? item.merchantID.name : "N/A"}</td>
+                    <td>
+                      {item.customerID ? item.customerID.fullName : "N/A"}
+                    </td>
                     <td>{item.shipperID ? item.shipperID.fullName : "N/A"}</td>
                     <td>{item ? item.deliveryAddress : "N/A"}</td>
                     <td>{item ? item.timeBook : "N/A"}</td>

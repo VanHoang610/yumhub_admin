@@ -329,13 +329,13 @@
   background-color: #fff;
 }
 
-.contaienr {
+.container {
   background-color: aliceblue;
 }
 
 .content {
   flex: 1;
-  height: 750px;
+  height: 800px;
   padding: 51px 94px;
   overflow: auto; /* Để có thể cuộn nếu nội dung quá dài */
   scrollbar-width: none;
