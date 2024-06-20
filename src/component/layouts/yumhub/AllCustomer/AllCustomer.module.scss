@@ -149,6 +149,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 10px;
   }
 
   //content
@@ -250,6 +251,7 @@
 }
 
 .logo {
+  border-radius: 50%;
   width: 68px;
   height: 66px;
 }
@@ -352,14 +354,17 @@
   background-color: aliceblue;
 }
 
-.header {
-  width: 100vw;
-  height: 96px;
-  background-color: aquamarine;
+.content-modal {
+  flex: 1;
+  margin: 20px;
+  overflow: auto; /* Để có thể cuộn nếu nội dung quá dài */
+  scrollbar-width: none;
 }
 
 .content {
   flex: 1;
+  height: 800px;
   padding: 51px 94px;
   overflow: auto; /* Để có thể cuộn nếu nội dung quá dài */
+  scrollbar-width: none;
 }

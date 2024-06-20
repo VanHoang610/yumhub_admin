@@ -1,77 +1,222 @@
 import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TailSpin } from "react-loader-spinner";
+import Modal from "react-modal";
+import Tippy from "@tippyjs/react";
+import Swal from "sweetalert2";
 import axios from "axios";
+import {
+  faBicycle,
+  faMagnifyingGlass,
+  faMap,
+  faPalette,
+} from "@fortawesome/free-solid-svg-icons";
 
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import AxiosInstance from "../../../../utils/AxiosInstance";
+import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
+import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./AddShipper.module.scss";
-import Modal from "react-modal";
+import ellipse from "../../../../assets/images/ellipse.png";
 import logo from "../../../../assets/images/logoYumhub.png";
+
 const cx = classNames.bind(styles);
 
 Modal.setAppElement("#root");
 
 function AddShipper() {
-  const [shippers, setShippers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedShipper, setSelectedShipper] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [checkIDCard, setCheckIDCard] = useState(false);
+  const [data, setData] = useState([]);
+  const [selectShipperById, setSelectShipperId] = useState({});
+  const [searchResult, setSearchResult] = useState([]);
+  const [tippyVisible, setTippyVisible] = useState(false);
+
+  // modal
+  const [showModal, setShowModal] = useState(false);
+  const [id, setId] = useState("");
+  const [address, setAddress] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [birthDay, setBirthDay] = useState("");
+  const [brandBike, setBrandBike] = useState("");
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [idBike, setIdBike] = useState("");
+  const [joinDay, setJoinDay] = useState("");
+  const [modeCode, setModeCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState([]);
+  const [gender, setGender] = useState([]);
+  const [idCardFrontSide, setIdCardFrontSide] = useState([]);
+  const [drivingLicenseFrontSide, setDrivingLicenseFrontSide] = useState([]);
+  const [driverLicenseFrontSide, setDriverLicenseFrontSide] = useState([]);
+  const [idCardBackSide, setIdCardBackSide] = useState([]);
+  const [drivingLicenseBackSide, setDrivingLicenseBackSide] = useState([]);
+  const [driverLicenseBackSide, setDriverLicenseBackSide] = useState([]);
+
+  const [checkIDCard, setCheckIDCard] = useState(false);  // nhấn nút check
+  const [overAllIDCard, setOverAllIDCard] = useState(""); // hiển thị overAll(% căn cước)
+  const [loadingIdCard, setLoadingIdCard] = useState(false); // hiển thị nút loading khi nhấn check
   const [checkDrivingLicense, setCheckDrivingLicense] = useState(false);
+  const [overAllDrivingLicense, setOverAllDrivingLicense] = useState("");
   const [checkDriverLicense, setCheckDriverLicense] = useState(false);
-  const [messageDrivingLicense, setMessageDrivingLicense] = useState();
-  const [overAllIDCard, setOverAllIDCard] = useState();
-  const [overAllDriverLicense, setOverAllDriverLicense] = useState();
-  const [loadingIDCard, setLoadingIDCard] = useState(false);
+  const [overAllDriverLicense, setOverAllDriverLicense] = useState("");
   const [loadingDriverLicense, setLoadingDriverLicense] = useState(false);
 
+  // hiển thị chi tiết
+  const selectDetail = async (id) => {
+    try {
+      setSearchResult([]);
+      const response = await AxiosInstance.get(
+        `shippers/getShipperById/?id=${id}`
+      );
+      const { detailShipper } = response.data;
+      if (detailShipper) {
+        setSelectShipperId(detailShipper);
+        setShowModal(true);
+      } else {
+        console.log("Không tìm thấy thông tin ");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //load data hiển thị lên modal
   useEffect(() => {
-    const fetchShippers = async () => {
+    if (selectShipperById) {
+      setId(selectShipperById._id || "");
+      setAddress(selectShipperById.address || "");
+      setAvatar(selectShipperById.avatar || "");
+      setBirthDay(selectShipperById.birthDay || "");
+      setBrandBike(selectShipperById.brandBike || "");
+      setEmail(selectShipperById.email || "");
+      setFullName(selectShipperById.fullName || "");
+      setIdBike(selectShipperById.idBike || "");
+      setJoinDay(selectShipperById.joinDay || "");
+      setModeCode(selectShipperById.modeCode || "");
+      setPhoneNumber(selectShipperById.phoneNumber || "");
+      setGender(selectShipperById.sex || "");
+      setIdCardFrontSide(
+        selectShipperById.idCard ? selectShipperById.idCard.front : ""
+      );
+      setDriverLicenseFrontSide(
+        selectShipperById.driverLicense
+          ? selectShipperById.driverLicense.front
+          : ""
+      );
+      setDrivingLicenseFrontSide(
+        selectShipperById.vehicleCertificate
+          ? selectShipperById.vehicleCertificate.front
+          : ""
+      );
+
+      setIdCardBackSide(
+        selectShipperById.idCard ? selectShipperById.idCard.back : ""
+      );
+      setDriverLicenseBackSide(
+        selectShipperById.driverLicense
+          ? selectShipperById.driverLicense.back
+          : ""
+      );
+      setDrivingLicenseBackSide(
+        selectShipperById.vehicleCertificate
+          ? selectShipperById.vehicleCertificate.back
+          : ""
+      );
+    }
+  }, [selectShipperById]);
+
+  //list shipper
+  useEffect(() => {
+    const fetchData = async () => {
       try {
         const response = await AxiosInstance.get(
-          "shippers/listShipperApproval"
+          "/shippers/listShipperApproval"
         );
-        setShippers(response.data.listShipper);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        setData(response.data.listShipper);
+      } catch (error) {
+        console.log(error);
       }
     };
-
-    fetchShippers();
+    fetchData();
   }, []);
 
-  const handleCardClick = (shipper) => {
-    setSelectedShipper(shipper);
-    setIsModalOpen(true);
-
-    //hủy check
-    setCheckIDCard(false);
-    setCheckDriverLicense(false);
-    setCheckDrivingLicense(false);
-    setOverAllIDCard(undefined);
-    setOverAllDriverLicense(undefined);
-    setMessageDrivingLicense(undefined);
-  };
-  const checkDocuments = (front, back) => {
-    if (front && back) {
-      return "available";
-    } else return "not available";
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
+  // nhấn ra ngoài thanh search
+  const handleClickOutSide = () => {
+    setSearchResult([]);
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  // search
+  const handleSearch = async (e) => {
+    const keyword = e.target.value;
+    if (keyword) {
+      try {
+        const response = await AxiosInstance.post(
+          "/shippers/findApproveShipper",
+          {
+            keyword,
+          }
+        );
+        if (response.data.result && response.data.shippers.length > 0) {
+          setSearchResult(response.data.shippers);
+          setTippyVisible(true);
+        } else {
+          setSearchResult([]);
+          setTippyVisible(false);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setSearchResult([]);
+        setTippyVisible(false);
+      }
+    } else {
+      setSearchResult([]);
+      setTippyVisible(false);
+    }
+  };
+
+  // xác nhận merchant
+  const handleApproval = async (id) => {
+    try {
+      const responseUpdate = await AxiosInstance.patch(
+        `shippers/updateShipper?id=${id}`,
+        { status: 3 }
+      );
+
+      const responseVerify = await AxiosInstance.post(
+        "shippers/verifileShipper",
+        { email: email }
+      );
+      console.log(responseUpdate, responseVerify);
+      if (
+        responseUpdate.data.result === false &&
+        responseVerify.data.result === false
+      ) {
+        setShowModal(false);
+        Swal.fire({
+          icon: "info",
+          title: "Approval Failed",
+          text: "There was an error approval the shipper!",
+        });
+      } else {
+        setShowModal(false);
+        Swal.fire({
+          icon: "success",
+          title: "Approval Successful",
+          text: "The shipper has been successfully updated!",
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //check giấy tờ căn cước
   const handleCheckIDCard = async (imageUrl) => {
     try {
-      setLoadingIDCard(true);
-      const apiKey = "VGqiuXb1bdS2xdBVsCqNk9CWJZCRegTc";
+      setLoadingIdCard(true);
+      const apiKey = "a898FrZpkeYGYYPfz046hRervrSm2woD";
       const apiUrl = "https://api.fpt.ai/vision/idr/vnm";
 
       // Gửi FormData đến API
@@ -85,14 +230,16 @@ function AddShipper() {
           },
         }
       );
-      setOverAllIDCard(response.data.data[0].overall_score + "%");
+      setOverAllIDCard(response.data.data[0].overall_score);
       setCheckIDCard(true);
     } catch (error) {
+      console.log(overAllIDCard);
+      console.log(checkIDCard);
       setOverAllIDCard("Cannot check");
       setCheckIDCard(true);
       console.error("Error checking ID card:", error);
     } finally {
-      setLoadingIDCard(false);
+      setLoadingIdCard(false);
     }
   };
 
@@ -106,9 +253,7 @@ function AddShipper() {
       // Gửi FormData đến API
       const response = await axios.post(
         apiUrl,
-        {
-          image_url: imageUrl,
-        },
+        { image_url: imageUrl },
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -117,298 +262,340 @@ function AddShipper() {
         }
       );
       setOverAllDriverLicense(response.data.data[0].overall_score);
-      console.log(overAllDriverLicense);
       setCheckDriverLicense(true);
     } catch (error) {
-      console.error("Error checking Driver License:", error);
       setOverAllDriverLicense("Cannot check");
       setCheckDriverLicense(true);
+      console.error("Error checking Driver License:", error);
     } finally {
       setLoadingDriverLicense(false);
     }
   };
 
-  const handleDrivingLicense = () => {
-    setCheckDrivingLicense(true);
-    setMessageDrivingLicense("Cannot check");
+   //check giấy tờ xe (cà vẹt)
+   const handleCheckDrivingLicense = async () => {
+    try {
+      setOverAllDrivingLicense("Cannot check");
+      setCheckDrivingLicense(true);
+    } catch (error) {
+      console.error("Error checking Driving License:", error);
+    }
   };
 
   return (
     <div className={cx("container")}>
-      <div className={cx("title")}>Shipper Awaiting Approval</div>
-      <div className={cx("search-bar")}>
-        <input type="text" placeholder="Nombre, Unidad, Status" />
-      </div>
-      <div className={cx("card-container")}>
-        {shippers.map((shipper) => (
-          <div
-            key={shipper._id}
-            className={cx("card")}
-            onClick={() => handleCardClick(shipper)}
+      <div className={cx("content")}>
+        <p className={cx("title")}>Stores Awaiting Approval</p>
+        <div>
+          <Tippy
+            animation="fade"
+            interactive
+            placement="bottom"
+            onClickOutside={handleClickOutSide}
+            visible={tippyVisible}
+            render={(attrs) => (
+              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+                {searchResult.length > 0 && (
+                  <ProperWrapper>
+                    <h4 className={cx("search-title")}>Accounts</h4>
+                    {searchResult.length > 0
+                      ? searchResult.map((shipper) => (
+                          <AccountItemShipper
+                            key={shipper._id}
+                            shipper={shipper}
+                            handleView={selectDetail}
+                          />
+                        ))
+                      : setTippyVisible(false)}
+                  </ProperWrapper>
+                )}
+              </div>
+            )}
           >
-            <div className={cx("card-header")}>
-              <div className={cx("avatar-container")}>
-                <img
-                  src={shipper.avatar || "/default-avatar.png"}
-                  alt={shipper.fullName}
-                  className={cx("avatar")}
-                />
+            <div className={cx("inputSearch")}>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className={cx("icon-search")}
+              />
+              <input
+                className={cx("input")}
+                placeholder="Search by name"
+                onChange={handleSearch}
+              />
+            </div>
+          </Tippy>
+        </div>
+        <div className={cx("line-background")} />
+        <div className={cx("grid-container")}>
+          {data.map((item) => (
+            <div className={cx("box")} key={item._id}>
+              <div className={cx("titleBox")}>
+                <img src={logo} alt="logoShipper" className={cx("logo")} />
+                <div className={cx("line")} />
+                <div className={cx("textTitle")}>
+                  <p className={cx("nameShipper")}>{item.fullName}</p>
+                  <p className={cx("gender")}>{item.sex}</p>
+                </div>
               </div>
-              <div className={cx("info")}>
-                <div className={cx("name")}>{shipper.fullName}</div>
-                <div className={cx("phone")}>{shipper.phoneNumber}</div>
+              <div className={cx("line-bottom")} />
+              <div className={cx("contentBox")}>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon icon={faMap} className={cx("icon")} />
+                  <p className={cx("textContent")}>{item.address}</p>
+                </div>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon icon={faBicycle} className={cx("icon")} />
+                  <p className={cx("textContent")}>{item.idBike}</p>
+                </div>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon icon={faPalette} className={cx("icon")} />
+                  <p className={cx("textContent")}>{item.modeCode}</p>
+                </div>
+              </div>
+              <div className={cx("btn-detail")}>
+                <Button
+                  detail
+                  onClick={() => {
+                    selectDetail(item._id);
+                  }}
+                >
+                  Detail
+                </Button>
               </div>
             </div>
-            <div className={cx("card-body")}>
-              <div className={cx("detail")}>
-                <strong>ID Card:</strong>{" "}
-                {checkDocuments(shipper.idCard.front, shipper.idCard.back)}
-              </div>
-              <div className={cx("detail")}>
-                <strong>Driver License:</strong>{" "}
-                {checkDocuments(
-                  shipper.driverLicense.front,
-                  shipper.driverLicense.back
-                )}
-              </div>
-              <div className={cx("detail")}>
-                <strong>Vehicle Certificate:</strong>{" "}
-                {checkDocuments(
-                  shipper.vehicleCertificate.front,
-                  shipper.vehicleCertificate.back
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="Shipper Details"
+        isOpen={showModal}
+        onRequestClose={() => setShowModal(false)}
+        contentLabel="Update Merchant"
         className={cx("modal")}
-        overlayClassName={cx("overlay")}
       >
-        {selectedShipper && (
-          <div className={cx("modal-content")}>
-            <div className={cx("info-main")}>
-              <div className={cx("modal-header")}>
-                <div className={cx("modal-avatar-container")}>
-                  <img
-                    src={selectedShipper.avatar || "/default-avatar.png"}
-                    alt={selectedShipper.fullName}
-                    className={cx("modal-avatar")}
-                  />
-                </div>
-                <div className={cx("modal-info")}>
-                  <p className={cx("modal-balance")}>
-                    <strong>Balance:</strong> {selectedShipper.balance} VND
-                  </p>
-                  <p className={cx("modal-rating")}>
-                    <strong>Rating:</strong> {selectedShipper.rating} ★
-                  </p>
-                </div>
-              </div>
-              <div className={cx("modal-body")}>
-                <div className={cx("modal-section")}>
-                  <label>FullName</label>
-                  <input
-                    type="text"
-                    value={selectedShipper.fullName}
-                    readOnly
-                  />
-                </div>
-                <div className={cx("modal-section")}>
-                  <label>Email</label>
-                  <input type="text" value={selectedShipper.email} readOnly />
-                </div>
-                <div className={cx("modal-section")}>
-                  <label>Phone Number</label>
-                  <input
-                    type="text"
-                    value={selectedShipper.phoneNumber}
-                    readOnly
-                  />
-                </div>
-                <div className={cx("modal-section")}>
-                  <label>Day of Birth</label>
-                  <input
-                    type="text"
-                    value={selectedShipper.dayOfBirth}
-                    readOnly
-                  />
-                </div>
-                <div className={cx("modal-section")}>
-                  <label>Join Date</label>
-                  <input
-                    type="text"
-                    value={selectedShipper.joinDate}
-                    readOnly
-                  />
-                </div>
-              </div>
+        {selectShipperById && (
+          <div className={cx("modal-container")}>
+            <div className={cx("logo-merchant")}>
+              <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
+              <img src={avatar} alt="Shipper" className={cx("img-merchant")} />
             </div>
+            <div className={cx("content-modal")}>
+              <Button awaiting>Awaiting Approve</Button>
+              <div className={cx("container-content")}>
+                <p className={cx("name-shipper")}>{fullName}</p>
+                <div className={cx("line")}></div>
+                <p className={cx("gender-modal")}>{gender}</p>
+              </div>
+              <div className={cx("wrapper-content")}>
+                <p className={cx("title-merchant")}>Address:</p>
+                <p className={cx("content-merchant")}>{address}</p>
+              </div>
+              <div className={cx("wrapper-content")}>
+                <p className={cx("title-merchant")}>Email:</p>
+                <p className={cx("content-merchant")}>{email}</p>
+              </div>
+              <div className={cx("wrapper-content")}>
+                <p className={cx("title-merchant")}>PhoneNumber:</p>
+                <p className={cx("content-merchant")}>{phoneNumber}</p>
+              </div>
+              <div className={cx("wrapper-content")}>
+                <p className={cx("title-merchant")}>Birth Day:</p>
+                <p className={cx("content-merchant")}>{birthDay}</p>
+              </div>
+              <div className={cx("wrapper-content")}>
+                <p className={cx("title-merchant")}>Brand Bike:</p>
+                <p className={cx("content-merchant")}>{brandBike}</p>
+              </div>
+              <div className={cx("wrapper-content")}>
+                <p className={cx("title-merchant")}>Mode Code:</p>
+                <p className={cx("content-merchant")}>{modeCode}</p>
+              </div>
+              <div className={cx("wrapper-content")}>
+                <p className={cx("title-merchant")}>ID Bike:</p>
+                <p className={cx("content-merchant")}>{idBike}</p>
+              </div>
+              <div className={cx("wrapper-image-content")}>
+                <div className={cx("wrapper-title-document")}>
+                  <p className={cx("title-merchant")}>ID Card:</p>
+                  <div
+                    className={cx("btn-check")}
+                    onClick={() => handleCheckIDCard(idCardFrontSide)}
+                  >
+                    <p className={cx("text-check")}>Check</p>
+                  </div>
+                </div>
+                <div className={cx("wrapper-document")}>
+                  <img
+                    src={idCardFrontSide}
+                    alt="Document Front Side"
+                    className={cx("image-document")}
+                  />
+                  <img
+                    src={idCardBackSide}
+                    alt="Document Front Side"
+                    className={cx("image-document")}
+                  />
+                  {loadingIdCard && (
+                    <div className={cx("wrapper-loading")}>
+                      <span className={cx("text-loading")}>
+                        Đang loading...
+                      </span>
+                      <TailSpin
+                        height="40"
+                        width="40"
+                        color="#4bc2e6"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    </div>
+                  )}
+                  {checkIDCard ? (
+                    <h2 className={cx("text-overAll-id-card")}>
+                      {overAllIDCard === "Cannot check" ? (
+                        "Cannot check"
+                      ) : (
+                        <>
+                          OverAll:
+                          <span
+                            style={{
+                              color:
+                                parseFloat(overAllIDCard) < 80
+                                  ? "red"
+                                  : "green",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {overAllIDCard}%
+                          </span>
+                        </>
+                      )}
+                    </h2>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
 
-            <div className={cx("modal-documents")}>
-              <h3>Document</h3>
-              <div className={cx("document-container")}>
-                <div className={cx("document-item")}>
-                  <h4>National identity card</h4>
-                  <img
-                    src={selectedShipper.idCard.front || logo}
-                    alt="Front ID"
-                  />
-                  <img
-                    src={selectedShipper.idCard.back || logo}
-                    alt="Back ID"
-                  />
-                  <div className={cx("wrapper-check")}>
-                    <div
-                      className={cx("btn-check")}
-                      onClick={() =>
-                        handleCheckIDCard(selectedShipper.idCard.front)
-                      }
-                    >
-                      <p className={cx("text-check")}>Check</p>
-                    </div>
-                    {loadingIDCard && (
-                      <div className={cx("wrapper-loading")}>
-                        <span className={cx("text-loading")}>
-                          Đang loading...
-                        </span>
-                        <TailSpin
-                          height="40"
-                          width="40"
-                          color="#4bc2e6"
-                          ariaLabel="tail-spin-loading"
-                          radius="1"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                          visible={true}
-                        />
-                      </div>
-                    )}
-                    {checkIDCard && (
-                      <h2 className={cx("text-overAll-id-card")}>
-                        {overAllIDCard === "Cannot check" ? (
-                          "Cannot check"
-                        ) : (
-                          <>
-                            OverAll:
-                            <span
-                              style={{
-                                color:
-                                  parseFloat(overAllIDCard) < 80
-                                    ? "red"
-                                    : "green",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              {overAllIDCard}
-                            </span>
-                          </>
-                        )}
-                      </h2>
-                    )}
+              <div className={cx("wrapper-image-content")}>
+                <div className={cx("wrapper-title-document")}>
+                  <p className={cx("title-merchant")}>Driving License:</p>
+                  <div
+                    className={cx("btn-check")}
+                    onClick={() => handleCheckDrivingLicense()}
+                  >
+                    <p className={cx("text-check")}>Check</p>
                   </div>
                 </div>
-                <div className={cx("document-item")}>
-                  <h4>Vehicle registration papers</h4>
+                <div className={cx("wrapper-document")}>
                   <img
-                    src={selectedShipper.vehicleCertificate.front || logo}
-                    alt="Front Vehicle"
+                    src={drivingLicenseFrontSide}
+                    alt="Document Front Side"
+                    className={cx("image-document")}
                   />
                   <img
-                    src={selectedShipper.vehicleCertificate.back || logo}
-                    alt="Back Vehicle"
+                    src={drivingLicenseFrontSide}
+                    alt="Document Front Side"
+                    className={cx("image-document")}
                   />
-                  <div className={cx("wrapper-check")}>
-                    <div
-                      className={cx("btn-check")}
-                      onClick={() =>
-                        handleDrivingLicense(
-                          selectedShipper.driverLicense.front
-                        )
-                      }
-                    >
-                      <p className={cx("text-check")}>Check</p>
-                    </div>
-                    {checkDrivingLicense && (
-                      <p className={cx("text-overAll-id-card")}>
-                        {messageDrivingLicense}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className={cx("document-item")}>
-                  <h4>Driver's license</h4>
-                  <img
-                    src={selectedShipper.driverLicense.front || logo}
-                    alt="Front License"
-                  />
-                  <img
-                    src={selectedShipper.driverLicense.back || logo}
-                    alt="Back License"
-                  />
-                  <div className={cx("wrapper-check")}>
-                    <div
-                      className={cx("btn-check")}
-                      onClick={() =>
-                        handleCheckDriverLicense(
-                          "https://i.pinimg.com/236x/74/86/c9/7486c9b62c4e8e611e12f633a0a07fff.jpg"
-                        )
-                      }
-                    >
-                      <p className={cx("text-check")}>Check</p>
-                    </div>
-                    {loadingDriverLicense && (
-                      <div className={cx("wrapper-loading")}>
-                        <span className={cx("text-loading")}>
-                          Đang loading...
-                        </span>
-                        <TailSpin
-                          height="40"
-                          width="40"
-                          color="#4bc2e6"
-                          ariaLabel="tail-spin-loading"
-                          radius="1"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                          visible={true}
-                        />
-                      </div>
-                    )}
-                    {checkDriverLicense && (
-                      <h2 className={cx("text-overAll-id-card")}>
-                        {overAllDriverLicense === "Cannot check" ? (
-                          "Cannot check"
-                        ) : (
-                          <>
-                            OverAll:
-                            <span
-                              style={{
-                                color:
-                                  parseFloat(overAllDriverLicense) < 80
-                                    ? "red"
-                                    : "green",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              {overAllDriverLicense}%
-                            </span>
-                          </>
-                        )}
-                      </h2>
-                    )}
-                  </div>
+                  {checkDrivingLicense ? (
+                    <h2 className={cx("text-overAll-id-card")}>
+                      {overAllDrivingLicense === "Cannot check" ? (
+                        "Cannot check"
+                      ) : (
+                        <>
+                          OverAll:
+                          <span
+                            style={{
+                              color:
+                                parseFloat(overAllDrivingLicense) < 80
+                                  ? "red"
+                                  : "green",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {overAllDrivingLicense}%
+                          </span>
+                        </>
+                      )}
+                    </h2>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
-            </div>
-            <div className={cx("modal-actions")}>
-              <button className={cx("cancel-btn")} onClick={closeModal}>
-                Cancel
-              </button>
-              <button className={cx("approve-btn")}>Approve</button>
+
+              <div className={cx("wrapper-image-content")}>
+                <div className={cx("wrapper-title-document")}>
+                  <p className={cx("title-merchant")}>Driver License:</p>
+                  <div
+                    className={cx("btn-check")}
+                    onClick={() => handleCheckDriverLicense(driverLicenseFrontSide)}
+                  >
+                    <p className={cx("text-check")}>Check</p>
+                  </div>
+                </div>
+                <div className={cx("wrapper-document")}>
+                  <img
+                    src={driverLicenseFrontSide}
+                    alt="Document Front Side"
+                    className={cx("image-document")}
+                  />
+                  <img
+                    src={driverLicenseFrontSide}
+                    alt="Document Front Side"
+                    className={cx("image-document")}
+                  />
+                  {loadingDriverLicense && (
+                    <div className={cx("wrapper-loading")}>
+                      <span className={cx("text-loading")}>
+                        Đang loading...
+                      </span>
+                      <TailSpin
+                        height="40"
+                        width="40"
+                        color="#4bc2e6"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    </div>
+                  )}
+                  {checkDriverLicense? (
+                    <h2 className={cx("text-overAll-id-card")}>
+                      {overAllDriverLicense === "Cannot check" ? (
+                        "Cannot check"
+                      ) : (
+                        <>
+                          OverAll:
+                          <span
+                            style={{
+                              color:
+                                parseFloat(overAllDriverLicense) < 80
+                                  ? "red"
+                                  : "green",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {overAllDriverLicense}%
+                          </span>
+                        </>
+                      )}
+                    </h2>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+
+              <div className={cx("btn-delete")}>
+                <Button approve_btn onClick={() => handleApproval(id)}>
+                  Approval
+                </Button>
+              </div>
             </div>
           </div>
         )}

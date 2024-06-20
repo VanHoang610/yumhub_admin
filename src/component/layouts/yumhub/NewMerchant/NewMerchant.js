@@ -217,7 +217,7 @@ function NewMerchant() {
   };
 
   return (
-    <div className={cx("contaienr")}>
+    <div className={cx("container")}>
       <div className={cx("content")}>
         <p className={cx("title")}>Stores Awaiting Approval</p>
         <div>

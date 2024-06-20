@@ -265,7 +265,7 @@ function AllCustomer() {
                   <td>
                     <img
                       src={item.avatar}
-                      alt={`${item.name} logo`}
+                      alt={`avatar`}
                       className={cx("logo")}
                     />
                   </td>
@@ -321,7 +321,7 @@ function AllCustomer() {
                   className={cx("img-merchant")}
                 />
               </div>
-              <div className={cx("content")}>
+              <div className={cx("content-modal")}>
                 <Button reviewed>Reviewed</Button>
                 <div className={cx("container-content")}>
                   <p className={cx("name-merchant")}>

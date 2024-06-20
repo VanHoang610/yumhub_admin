@@ -4,8 +4,111 @@
   padding: 0;
 }
 
+//modal change-password
+.modal {
+  display: flex;
+  background-color: #023434;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+  .wrapper-box-change-password {
+    flex: 1;
+    width: 500px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ededed;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  .title-change-password {
+    display: flex;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-family: "Poppins", "sans-serif";
+    color: #4e4c4c;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .line {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin-bottom: 20px;
+  }
+
+  .wrapper-password {
+    width: 90%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: space-between; 
+    // background-color: #0072b2;
+  }
+
+  .text-password {
+    color: #4e4c4c;
+    font-family: "Poppins", "sans-serif";
+    white-space: nowrap;
+    width: 45%;
+  }
+
+  .input {
+    flex: 1;
+    width: 70px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+  }
+
+  .icon {
+    margin-top: -10px;
+    position: absolute;
+    right: 10px;
+    color: #888;
+    cursor: pointer;
+  }
+
+  .btn-set-password {
+    display: flex;
+    width: 80%;
+    height: 50px;
+    margin-top: 40px;
+  }
+
+  .btn {
+    flex: 1;
+    background-color: #19D6E5;
+    display: flex;
+    color: #fff;
+    font-size: 16px;
+    font-family: "Poppins", "sans-serif";
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #4bd4dd;
+      border: none;
+    }
+  }
+}
+
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   background-color: #f0f2f5;
   overflow-x: hidden;
 }
@@ -17,7 +120,7 @@ body {
   padding: 17px 19px;
   width: 100%;
   min-height: 76px;
-  background-color: #0072B2;
+  background-color: #0072b2;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 10px;
@@ -45,20 +148,20 @@ body {
   margin-left: 19px;
   font-size: 24px;
   font-weight: bold;
-  color: #FFF;
+  color: #fff;
 }
 
 .search-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: #FFF;
+  color: #fff;
 }
 
 .icon {
   width: 28px;
   height: 28px;
-  color: #FFF;
+  color: #fff;
 }
 
 .menu {

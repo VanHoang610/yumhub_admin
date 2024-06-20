@@ -1,383 +1,359 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faEye,
+  faMagnifyingGlass,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Swal from "sweetalert2";
+import Tippy from "@tippyjs/react/headless";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./Order.module.scss";
-import Modal from "react-modal";
-import debounce from "lodash/debounce";
-import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
-import ReactSlider from "react-slider";
+import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
 
+import image_merchant from "../../../../assets/images/logo_merchant.png";
+import ellipse from "../../../../assets/images/ellipse.png";
+import Button from "../../../buttons";
 const cx = classNames.bind(styles);
 
 Modal.setAppElement("#root");
 
 function Orders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [selectedShipper, setSelectedShipper] = useState(null);
-  const [selectedMerchant, setSelectedMerchant] = useState(null);
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-  const [isShipperModalOpen, setIsShipperModalOpen] = useState(false);
-  const [isMerchantModalOpen, setIsMerchantModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortField, setSortField] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [filterStatus, setFilterStatus] = useState("");
-  const [filterAmount, setFilterAmount] = useState([0, 10000000]);
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
+  };
 
-  const searchInputRef = useRef(null);
+  const [data, setData] = useState([{}]);
+  const [selectedOrder, setSelectedOrder] = useState({});
+  const [isEditModal, setIsEditModal] = useState(false);
 
-  const fetchOrders = useCallback(async (query = "") => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = query.trim()
-        ? await AxiosInstance.get(`orders/searchOrder?key=${query}`)
-        : await AxiosInstance.get("orders/getAllOrder");
+  const [searchResult, setSearchResult] = useState([]);
+  const [tippyVisible, setTippyVisible] = useState(false);
 
-      const fetchedOrders = response.data.order || response.data.orders;
-      if (Array.isArray(fetchedOrders)) {
-        setOrders(fetchedOrders);
-      } else {
-        setError("Invalid data format from API");
+  const [showModal, setShowModal] = useState(false);
+  const [orderStatuses, setOrderStatuses] = useState([]);
+  const [showModalHistory, setShowModalHistory] = useState(false);
+
+  //gọi api all shipper
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await AxiosInstance.get("orders/getAllOrder");
+        const updatedOrder = response.data.order.map((item) => ({
+          ...item,
+          timeBook: formatDate(item.timeBook),
+          nameStatus: getOrderStatusName(item.status),
+        }));
+        setData(updatedOrder);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-      if (searchInputRef.current) {
-        searchInputRef.current.focus();
-      }
-    }
+    };
+    fetchData();
   }, []);
 
-  const debouncedFetchOrders = useCallback(debounce(fetchOrders, 1000), [
-    fetchOrders,
-  ]);
-
-  useEffect(() => {
-    debouncedFetchOrders(searchQuery);
-    return () => {
-      debouncedFetchOrders.cancel();
-    };
-  }, [searchQuery, debouncedFetchOrders]);
-
-  useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+  // nhấn ra ngoài thanh search
+  const handleClickOutSide = () => {
+    setSearchResult([]);
   };
 
-  const handleViewClick = (e, order) => {
-    e.stopPropagation();
+  // nhấn xem chi tiết
+  const handleView = async (order) => {
+    setSearchResult([]);
+    setShowModal(true);
     setSelectedOrder(order);
-    setIsOrderModalOpen(true);
   };
 
-  const handleCustomerClick = (e, customerID) => {
-    e.stopPropagation();
-    const customer = orders.find(
-      (order) => order.customerID._id === customerID
-    )?.customerID;
-    setSelectedCustomer(customer);
-    setIsCustomerModalOpen(true);
-  };
-
-  const handleShipperClick = (e, shipperID) => {
-    e.stopPropagation();
-    const shipper = orders.find(
-      (order) => order.shipperID._id === shipperID
-    )?.shipperID;
-    setSelectedShipper(shipper);
-    setIsShipperModalOpen(true);
-  };
-
-  const handleMerchantClick = (e, merchantID) => {
-    e.stopPropagation();
-    const merchant = orders.find(
-      (order) => order.merchantID._id === merchantID
-    )?.merchantID;
-    setSelectedMerchant(merchant);
-    setIsMerchantModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOrderModalOpen(false);
-    setIsCustomerModalOpen(false);
-    setIsShipperModalOpen(false);
-    setIsMerchantModalOpen(false);
-  };
-
-  const handleSort = (field) => {
-    const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
-    setSortField(field);
-    setSortOrder(order);
-  };
-
-  const formatCurrency = (value) => {
-    return value.toLocaleString("en-US", { minimumFractionDigits: 0 });
-  };
-
-  const sortedOrders = [...orders].sort((a, b) => {
-    if (!sortField) return 0;
-    const valueA = a[sortField];
-    const valueB = b[sortField];
-    const orderMultiplier = sortOrder === "asc" ? 1 : -1;
-
-    if (valueA < valueB) return -1 * orderMultiplier;
-    if (valueA > valueB) return 1 * orderMultiplier;
-    return 0;
-  });
-
-  const filteredOrders = sortedOrders.filter((order) => {
-    return (
-      (!filterStatus || order.status.name === filterStatus) &&
-      order.totalPaid >= filterAmount[0] &&
-      order.totalPaid <= filterAmount[1]
-    );
-  });
-
-  const handleFilterStatusChange = (e) => {
-    setFilterStatus(e.target.value);
-  };
-
-  const handleFilterAmountChange = (values) => {
-    setFilterAmount(values);
-  };
-
-  const getSortIcon = (field) => {
-    if (sortField === field) {
-      return sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />;
+  // search
+  const handleSearch = async (e) => {
+    const keyword = e.target.value;
+    if (keyword) {
+      try {
+        const response = await AxiosInstance.get(
+          `/orders/searchOrder?search=${keyword}`
+        );
+        console.log(response);
+        if (response.data.result && response.data.shippers.length > 0) {
+          setSearchResult(response.data.shippers);
+          setTippyVisible(true);
+        } else {
+          setSearchResult([]);
+          setTippyVisible(false);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setSearchResult([]);
+        setTippyVisible(false);
+      }
+    } else {
+      setSearchResult([]);
+      setTippyVisible(false);
     }
-    return <FaSort />;
   };
+
+  // nhấn tắt modal
+  const handleModalClose = () => {
+    setShowModal(false);
+    setIsEditModal(false);
+    setShowModalHistory(false);
+  };
+
+  // gọi api lấy orderStatus
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await AxiosInstance.get("orders/getAllOrderStatus");
+        setOrderStatuses(response.data.orderStatus);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // lấy ra tên của status trong order
+  function getOrderStatusName(statusId) {
+    const matchingStatus = orderStatuses.find(
+      (status) => status._id === statusId._id
+    );
+    return matchingStatus ? matchingStatus.name : "N/A";
+  }
 
   return (
     <div className={cx("container")}>
-      <div className={cx("header")}>
-        <div className={cx("title")}>All Orders</div>
-        <div className={cx("search-container")}>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search orders..."
-            className={cx("search-input")}
-            ref={searchInputRef}
-          />
+      <div className={cx("content")}>
+        <p className={cx("title")}>All Orders</p>
+        <div>
+          <Tippy
+            animation="fade"
+            interactive
+            placement="bottom"
+            onClickOutside={handleClickOutSide}
+            visible
+            render={(attrs) => (
+              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+                {searchResult.length > 0 && (
+                  <ProperWrapper>
+                    <h4 className={cx("search-title")}>Accounts</h4>
+                    {searchResult.length > 0
+                      ? searchResult.map((shipper) => (
+                          <AccountItemShipper
+                            key={shipper._id}
+                            shipper={shipper}
+                            handleView={handleView}
+                          />
+                        ))
+                      : setTippyVisible(false)}
+                  </ProperWrapper>
+                )}
+              </div>
+            )}
+          >
+            <div className={cx("inputSearch")}>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className={cx("icon-search")}
+              />
+              <input
+                className={cx("input")}
+                placeholder="Search by name"
+                onChange={handleSearch}
+              />
+            </div>
+          </Tippy>
         </div>
-      </div>
-
-      <div className={cx("filters")}>
-        <select
-          value={filterStatus}
-          onChange={handleFilterStatusChange}
-          className={cx("filter-select")}
-        >
-          <option value="">All Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancel">Cancel</option>
-          <option value="backordered">back ordered</option>
-          <option value="fakeOrder">fake order</option>
-        </select>
-        <div className={cx("filter-slider-container")}>
-          <div className={cx("filter-slider-label")}>Total Paid</div>
-          <ReactSlider
-            className={cx("filter-slider")}
-            thumbClassName={cx("filter-slider-thumb")}
-            trackClassName={cx("filter-slider-track")}
-            value={filterAmount}
-            onChange={handleFilterAmountChange}
-            min={0}
-            max={10000000}
-            step={100}
-          />
-          <div className={cx("filter-slider-values")}>
-            <span>{formatCurrency(filterAmount[0])}</span>
-            <span>{formatCurrency(filterAmount[1])}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className={cx("table-container")}>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : (
+        <div className={cx("line-background")} />
+        <div className={cx("box-container")}>
           <table className={cx("table")}>
             <thead>
               <tr>
-                <th onClick={() => handleSort("_id")}>
-                  Order Number {getSortIcon("_id")}
-                </th>
-                <th>Customer</th>
-                <th>Shipper</th>
+                <th>ID</th>
                 <th>Merchant</th>
-                <th onClick={() => handleSort("timeBook")}>
-                  Time Book {getSortIcon("timeBook")}
-                </th>
-                <th onClick={() => handleSort("timeGiveFood")}>
-                  Delivery Date {getSortIcon("timeGiveFood")}
-                </th>
+                <th>Shipper</th>
+                <th>Customer</th>
+                <th>Voucher</th>
+                <th>Time Book</th>
                 <th>Status</th>
-                <th onClick={() => handleSort("totalPaid")}>
-                  Total Amount {getSortIcon("totalPaid")}
-                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(filteredOrders) &&
-                filteredOrders.map((order) => (
-                  <tr
-                    key={order._id}
-                    onClick={(e) => handleViewClick(e, order)}
-                  >
-                    <td className={cx("order-number")}>{order._id}</td>
-                    <td
-                      onClick={(e) =>
-                        handleCustomerClick(e, order.customerID._id)
-                      }
+              {data.map((item, index) => (
+                <tr
+                  key={index}
+                  className={cx("table-row")}
+                  onClick={() => handleView(item)}
+                >
+                  <td>{item._id}</td>
+                  <td>{item.merchantID ? item.merchantID.name : "N/A"}</td>
+                  <td>{item.shipperID ? item.shipperID.fullName : "N/A"}</td>
+                  <td>{item.customerID ? item.customerID.fullName : "N/A"}</td>
+                  <td>{item.voucherID ? item.voucherID.nameVoucher : "N/A"}</td>
+                  <td>{item.customerID ? item.timeBook : "N/A"}</td>
+                  <td>
+                    <p
+                      className={cx(
+                        "status", // Base class for all status elements
+                        item.nameStatus === "cancel"
+                          ? "status-cancel"
+                          : "status-work"
+                      )}
                     >
-                      {order.customerID?.fullName || "Unknown"}
-                    </td>
-                    <td
-                      onClick={(e) =>
-                        handleShipperClick(e, order.shipperID._id)
-                      }
+                      {item.nameStatus}
+                    </p>
+                  </td>
+                  <td>
+                    <button
+                      className={cx("action-button")}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleView(item._id);
+                      }}
                     >
-                      {order.shipperID?.fullName || "Unknown"}
-                    </td>
-                    <td
-                      onClick={(e) =>
-                        handleMerchantClick(e, order.merchantID._id)
-                      }
-                    >
-                      {order.merchantID?.name || "Unknown"}
-                    </td>
-                    <td>{new Date(order.timeBook).toLocaleString()}</td>
-                    <td>{new Date(order.timeGiveFood).toLocaleString()}</td>
-                    <td>{order.status?.name || "Unknown"}</td>
-                    <td>{formatCurrency(order.totalPaid)}</td>
-                  </tr>
-                ))}
+                      <FontAwesomeIcon icon={faEye} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
-        )}
+        </div>
+        <Modal
+          isOpen={showModal}
+          onRequestClose={handleModalClose}
+          contentLabel="Table Order"
+          className={cx("modal")}
+        >
+          {selectedOrder && (
+            <div className={cx("modal-container")}>
+              <div className={cx("logo-shipper")}>
+                <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
+                <img
+                  src={image_merchant}
+                  alt="Merchant"
+                  className={cx("img-shipper")}
+                />
+              </div>
+              <div className={cx("content-modal")}>
+                {selectedOrder.nameStatus === "cancel" ? (
+                  <Button awaiting>{selectedOrder.nameStatus}</Button>
+                ) : (
+                  <Button reviewed>{selectedOrder.nameStatus}</Button>
+                )}
+
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>ID:</p>
+                  <p className={cx("content-merchant")}>{selectedOrder._id}</p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Name Customer:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.customerID
+                      ? selectedOrder.customerID.fullName
+                      : "N/A"}
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Phone Customer:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.customerID
+                      ? selectedOrder.customerID.phoneNumber
+                      : "N/A"}
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Name Merchant:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.merchantID
+                      ? selectedOrder.merchantID.name
+                      : "N/A"}
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Name Shipper:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.shipperID
+                      ? selectedOrder.shipperID.fullName
+                      : "N/A"}
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Phone Shipper:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.shipperID
+                      ? selectedOrder.shipperID.phoneNumber
+                      : "N/A"}
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Voucher:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.voucherID
+                      ? selectedOrder.voucherID.nameVoucher
+                      : "N/A"}
+                  </p>
+                </div>
+
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Date Book:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.timeBook}
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Delivery Address:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.deliveryAddress}
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Delivery Cost:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.deliveryCost} đ
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Price Food:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.priceFood} đ
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Total:</p>
+                  <p className={cx("content-merchant")}>
+                    {selectedOrder.totalPaid} đ
+                  </p>
+                </div>
+                <div className={cx("wrapper-content")}>
+                  <p className={cx("title-merchant")}>Payment Method:</p>
+                  <p className={cx("content-merchant")}>
+                    {(() => {
+                      switch (selectedOrder.paymentMethod) {
+                        case 1:
+                          return "Bank Transfer";
+                        case 2:
+                          return "Cash";
+                        case 3:
+                          return "Zalo Pay";
+                        default:
+                          return "N/A";
+                      }
+                    })()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </Modal>
       </div>
-
-      <Modal
-        isOpen={isOrderModalOpen}
-        onRequestClose={closeModal}
-        className={cx("modal")}
-        overlayClassName={cx("overlay")}
-      >
-        {selectedOrder && (
-          <div className={cx("modal-content")}>
-            <h2>Order Details</h2>
-            <p>Order Number: {selectedOrder._id}</p>
-            <p>Customer: {selectedOrder.customerID?.fullName || "Unknown"}</p>
-            <p>Shipper: {selectedOrder.shipperID?.fullName || "Unknown"}</p>
-            <p>Merchant: {selectedOrder.merchantID?.name || "Unknown"}</p>
-            <p>
-              Time Book: {new Date(selectedOrder.timeBook).toLocaleString()}
-            </p>
-            <p>
-              Delivery Date:{" "}
-              {new Date(selectedOrder.timeGiveFood).toLocaleString()}
-            </p>
-            <p>Status: {selectedOrder.status?.name || "Unknown"}</p>
-            <p>Total Amount: {formatCurrency(selectedOrder.totalPaid)}</p>
-          </div>
-        )}
-      </Modal>
-
-      <Modal
-        isOpen={isCustomerModalOpen}
-        onRequestClose={closeModal}
-        className={cx("modal")}
-        overlayClassName={cx("overlay")}
-      >
-        {selectedCustomer && (
-          <div className={cx("modal-content")}>
-            <h2>Customer Details</h2>
-            <p>Customer ID: {selectedCustomer._id}</p>
-            <p>Full Name: {selectedCustomer.fullName}</p>
-            <p>Email: {selectedCustomer.email}</p>
-            <p>Phone: {selectedCustomer.phone}</p>
-            <p>Address: {selectedCustomer.address}</p>
-          </div>
-        )}
-      </Modal>
-
-      <Modal
-        isOpen={isShipperModalOpen}
-        onRequestClose={closeModal}
-        className={cx("modal")}
-        overlayClassName={cx("overlay")}
-      >
-        {selectedShipper && (
-          <div className={cx("modal-content")}>
-            <h2>Shipper Details</h2>
-            <p>Shipper ID: {selectedShipper._id}</p>
-            <p>Full Name: {selectedShipper.fullName}</p>
-            <p>Email: {selectedShipper.email}</p>
-            <p>Phone: {selectedShipper.phone}</p>
-            <p>Address: {selectedShipper.address}</p>
-          </div>
-        )}
-      </Modal>
-
-      <Modal
-        isOpen={isMerchantModalOpen}
-        onRequestClose={closeModal}
-        className={cx("modal")}
-        overlayClassName={cx("overlay")}
-      >
-        {selectedMerchant && (
-          <div className={cx("modal-content")}>
-            <h2>Merchant Details</h2>
-            <table className={cx("details-table")}>
-              <tbody>
-                <tr>
-                  <td>Merchant ID</td>
-                  <td>{selectedMerchant._id}</td>
-                </tr>
-                <tr>
-                  <td>Name</td>
-                  <td>{selectedMerchant.name}</td>
-                </tr>
-                <tr>
-                  <td>Email</td>
-                  <td>{selectedMerchant.email}</td>
-                </tr>
-                <tr>
-                  <td>Phone</td>
-                  <td>{selectedMerchant.phoneNumber}</td>
-                </tr>
-                <tr>
-                  <td>Address</td>
-                  <td>{selectedMerchant.address}</td>
-                </tr>
-              </tbody>
-            </table>
-
-            {/* <p>Merchant ID: {selectedMerchant._id}</p>
-            <p>Name: {selectedMerchant.name}</p>
-            <p>Email: {selectedMerchant.email}</p>
-            <p>Phone: {selectedMerchant.phone}</p>
-            <p>Address: {selectedMerchant.address}</p> */}
-          </div>
-        )}
-      </Modal>
     </div>
   );
 }

@@ -1,0 +1,33 @@
+// menu
+.wrapper-menu {
+  width: 280px;
+  background-color: #fff;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-right: 60px;
+}
+
+//menu-items
+.wrapper-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon-item {
+  display: flex;
+  margin-right: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-item {
+  color: #313131;
+  font-size: 18px;
+  font-family: "Montserrat Alternates", "sans-serif";
+  margin-right: 20px;
+  font-weight: 600;
+}

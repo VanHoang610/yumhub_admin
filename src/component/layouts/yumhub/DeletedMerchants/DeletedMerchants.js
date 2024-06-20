@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
 import Tippy from "@tippyjs/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import Button from "../../../buttons";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
+import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./DeletedMerchant.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
-import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
+import image_merchant from "../../../../assets/images/logo_merchant.png";
 
 const cx = classNames.bind(styles);
 
@@ -31,7 +31,6 @@ function DeletedMerchant() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
-  const [documents, setDocuments] = useState([]);
   const [idCardDocuments, setIdCardDocuments] = useState([]);
   const [licenseDriverDocuments, setLicenseDriverDocuments] = useState([]);
 
@@ -54,7 +53,9 @@ function DeletedMerchant() {
   const handleView = async (id) => {
     setSearchResult([]);
     try {
-      const response = await AxiosInstance.get(`merchants/getMerchantById?id=${id}`);
+      const response = await AxiosInstance.get(
+        `merchants/getMerchantById?id=${id}`
+      );
       const { detailMerchant } = response.data;
       console.log(response);
       if (detailMerchant) {
@@ -90,7 +91,7 @@ function DeletedMerchant() {
         filteredDocuments.filter(
           (doc) => doc.documentTypeID.name === "Business License"
         )
-      );;
+      );
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "N/A");
       setType(selectMerchantById.type ? selectMerchantById.type.name : "N/A");
     }
@@ -134,6 +135,7 @@ function DeletedMerchant() {
   const handleModalClose = () => {
     setShowModal(false);
   };
+
   return (
     <div className={cx("contaienr")}>
       <div className={cx("content")}>
@@ -155,7 +157,7 @@ function DeletedMerchant() {
                           <AccountItemMerchant
                             key={merchant._id}
                             merchant={merchant}
-                            // handleView={handleView}
+                            handleView={handleView}
                           />
                         ))
                       : setTippyVisible(false)}
@@ -223,6 +225,7 @@ function DeletedMerchant() {
               ))}
             </tbody>
           </table>
+
           <Modal
             isOpen={showModal}
             onRequestClose={handleModalClose}
@@ -239,7 +242,7 @@ function DeletedMerchant() {
                     className={cx("img-merchant")}
                   />
                 </div>
-                <div className={cx("content")}>
+                <div className={cx("content-modal")}>
                   <Button awaiting>Deleted</Button>
                   <div className={cx("container-content")}>
                     <p className={cx("name-merchant")}>{name}</p>
@@ -271,52 +274,51 @@ function DeletedMerchant() {
                     <p className={cx("content-merchant")}>{closeTime}</p>
                   </div>
                   <div>
-                  {idCardDocuments.map((doc, index) => (
-                    <div key={index} className={cx("wrapper-image-content")}>
-                      <div className={cx("wrapper-title-document")}>
-                        <p className={cx("title-merchant")}>
-                          {doc.documentTypeID.name}
-                        </p>
-                      
+                    {idCardDocuments.map((doc, index) => (
+                      <div key={index} className={cx("wrapper-image-content")}>
+                        <div className={cx("wrapper-title-document")}>
+                          <p className={cx("title-merchant")}>
+                            {doc.documentTypeID.name}:
+                          </p>
+                        </div>
+                        <div className={cx("wrapper-document")}>
+                          <img
+                            src={doc.imageFontSide}
+                            alt="Document Front Side"
+                            className={cx("image-document")}
+                          />
+                          <img
+                            src={doc.imageBackSide}
+                            alt="Document Front Side"
+                            className={cx("image-document")}
+                          />
+                        </div>
                       </div>
-                      <div className={cx("wrapper-document")}>
-                        <img
-                          src={doc.imageFontSide}
-                          alt="Document Front Side"
-                          className={cx("image-document")}
-                        />
-                        <img
-                          src={doc.imageBackSide}
-                          alt="Document Front Side"
-                          className={cx("image-document")}
-                        /> 
+                    ))}
+                  </div>
+                  <div>
+                    {licenseDriverDocuments.map((doc, index) => (
+                      <div key={index} className={cx("wrapper-image-content")}>
+                        <div className={cx("wrapper-title-document")}>
+                          <p className={cx("title-merchant")}>
+                            {doc.documentTypeID.name}:
+                          </p>
+                        </div>
+                        <div className={cx("wrapper-document")}>
+                          <img
+                            src={doc.imageFontSide}
+                            alt="Document Front Side"
+                            className={cx("image-document")}
+                          />
+                          <img
+                            src={doc.imageBackSide}
+                            alt="Document Front Side"
+                            className={cx("image-document")}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  {licenseDriverDocuments.map((doc, index) => (
-                    <div key={index} className={cx("wrapper-image-content")}>
-                      <div className={cx("wrapper-title-document")}>
-                        <p className={cx("title-merchant")}>
-                          {doc.documentTypeID.name}
-                        </p>
-                      </div>
-                      <div className={cx("wrapper-document")}>
-                        <img
-                          src={doc.imageFontSide}
-                          alt="Document Front Side"
-                          className={cx("image-document")}
-                        />
-                        <img
-                          src={doc.imageBackSide}
-                          alt="Document Front Side"
-                          className={cx("image-document")}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
