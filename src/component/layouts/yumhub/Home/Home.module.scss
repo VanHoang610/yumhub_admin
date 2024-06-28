@@ -34,13 +34,11 @@
   outline: none;
 }
 
-
-
-
 .container {
   width: 80vw;
-  height: 100vh;
+  height: 800px;
   overflow: auto;
+  scrollbar-width: none;
 }
 
 .box-chart {
@@ -77,7 +75,6 @@
   justify-content: center;
   align-items: center;
 }
-
 
 .yumhub-chart-wrapper {
   display: flex;

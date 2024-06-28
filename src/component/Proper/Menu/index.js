@@ -1,12 +1,13 @@
 import Tippy from "@tippyjs/react/headless";
-import { Wrapper as ProperWrapper } from "../index";
 
 import classNames from "classnames/bind";
 import styles from "./Menu.module.scss";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
 function MenuInfo({ children, items = [], onItemSelected }) {
+  const { t } = useTranslation(); 
   const renderItems = () => {
     return items.map((item) => (
       <div
@@ -15,7 +16,7 @@ function MenuInfo({ children, items = [], onItemSelected }) {
         onClick={() => onItemSelected(item.title)}
       >
         <span className={cx("icon-item")}>{item.icon}</span>
-        <p className={cx("title-item")}>{item.title}</p>
+        <p className={cx("title-item")}>{t(`account.${item.title.replace(/\s+/g, '').toLowerCase()}`)}</p>
       </div>
     ));
   };

@@ -1,0 +1,77 @@
+/* src/Setting.module.scss */
+
+
+.container {
+  flex: 1;
+  height: 800px;
+  padding: 51px 94px;
+  overflow: auto;
+  scrollbar-width: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.container.dark h1 {
+  color: #fff;
+}
+
+.wrapper-language {
+  display: flex;
+  align-items: center;
+}
+
+.title-language {
+  color: #333;
+  margin-right: 20px;
+}
+
+.container.dark .title-language {
+  color: #fff;
+}
+
+.wrapper-dark-mode {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.title-dark-mode {
+  color: #333;
+  margin-right: 20px;
+}
+
+.container.dark .title-dark-mode {
+  color: #fff;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  background-color: #007bff;
+  color: #fff;
+  margin-left: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}

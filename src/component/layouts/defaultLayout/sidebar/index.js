@@ -16,10 +16,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserContext } from "../../../contexts/UserContext";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { logoutUser } = useContext(UserContext);
 
@@ -31,110 +33,110 @@ function Sidebar() {
   return (
     <div className={cx("sidebar")}>
       <nav className={cx("nav")}>
-        <p className={cx("title")}>Reports and statistics</p>
+        <p className={cx("title")}>{t('sidebar.reportsStatistics')}</p>
         <NavLink
           to="/home"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faChartBar} className={cx("icon")} />
-          <span className={cx("text")}>Dashboards</span>
+          <span className={cx("text")}>{t('sidebar.dashboards')}</span>
         </NavLink>
-        <p className={cx("title")}>Voucher manager</p>
+        <p className={cx("title")}>{t('sidebar.voucherManager')}</p>
         <NavLink
           to="/add-voucher"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faGift} className={cx("icon")} />
-          <span className={cx("text")}>Add Voucher</span>
+          <span className={cx("text")}>{t('sidebar.addVoucher')}</span>
         </NavLink>
         <NavLink
           to="/all-vouchers"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faGift} className={cx("icon")} />
-          <span className={cx("text")}>All Vouchers</span>
+          <span className={cx("text")}>{t('sidebar.allVouchers')}</span>
         </NavLink>
-        <p className={cx("title")}>Merchant manager</p>
+        <p className={cx("title")}>{t('sidebar.merchantManager')}</p>
         <NavLink
           to="/new-merchant"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faPlus} className={cx("icon")} />
-          <span className={cx("text")}>New Merchant</span>
+          <span className={cx("text")}>{t('sidebar.newMerchant')}</span>
         </NavLink>
         <NavLink
           to="/all-merchants"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faStore} className={cx("icon")} />
-          <span className={cx("text")}>All Merchants</span>
+          <span className={cx("text")}>{t('sidebar.allMerchants')}</span>
         </NavLink>
         <NavLink
           to="/food-request"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faUtensils} className={cx("icon")} />
-          <span className={cx("text")}>Food Requests</span>
+          <span className={cx("text")}>{t('sidebar.foodRequests')}</span>
         </NavLink>
         <NavLink
           to="/deleted-merchants"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faUtensils} className={cx("icon")} />
-          <span className={cx("text")}>Deleted Merchants</span>
+          <span className={cx("text")}>{t('sidebar.deletedMerchants')}</span>
         </NavLink>
-        <p className={cx("title")}>Shipper manager</p>
+        <p className={cx("title")}>{t('sidebar.shipperManager')}</p>
         <NavLink
           to="/new-shipper"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faPlus} className={cx("icon")} />
-          <span className={cx("text")}>New Shipper</span>
+          <span className={cx("text")}>{t('sidebar.newShipper')}</span>
         </NavLink>
         <NavLink
           to="/all-shippers"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faTruck} className={cx("icon")} />
-          <span className={cx("text")}>All Shippers</span>
+          <span className={cx("text")}>{t('sidebar.allShippers')}</span>
         </NavLink>
         <NavLink
           to="/deleted-shippers"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faTrash} className={cx("icon")} />
-          <span className={cx("text")}>Deleted Shippers</span>
+          <span className={cx("text")}>{t('sidebar.deletedShippers')}</span>
         </NavLink>
-        <p className={cx("title")}>User manager</p>
+        <p className={cx("title")}>{t('sidebar.userManager')}</p>
         <NavLink
           to="/all-customers"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faUser} className={cx("icon")} />
-          <span className={cx("text")}>Customer</span>
+          <span className={cx("text")}>{t('sidebar.customer')}</span>
         </NavLink>
-        <p className={cx("title")}>Order manager</p>
+        <p className={cx("title")}>{t('sidebar.orderManager')}</p>
         <NavLink
           to="/order"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faShoppingCart} className={cx("icon")} />
-          <span className={cx("text")}>Order</span>
+          <span className={cx("text")}>{t('sidebar.order')}</span>
         </NavLink>
-        <p className={cx("title")}>My account</p>
+        <p className={cx("title")}>{t('sidebar.myAccount')}</p>
         <NavLink
           to="/infomation"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faUser} className={cx("icon")} />
-          <span className={cx("text")}>Infomation</span>
+          <span className={cx("text")}>{t('sidebar.infomation')}</span>
         </NavLink>
         <NavLink
           to="/change-password"
           className={({ isActive }) => cx("nav-link", { active: isActive })}
         >
           <FontAwesomeIcon icon={faUser} className={cx("icon")} />
-          <span className={cx("text")}>Change Password</span>
+          <span className={cx("text")}>{t('sidebar.changePassword')}</span>
         </NavLink>
 
         <button
@@ -142,7 +144,7 @@ function Sidebar() {
           onClick={handleLogout}
         >
           <FontAwesomeIcon icon={faSignOutAlt} className={cx("icon")} />
-          <span className={cx("text")}>Logout</span>
+          <span className={cx("text")}>{t('sidebar.logout')}</span>
         </button>
       </nav>
     </div>

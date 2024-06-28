@@ -22,13 +22,14 @@ import EmployeeDetails from "../component/layouts/yumhub/Employee/EmployeeDetail
 import AddAdmin from "../component/layouts/yumhub/Employee/AddAdmin"
 import DeletedMerchant from "../component/layouts/yumhub/DeletedMerchants/DeletedMerchants"
 import Orders from "../component/layouts/yumhub/Order/Order"
+import Settings from "../component/layouts/defaultLayout/header/Settings"
 
 
 
 
 // public routes
 const publicRoutes = [
-    { path: "/", component: Login, layout: null },
+    { path: "/yumhub_admin", component: Login, layout: null },
     { path: '/forgetPassword', component: ForgetPassword, layout: null  }, 
     { path: '/otp', component: OTP, layout: null }, 
     { path: '/resetPassword', component: ResetPassword, layout: null }, 
@@ -48,6 +49,8 @@ const privateRoutes = [
     { path: '/all-customers', component: AllCustomer, layout: DefaultLayout },
     { path: '/food-request', component: FoodRequest, layout: DefaultLayout },
     { path: '/deleted-merchants', component: DeletedMerchant, layout: DefaultLayout },
+    { path: '/settings', component: Settings, layout: DefaultLayout },
+
 
     { path: '/order', component: Orders, layout: DefaultLayout },
     { path: '/deleted-shippers', component: DeletedShipper, layout: DefaultLayout },
