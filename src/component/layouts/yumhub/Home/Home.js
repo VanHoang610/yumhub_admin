@@ -20,6 +20,7 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
+import { useTranslation } from "react-i18next";
 
 ChartJS.register(
   CategoryScale,
@@ -38,6 +39,7 @@ ChartJS.register(
 const cx = classNames.bind(styles);
 
 function Home() {
+  const { t } = useTranslation();
   const [yumhubData, setYumhubData] = useState({});
   const [revenueData, setRevenueData] = useState({});
   const [foodData, setFoodData] = useState({});
@@ -58,7 +60,7 @@ function Home() {
     const fetchData = async () => {
       try {
         const month = formatDate(startDate);
-        
+
         const response = await AxiosInstance.get(
           `orders/revenueFoodDelivery?month=${month}`
         );
@@ -132,25 +134,25 @@ function Home() {
     fetchData();
   }, [startDate]);
 
-  const currentDate = new Date();
-  const labels = Array.from({ length: 3 }, (_, i) => {
-    const date = subMonths(currentDate, i);
-    return format(date, "MMMM yyyy");
-  }).reverse();
+  const labels = [
+    t("home.twoMonthsAgo"),
+    t("home.lastMonth"),
+    t("home.thisMonth"),
+  ];
 
   const totalYumHub = {
     labels: [
-      "Revenue",
-      "Profit",
-      "Food",
-      "Ship",
-      "Voucher",
-      "Merchant",
-      "Shipper",
+      t("home.revenue"),
+      t("home.profit"),
+      t("home.food"),
+      t("home.ship"),
+      t("home.voucher"),
+      t("home.merchant"),
+      t("home.shipper"),
     ],
     datasets: [
       {
-        label: "YumHub Chart",
+        label: t("home.yumhubChart"),
         data: [
           yumhubData?.revenue || 0,
           yumhubData?.profit || 0,
@@ -185,7 +187,7 @@ function Home() {
     labels: labels,
     datasets: [
       {
-        label: "Revenue Chart",
+        label: t("home.revenueChart"),
         data: [
           revenueData?.twoMonthsAgo || 0,
           revenueData?.lastMonth || 0,
@@ -202,7 +204,7 @@ function Home() {
     labels: labels,
     datasets: [
       {
-        label: "Food Chart",
+        label: t("home.foodChart"),
         data: [
           foodData?.twoMonthsAgo || 0,
           foodData?.lastMonth || 0,
@@ -221,7 +223,7 @@ function Home() {
     labels: labels,
     datasets: [
       {
-        label: "Ship Chart",
+        label: t("home.shipChart"),
         data: [
           shipData?.twoMonthsAgo || 0,
           shipData?.lastMonth || 0,
@@ -240,7 +242,7 @@ function Home() {
     labels: labels,
     datasets: [
       {
-        label: "Profit Chart",
+        label: t("home.profitChart"),
         data: [
           profitData?.twoMonthsAgo || 0,
           profitData?.lastMonth || 0,
@@ -257,7 +259,7 @@ function Home() {
     labels: labels,
     datasets: [
       {
-        label: "Merchant Chart",
+        label: t("home.merchantChart"),
         data: [
           merchantsData?.twoMonthsAgo || 0,
           merchantsData?.lastMonth || 0,
@@ -282,7 +284,7 @@ function Home() {
     labels: labels,
     datasets: [
       {
-        label: "Shipper Chart",
+        label: t("home.shipperChart"),
         data: [
           shippersData?.twoMonthsAgo || 0,
           shippersData?.lastMonth || 0,
@@ -306,7 +308,7 @@ function Home() {
   return (
     <div className={cx("container")}>
       <div className={cx("wrapper-date-picker")}>
-        <p className={cx("title-date-picker")}>Select Date:</p>
+        <p className={cx("title-date-picker")}>{t("home.seleteDate")}</p>
         <DatePicker
           selected={startDate}
           onChange={(date) => setStartDate(date)}
@@ -325,7 +327,7 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
-                text: "YumHub Chart",
+                text: t("home.yumhubChart"),
                 font: {
                   size: 20,
                 },
@@ -357,7 +359,7 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
-                text: "Revenue Chart",
+                text: t("home.revenueChart"),
                 font: {
                   size: 20,
                 },
@@ -394,7 +396,7 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
-                text: "Profit Chart",
+                text: t("home.profitChart"),
                 font: {
                   size: 20,
                 },
@@ -490,7 +492,7 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
-                text: "Ship Chart",
+                text: t("home.shipChart"),
                 font: {
                   size: 20,
                 },
@@ -533,7 +535,7 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
-                text: "Food Chart",
+                text: t("home.foodChart"),
                 font: {
                   size: 20,
                 },

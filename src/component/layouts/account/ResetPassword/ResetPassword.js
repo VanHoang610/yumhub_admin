@@ -106,7 +106,7 @@ function ResetPassword() {
           </Button>
         </div>
         <div className={cx("btnBackLogin")}>
-          <Link to="/" className={cx("no-underline")}>
+          <Link to="/yumhub_admin" className={cx("no-underline")}>
             <Button backLogin forget_btn>
               BACK TO LOGIN
             </Button>

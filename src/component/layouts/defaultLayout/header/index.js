@@ -28,6 +28,7 @@ import Swal from "sweetalert2";
 import Modal from "react-modal";
 import { result } from "lodash";
 import AxiosInstance from "../../../../utils/AxiosInstance";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
@@ -47,6 +48,7 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, logoutUser } = useContext(UserContext);
 
@@ -79,12 +81,11 @@ function Header() {
   //nhấn logout
   const handleLogout = async () => {
     await logoutUser();
-    navigate("/");
+    navigate("/yumhub_admin");
   };
 
   // chọn vào từng item-menu
   const handleItemSelected = (title) => {
-    console.log(title);
     if (title === "Information") {
       setShowModalInfo(true);
     } else if (title === "Logout") {
@@ -161,6 +162,11 @@ function Header() {
       console.log(error);
     }
   };
+
+  // nhấn settings
+  const handleSettings = () => {
+    navigate('settings');
+  }
   return (
     <header className={cx("wrapper")}>
       <div className={cx("inner")}>
@@ -177,8 +183,8 @@ function Header() {
             <p className={cx("textHeader")}>Menu</p>
           </Link>
           <Link to="/settings" className={cx("setting-btn")}>
-            <FontAwesomeIcon icon={faCog} className={cx("icon")} />
-            <p className={cx("textHeader")}>Settings</p>
+            <FontAwesomeIcon icon={faCog} className={cx("icon")} onClick={handleSettings} />
+            <p className={cx("textHeader")}>{t('header.settings')}</p>
           </Link>
           <Link
             to="/employee"
@@ -186,7 +192,7 @@ function Header() {
             onClick={handleEmployeeClick}
           >
             <FontAwesomeIcon icon={faUser} className={cx("icon")} />
-            <p className={cx("textHeader")}>Employee</p>
+            <p className={cx("textHeader")}>{t('header.employee')}</p>
           </Link>
         </nav>
         <div className={cx("right")}>
@@ -231,13 +237,13 @@ function Header() {
         onRequestClose={handleModalClose}
       >
         <div className={cx("wrapper-box-change-password")}>
-          <p className={cx("title-change-password")}>Change Your Password</p>
+          <p className={cx("title-change-password")}>{t('header.changePassword')}</p>
           <div className={cx("line")} />
           <div className={cx("wrapper-password")}>
-            <p className={cx("text-password")}>Password</p>
+            <p className={cx("text-password")}>{t('header.password')}</p>
             <input
               type={showCurrentPassword ? "text" : "password"}
-              placeholder="Current Password"
+              placeholder={t('header.placeholderPassword')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={cx("input")}
@@ -251,10 +257,10 @@ function Header() {
             />
           </div>
           <div className={cx("wrapper-password")}>
-            <p className={cx("text-password")}>New Password</p>
+            <p className={cx("text-password")}>{t('header.newPassword')}</p>
             <input
               type={showNewPassword ? "text" : "password"}
-              placeholder="New Password"
+              placeholder={t('header.placeholderNewPassword')}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className={cx("input")}
@@ -268,10 +274,10 @@ function Header() {
             />
           </div>
           <div className={cx("wrapper-password")}>
-            <p className={cx("text-password")}>Confirm Password</p>
+            <p className={cx("text-password")}>{t('header.confirmPassword')}</p>
             <input
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm New Password"
+              placeholder={t('header.placeholderConfirmPassword')}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className={cx("input")}
@@ -288,7 +294,7 @@ function Header() {
             className={cx("btn-set-password")}
             onClick={() => handleChangePassword()}
           >
-            <button className={cx("btn")}>Set Password</button>
+            <button className={cx("btn")}>{t('header.setPassword')}</button>
           </div>
         </div>
       </Modal>
