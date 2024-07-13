@@ -6,6 +6,7 @@ import Tippy from "@tippyjs/react/headless";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faChevronLeft,
   faClockRotateLeft,
   faEye,
   faMagnifyingGlass,
@@ -18,14 +19,21 @@ import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import AccountItem from "../../../AccountItem/AccountCustomer/AccountCustomer";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
+
 const cx = classNames.bind(styles);
 
 function AllCustomer() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const formatDate = (date) => {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
   };
-  
+
   const [orderStatuses, setOrderStatuses] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
@@ -50,7 +58,6 @@ function AllCustomer() {
     fetchData();
   }, []);
 
-  
   // gọi api lấy orderStatus
   useEffect(() => {
     const fetchData = async () => {
@@ -107,7 +114,6 @@ function AllCustomer() {
           const updatedHistory = response.data.history.map((item) => ({
             ...item,
             timeBook: formatDate(item.timeBook),
-            nameStatus: getOrderStatusName(item.status),
           }));
           setDataHistory(updatedHistory);
           setShowModalHistory(true);
@@ -187,18 +193,12 @@ function AllCustomer() {
     setSearchResult([]);
   };
 
-  function getOrderStatusName(statusId) {
-    console.log(orderStatuses);
-    const matchingStatus = orderStatuses.find(
-      (status) => status._id === statusId
-    );
-    return matchingStatus ? matchingStatus.name : "N/A";
-  }
-
   return (
-    <div className={cx("container")}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title")}>All Customers</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t('customer.allCustomer')}
+        </p>
         <div>
           <Tippy
             animation="fade"
@@ -207,10 +207,14 @@ function AllCustomer() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title")}>Accounts</h4>
+                    <h4 className={cx("search-title", fontSize)}>{t('customer.accounts')}</h4>
                     {searchResult.length > 0
                       ? searchResult.map((customer) => (
                           <AccountItem
@@ -225,37 +229,37 @@ function AllCustomer() {
               </div>
             )}
           >
-            <div className={cx("inputSearch")}>
+            <div className={cx("inputSearch", { dark: theme === "dark" })}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className={cx("icon-search")}
               />
               <input
-                className={cx("input")}
-                placeholder="Search by name"
+                className={cx("input", { dark: theme === "dark" })}
+                placeholder={t('customer.searchByName')}
                 onChange={handleSearch}
               />
             </div>
           </Tippy>
         </div>
         <div className={cx("line-background")} />
-        <div className={cx("box-container")}>
-          <table className={cx("table")}>
+        <div className={cx("box-container", { dark: theme === "dark" })}>
+          <table className={cx("table", fontSize, { dark: theme === "dark" })}>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Phone Number</th>
-                <th>Birth Day</th>
-                <th>Avatar</th>
-                <th>Actions</th>
+                <th>{t('customer.name')}</th>
+                <th>{t('customer.phone')}</th>
+                <th>{t('customer.birthDay')}</th>
+                <th>{t('customer.avatar')}</th>
+                <th>{t('customer.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, index) => (
                 <tr
                   key={index}
-                  className={cx("table-row")}
+                  className={cx("table-row", { dark: theme === "dark" })}
                   onClick={() => handleView(item._id)}
                 >
                   <td>{index + 1}</td>
@@ -312,28 +316,33 @@ function AllCustomer() {
           className={cx("modal-wrapper")}
         >
           {detailCustomer && (
-            <div className={cx("modal-container")}>
-              <div className={cx("logo-merchant")}>
+            <div className={cx("modal-container", { dark: theme === "dark" })}>
+              <div className={cx("logo-customer", { dark: theme === "dark" })}>
                 <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                 <img
-                  src={image_merchant}
-                  alt="Merchant"
-                  className={cx("img-merchant")}
+                  src={
+                    detailCustomer.avatar
+                      ? detailCustomer.avatar
+                      : image_merchant
+                  }
+                  alt="customer"
+                  className={cx("img-customer")}
                 />
               </div>
               <div className={cx("content-modal")}>
-                <Button reviewed>Reviewed</Button>
                 <div className={cx("container-content")}>
-                  <p className={cx("name-merchant")}>
+                  <p className={cx("name-customer", fontSize)}>
                     {detailCustomer.fullName}
                   </p>
-                  <div className={cx("line")}></div>
-                  <p className={cx("type-merchant")}>{detailCustomer.sex}</p>
+                  <div className={cx("line", { dark: theme === "dark" })}></div>
+                  <p className={cx("type-customer", fontSize)}>
+                    {detailCustomer.sex}
+                  </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Address:</p>
+                  <p className={cx("title-customer", fontSize)}>{t('customer.address')}:</p>
                   {detailAddress.map((address, index) => (
-                    <p key={index} className={cx("content-merchant")}>
+                    <p key={index} className={cx("content-customer", fontSize)}>
                       {[
                         address.houseNumber,
                         address.street,
@@ -345,32 +354,34 @@ function AllCustomer() {
                   ))}
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Email:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-customer", fontSize)}>{t('customer.email')}:</p>
+                  <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.email}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Birth Day:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-customer", fontSize)}>{t('customer.birthDay')}:</p>
+                  <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.birthDay}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Phone Number:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-customer", fontSize)}>
+                  {t('customer.phone')}:
+                  </p>
+                  <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.phoneNumber}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Join Day:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-customer", fontSize)}>{t('customer.joinDay')}:</p>
+                  <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.joinDay}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Rating:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-customer", fontSize)}>{t('customer.rating')}:</p>
+                  <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.rating}
                   </p>
                 </div>
@@ -381,7 +392,7 @@ function AllCustomer() {
                       handleHistory(detailCustomer._id);
                     }}
                   >
-                    History
+                    {t('customer.history')}
                   </Button>
                 </div>
               </div>
@@ -394,23 +405,40 @@ function AllCustomer() {
           isOpen={showModalHistory}
           onRequestClose={handleModalClose}
           contentLabel="HistoryCustomer"
-          className={cx("modal-history")}
+          className={cx("modal-history", { dark: theme === "dark" })}
         >
           <div className={cx("box-history")}>
-            <h2 className={cx("title-history")}>History Customer</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FontAwesomeIcon
+                onClick={() => setShowModalHistory(false)}
+                icon={faChevronLeft}
+                className={cx("iconLeft", fontSize)}
+              />
+              <h2
+                className={cx("title-history", fontSize, {
+                  dark: theme === "dark",
+                })}
+              >
+                {t('customer.historyCustomer')}
+              </h2>
+            </div>
             <table className={cx("table")}>
-              <thead className={cx("table-row-history")}>
+              <thead className={cx("table-row-history", fontSize, {
+                  dark: theme === "dark",
+                })}>
                 <tr>
                   <th>#</th>
-                  <th>Name Merchant</th>
-                  <th>Name Shipper </th>
-                  <th>Delivery Address</th>
-                  <th>Time Book</th>
-                  <th>Total Price</th>
-                  <th>Status</th>
+                  <th>{t('customer.nameMerchant')}</th>
+                  <th>{t('customer.nameShipper')} </th>
+                  <th>{t('customer.deliveryAddress')}</th>
+                  <th>{t('customer.timeBook')}</th>
+                  <th>{t('customer.totalPrice')}</th>
+                  <th>{t('customer.status')}</th>
                 </tr>
               </thead>
-              <tbody className={cx("table-row-history")}>
+              <tbody className={cx("table-row-history", fontSize, {
+                  dark: theme === "dark",
+                })}>
                 {dataHistory.map((item, index) => (
                   <tr key={index} onClick={() => handleView(item._id)}>
                     <td>{index + 1}</td>
@@ -423,18 +451,18 @@ function AllCustomer() {
                       <p
                         className={cx(
                           "status", // Base class for all status elements
-                          item.nameStatus === "cancel"
+                          item.status.name === "cancel"
                             ? "status-cancel"
                             : "status-work"
                         )}
                       >
-                        {item.nameStatus}
+                        {item.status ? item.status.name : "N/A"}
                       </p>
                     </td>
                   </tr>
                 ))}
               </tbody>
-              <div className={cx('line')}/>
+              <div className={cx("line")} />
             </table>
           </div>
         </Modal>

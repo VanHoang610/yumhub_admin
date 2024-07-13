@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "../../../GlobalStyles/global.scss";
 
 .textReset {
   color: #257EE7;
-  font-size: 14px;
-  font-weight: 400;
-  font-family: "Poppins", sans-serif;
+  font-size: $fs-14;
+  font-weight: $fw-400;
+  font-family: $ff-popins;
   margin-left: 5px;
 
   &:hover {
@@ -13,10 +12,10 @@
   }
 }
 .textRemember {
-  color: #4F4E4E;
-  font-size: 14px;
-  font-weight: 400;
-  font-family: "Poppins", sans-serif;
+  color: $color-title;
+  font-size: $fs-14;
+  font-weight: $fw-400;
+  font-family: $ff-popins;
 }
 
 .rememberPassword {
@@ -26,15 +25,16 @@
   margin-left: 300px;
   margin-top: -6px;
   justify-content: center;
+  align-items: center;
   margin-top: 13.5px;
 }
 
 .textLogin {
-  color: #fff;
+  color: $color-white;
   text-align: center;
-  font-size: 24px;
-  font-weight: 400;
-  font-family: "Poppins", sans-serif;
+  font-size: $fs-24;
+  font-weight: $fw-400;
+  font-family: $ff-popins;
 }
 
 .btnLogin {
@@ -45,11 +45,11 @@
   align-items: center;
   margin-left: 156px;
   margin-top: 25px;
-  background-color: #fff;
+  background-color: $color-white;
   justify-content: center;
 
   &:hover {
-    background-color: #19D6E5;
+    background-color: $bg-primary;
   }
 }
 
@@ -69,7 +69,7 @@
   display: flex;
   width: 568px;
   height: 48px;
-  background-color: #FBFBFB;
+  background-color: $color-white;
   border-radius: 10px;
   align-items: center;
   margin-left: 156px;
@@ -82,16 +82,15 @@
     margin-top: 10px;
     border: none;
     outline: none;
-    color: #323232;
-
+    color: $color-content-box;
   }
 }
 .titleLogin { 
   width: 412px;
   height: 39px;
   color: #577BF9;
-  font-size: 35px;
-  font-weight: 900;
+  font-size: $fs-35;
+  font-weight: $fw-900;
   margin-top: 319px;
   margin-left: 304px;
   margin-bottom: 39px;
@@ -102,10 +101,10 @@
 }
 
 .textTitle {
-  color: #F2F2F2;
-  font-weight: 700;
-  font-size: 64px;
-  font-family: "Montserrat Alternates", sans-serif;
+  color: $color-white;
+  font-weight: $fw-700;
+  font-size: $fs-64;
+  font-family: $ff-montserrat;
 }
 
 .title {
@@ -115,18 +114,18 @@
   margin-left: 144px;
 }
 .slogen {
-  color: #323232;
-  font-size: 16px;
-  font-weight: 600;
+  color: $color-content-box;
+  font-size: $fs-16;
+  font-weight: $fw-700;
 }
 
 .textLogo {
-  color: #202020;
-  font-size: 51px;
-  font-weight: 700;
+  color: $color-black;
+  font-size: $fs-52;
+  font-weight: $fw-700;
   line-height: 40px;
   margin-left: 23px;
-  font-family: "Montserrat Alternates", sans-serif;
+  font-family: $ff-montserrat;
 }
 
 .logoContainer {

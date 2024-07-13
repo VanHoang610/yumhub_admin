@@ -13,10 +13,16 @@ import styles from "./DeletedMerchant.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
 function DeletedMerchant() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const [data, setData] = useState([{}]);
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
@@ -137,9 +143,9 @@ function DeletedMerchant() {
   };
 
   return (
-    <div className={cx("contaienr")}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title")}>All Deleted Merchant</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('merchant.allDeletedMerchant')}</p>
         <div>
           <Tippy
             animation="fade"
@@ -148,10 +154,10 @@ function DeletedMerchant() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+              <div tabIndex="-1" {...attrs} className={cx("search-result", { dark: theme === "dark" })}>
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title")}>Accounts</h4>
+                    <h4 className={cx("search-title", fontSize)}>{t('merchant.accounts')}</h4>
                     {searchResult.length > 0
                       ? searchResult.map((merchant) => (
                           <AccountItemMerchant
@@ -166,37 +172,37 @@ function DeletedMerchant() {
               </div>
             )}
           >
-            <div className={cx("inputSearch")}>
+            <div className={cx("inputSearch", { dark: theme === "dark" })}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className={cx("icon-search")}
               />
               <input
-                className={cx("input")}
-                placeholder="Search by name"
+                className={cx("input", { dark: theme === "dark" })}
+                placeholder={t('merchant.searchByName')}
                 onChange={handleSearch}
               />
             </div>
           </Tippy>
         </div>
         <div className={cx("line-background")} />
-        <div className={cx("box-container")}>
-          <table className={cx("table")}>
+        <div className={cx("box-container", { dark: theme === "dark" })}>
+          <table className={cx("table", fontSize, { dark: theme === "dark" })}>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Time</th>
-                <th>Image</th>
-                <th>Actions</th>
+                <th>{t('merchant.name')}</th>
+                <th>{t('merchant.address')}</th>
+                <th>{t('merchant.time')}</th>
+                <th>{t('merchant.image')}</th>
+                <th>{t('merchant.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, index) => (
                 <tr
                   key={index}
-                  className={cx("table-row")}
+                  className={cx("table-row", { dark: theme === "dark" })}
                   onClick={() => handleView(item._id)}
                 >
                   <td>{index + 1}</td>
@@ -233,8 +239,8 @@ function DeletedMerchant() {
             className={cx("modal")}
           >
             {selectMerchantById && (
-              <div className={cx("modal-container")}>
-                <div className={cx("logo-merchant")}>
+              <div className={cx("modal-container", { dark: theme === "dark" })}>
+                <div className={cx("logo-merchant", { dark: theme === "dark" })}>
                   <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                   <img
                     src={image_merchant}
@@ -243,42 +249,42 @@ function DeletedMerchant() {
                   />
                 </div>
                 <div className={cx("content-modal")}>
-                  <Button awaiting>Deleted</Button>
+                  <Button awaiting>{t('merchant.deleted')}</Button>
                   <div className={cx("container-content")}>
-                    <p className={cx("name-merchant")}>{name}</p>
-                    <div className={cx("line")}></div>
-                    <p className={cx("type-merchant")}>{type}</p>
+                    <p className={cx("name-merchant", fontSize)}>{name}</p>
+                    <div className={cx("line", { dark: theme === "dark" })}></div>
+                    <p className={cx("type-merchant", fontSize)}>{type}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Address:</p>
-                    <p className={cx("content-merchant")}>{address}</p>
+                    <p className={cx("title-merchant", fontSize)}>{t('merchant.address')}:</p>
+                    <p className={cx("content-merchant", fontSize)}>{address}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Email:</p>
-                    <p className={cx("content-merchant")}>{email}</p>
+                    <p className={cx("title-merchant", fontSize)}>{t('merchant.email')}:</p>
+                    <p className={cx("content-merchant", fontSize)}>{email}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Store Owner:</p>
-                    <p className={cx("content-merchant")}>{fullName}</p>
+                    <p className={cx("title-merchant", fontSize)}>{t('merchant.storeOwner')}:</p>
+                    <p className={cx("content-merchant", fontSize)}>{fullName}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>PhoneNumber:</p>
-                    <p className={cx("content-merchant")}>{phoneNumber}</p>
+                    <p className={cx("title-merchant", fontSize)}>{t('merchant.phone')}:</p>
+                    <p className={cx("content-merchant", fontSize)}>{phoneNumber}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Open Time:</p>
-                    <p className={cx("content-merchant")}>{openTime}</p>
+                    <p className={cx("title-merchant", fontSize)}>{t('merchant.openTime')}:</p>
+                    <p className={cx("content-merchant", fontSize)}>{openTime}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Close Time:</p>
-                    <p className={cx("content-merchant")}>{closeTime}</p>
+                    <p className={cx("title-merchant", fontSize)}>{t('merchant.closeTime')}:</p>
+                    <p className={cx("content-merchant", fontSize)}>{closeTime}</p>
                   </div>
                   <div>
                     {idCardDocuments.map((doc, index) => (
                       <div key={index} className={cx("wrapper-image-content")}>
                         <div className={cx("wrapper-title-document")}>
-                          <p className={cx("title-merchant")}>
-                            {doc.documentTypeID.name}:
+                          <p className={cx("title-merchant", fontSize)}>
+                          {t('merchant.idCard')}:
                           </p>
                         </div>
                         <div className={cx("wrapper-document")}>
@@ -300,8 +306,8 @@ function DeletedMerchant() {
                     {licenseDriverDocuments.map((doc, index) => (
                       <div key={index} className={cx("wrapper-image-content")}>
                         <div className={cx("wrapper-title-document")}>
-                          <p className={cx("title-merchant")}>
-                            {doc.documentTypeID.name}:
+                          <p className={cx("title-merchant", fontSize)}>
+                          {t('merchant.businessLicense')}:
                           </p>
                         </div>
                         <div className={cx("wrapper-document")}>

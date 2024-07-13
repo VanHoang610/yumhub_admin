@@ -1,6 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
+@import "../../../GlobalStyles/global.scss";
 
 .input {
   margin: 0;
@@ -17,9 +15,9 @@
   width: 70px;
   height: 91px;
   text-align: center;
-  font-size: 28px;
-  color: #15cf74;
-  border: 1px solid #15cf74;
+  font-size: $fs-28;
+  color: $color-green;
+  border: 1px solid $color-green;
   border-radius: 10px;
 }
 
@@ -51,10 +49,10 @@
 .note {
   width: 489px;
   height: 18px;
-  font-family: "Poppins", sans-serif;
-  color: #313131;
-  font-size: 12px;
-  font-weight: 400;
+  font-family: $ff-popins;
+  color: $color-content-box;
+  font-size: $fs-12;
+  font-weight: $fw-400;
   margin-top: 1px;
   margin-bottom: 0px;
 }
@@ -62,21 +60,21 @@
 .title {
   width: 621px;
   height: 41px;
-  font-family: "Montserrat Alternates", sans-serif;
-  color: #1b1a1a;
-  font-size: 34px;
-  font-weight: 700;
+  font-family: $ff-montserrat;
+  color: $color-black;
+  font-size: $fs-34;
+  font-weight: $fw-700;
   margin-top: 77px;
   margin-bottom: 0px;
 }
 
 .textLogo {
-  color: #202020;
-  font-size: 51px;
-  font-weight: 700;
+  color: $color-black;
+  font-size: $fs-52;
+  font-weight: $fw-700;
   line-height: 40px;
   margin-left: 23px;
-  font-family: "Montserrat Alternates", sans-serif;
+  font-family: $ff-montserrat;
 }
 
 .logo {

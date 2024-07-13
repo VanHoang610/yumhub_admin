@@ -1,34 +1,34 @@
+@import "../../../GlobalStyles/global.scss";
+
 // modal
 .modal-container {
   display: flex;
   width: 80%;
   height: 80%;
-  background-color: #caf1f1;
+  background-color: $bg-line;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-
+  
+  &.dark {
+    background-color: $bg-gray-light-dark;
+  }
   // logo
   .logo-merchant {
-    width: 48%;
+    width: 35%;
     height: 100%;
-    background-color: #e3e5fa;
     position: relative;
+    background-color: $bg-light;
+
+    &.dark {
+      background-color: $bg-gray-light;
+    }
   }
 
-  .icon-back {
-    position: absolute;
-    color: #6f768d;
-    padding: 36px 36px;
-    width: 40px;
-    height: 40px;
-  }
-
-  .ellpse {
+  .ellipse {
     position: absolute;
     width: 80%;
     top: 50%;
@@ -61,28 +61,46 @@
   }
 
   .name-merchant {
-    color: #000;
+    color: $color-black;
     text-align: left;
-    font-size: 25px;
-    font-weight: 600;
-    font-family: "Montserrat Alternates", "sans-serif";
+    font-size: $fs-25;
+    font-weight: $fw-600;
+    font-family: $ff-montserrat;
     border: none;
+
+    &.small {
+      font-size: $fs-21;
+    }
+    &.large {
+      font-size: $fs-29;
+    }
   }
 
   .line {
     height: 30px;
     width: 1px;
-    background-color: #bfbfbf;
+    background-color: $bg-line-main;
     margin-left: 10px;
+
+    &.dark {
+      background-color: $bg-line-green;
+    }
   }
 
   .type-merchant {
-    color: #50cc98;
-    font-family: "Montserrat Alternates", "sans-serif";
-    font-size: 15px;
-    font-weight: 400;
+    color: $color-green;
+    font-family: $ff-montserrat;
+    font-size: $fs-15;
+    font-weight: $fw-400;
     margin-left: 15px;
     border: none;
+
+    &.small {
+      font-size: $fs-11;
+    }
+    &.large {
+      font-size: $fs-19;
+    }
   }
 
   .wrapper-content {
@@ -97,31 +115,45 @@
   .title-merchant {
     align-items: center;
     padding: 0;
-    width: 37%;
+    width: 45%;
     height: 100%;
-    color: #000;
-    font-size: 20px;
-    font-weight: 600;
-    font-family: "Montserrat Alternates", "sans-serif";
+    color: $color-black;
+    font-size: $fs-20;
+    font-weight: $fw-600;
+    font-family: $ff-montserrat;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     margin-left: 10px;
     display: flex;
     align-items: center;
+
+    &.small {
+      font-size: $fs-16;
+    }
+    &.large {
+      font-size: $fs-24;
+    }
   }
 
   .content-merchant {
     flex: 1;
-    color: #000;
+    color: $color-black;
     text-align: left;
-    font-size: 20px;
-    font-weight: 300;
-    font-family: "Montserrat Alternates", "sans-serif";
+    font-size: $fs-20;
+    font-weight: $fw-300;
+    font-family: $ff-montserrat;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     border: none;
+
+    &.small {
+      font-size: $fs-16;
+    }
+    &.large {
+      font-size: $fs-24;
+    }
   }
 
   .wrapper-image-content {
@@ -148,10 +180,10 @@
 
 // search-input
 .search-result {
-  width: 1050px;
+  width: 1170px;
   height: 100%;
   max-height: 80vh;
-  background-color: rgb(249, 244, 244);
+  background-color: $bg-white;
   overflow: auto;
   scrollbar-width: none;
 
@@ -159,8 +191,20 @@
     font-size: 20px;
     padding-bottom: 20px;
     margin: 0;
-    font-family: "Poppins", sans-serif;
+    font-family: $ff-popins;
   }
+}
+  
+.search-title.small {
+  font-size: $fs-16;
+}
+
+.search-title.large {
+  font-size: $fs-24;
+}
+
+.search-result.dark {
+  background-color: $bg-gray-light;
 }
 
 .table {
@@ -169,17 +213,17 @@
   border-spacing: 34px 29px; /* Khoảng cách dọc giữa các hàng và ngang giữa các cột */
 
   th {
-    color: #9f9f9f;
-    font-family: "Poppins", "sans-serif";
-    font-size: 15px;
-    font-weight: 500;
+    color: $color-title-box;
+    font-family: $ff-popins;
+    font-size: $fs-15;
+    font-weight: $fw-500;
   }
 
   td {
-    color: #323c47;
-    font-family: "Poppins", "sans-serif";
-    font-size: 13px;
-    font-weight: 400;
+    color: $color-content-box;
+    font-family: $ff-popins;
+    font-size: $fs-13;
+    font-weight: $fw-400;
   }
 
   th,
@@ -196,7 +240,37 @@
     margin-right: 5px;
     border: none;
     background-color: transparent;
-    color: #98a9bc;
+    color: $color-title-box;
+  }
+}
+
+.table.small {
+  th {
+    font-size: $fs-11;
+  }
+
+  td {
+    font-size: $fs-9;
+  }
+}
+
+.table.large {
+  th {
+    font-size: $fs-19;
+  }
+
+  td {
+    font-size: $fs-17;
+  }
+}
+
+.table.dark {
+  th {
+    color: $color-white;
+  }
+
+  td {
+    color: $color-white;
   }
 }
 
@@ -212,7 +286,7 @@
 
 .box-container {
   position: relative;
-  background-color: #fff;
+  background-color: $color-white;
   border-radius: 8px;
   padding: 20px;
   margin-top: 52px;
@@ -222,56 +296,35 @@
   scrollbar-width: none;
 }
 
-.table {
-  width: 100%;
-  border-collapse: separate; /* Sử dụng 'separate' để khoảng cách giữa các ô hoạt động */
-  border-spacing: 34px 29px; /* Khoảng cách dọc giữa các hàng và ngang giữa các cột */
-
-  th {
-    color: #9f9f9f;
-    font-family: "Poppins", "sans-serif";
-    font-size: 15px;
-    font-weight: 500;
-  }
-
-  td {
-    color: #323c47;
-    font-family: "Poppins", "sans-serif";
-    font-size: 13px;
-    font-weight: 400;
-  }
-
-  th,
-  td {
-    padding: 8px;
-    text-align: left;
-    overflow: hidden; /* Ẩn nội dung tràn */
-    text-overflow: ellipsis; /* Hiển thị dấu chấm lửng nếu nội dung tràn */
-    white-space: nowrap; /* Ngăn nội dung xuống dòng */
-    max-width: 269px; /* Thiết lập chiều rộng tối đa */
-    height: 23px; /* Thiết lập chiều cao cố định */
-  }
-  .action-button {
-    margin-right: 5px;
-    border: none;
-    background-color: transparent;
-    color: #98a9bc;
-  }
+.box-container.dark {
+  background-color: $bg-dark;
 }
 
 .line-background {
   display: flex;
   height: 0.5px;
-  background-color: #939292;
+  background-color: $bg-line-main;
   margin-top: 35px;
 }
 
 .title {
-  color: #6b6b6b;
-  font-family: "Poppins", sans-serif;
-  font-size: 36px;
-  font-weight: 600;
+  color: $color-title;
+  font-family: $ff-popins;
+  font-size: $fs-36;
+  font-weight: $fw-600;
   margin-bottom: 26px;
+}
+
+.title.dark {
+  color: $color-white;
+}
+
+.title.small {
+  font-size: $fs-32;
+}
+
+.title.large {
+  font-size: $fs-40;
 }
 
 .inputSearch {
@@ -280,6 +333,18 @@
   height: 60px;
   background-color: #fff;
   align-items: center;
+}
+
+.inputSearch {
+  width: 1170px;
+  display: flex;
+  height: 60px;
+  background-color: $bg-white;
+  align-items: center;
+}
+
+.inputSearch.dark {
+  background-color: $bg-gray-light;
 }
 
 .icon-search {
@@ -293,8 +358,8 @@
 .input {
   margin: 0;
   flex-grow: 1;
-  color: #90a0b7;
-  font-family: "Poppins", "sans-serif";
+  color: $color-title-box;
+  font-family: $ff-popins;
   border: none;
   outline: none; // bỏ mặc định
 
@@ -304,8 +369,10 @@
   }
 }
 
-.container {
-  background-color: aliceblue;
+.input.dark {
+  color: $color-title-box;
+  background-color: $bg-gray-light;
+  font-family: $ff-popins;
 }
 
 .content {
@@ -313,4 +380,12 @@
   height: 800px;
   padding: 51px 94px;
   overflow: auto; /* Để có thể cuộn nếu nội dung quá dài */
+}
+
+.container {
+  background-color: $bg-primary;
+}
+
+.container.dark {
+  background-color: $bg-black;
 }

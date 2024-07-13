@@ -20,9 +20,15 @@ import styles from "./NewMerchant.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 function NewMerchant() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const [data, setData] = useState([]);
   const [selectMerchantById, setSelectMerchantId] = useState({});
   const [searchResult, setSearchResult] = useState([]);
@@ -31,6 +37,7 @@ function NewMerchant() {
   const [showModal, setShowModal] = useState(false);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [address, setAddress] = useState("");
   const [closeTime, setCloseTime] = useState("");
   const [openTime, setOpenTime] = useState("");
@@ -75,6 +82,7 @@ function NewMerchant() {
     if (selectMerchantById) {
       setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
+      setAvatar(selectMerchantById.user ? selectMerchantById.user.avatar : "");
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
       setOpenTime(selectMerchantById.openTime || "");
@@ -98,6 +106,7 @@ function NewMerchant() {
     }
   }, [selectMerchantById]);
 
+  console.log(selectMerchantById);
   //list mercahnt
   useEffect(() => {
     const fetchData = async () => {
@@ -200,7 +209,7 @@ function NewMerchant() {
     } catch (error) {
       console.log(overAllIDCard);
       console.log(checkIDCard);
-      setOverAllIDCard("Cannot check");
+      setOverAllIDCard(t("merchant.cannotCheck"));
       setCheckIDCard(true);
       console.error("Error checking ID card:", error);
     } finally {
@@ -211,15 +220,17 @@ function NewMerchant() {
   //check giấy phép kinh doanh
   const handleCheckBusinessLicense = async () => {
     try {
-      setMessageBusiness("Cannot check business license");
+      setMessageBusiness(t("merchant.cannotCheck"));
       setCheckBusinessLicense(true);
     } catch (error) {}
   };
 
   return (
-    <div className={cx("container")}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title")}>Stores Awaiting Approval</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t("merchant.awaitApproval")}
+        </p>
         <div>
           <Tippy
             animation="fade"
@@ -228,13 +239,20 @@ function NewMerchant() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title")}>Accounts</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {t("merchant.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((merchant) => (
                           <AccountItemMerchant
+                            theme
                             key={merchant._id}
                             merchant={merchant}
                             handleView={selectDetail}
@@ -246,14 +264,14 @@ function NewMerchant() {
               </div>
             )}
           >
-            <div className={cx("inputSearch")}>
+            <div className={cx("inputSearch", { dark: theme === "dark" })}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className={cx("icon-search")}
               />
               <input
-                className={cx("input")}
-                placeholder="Search by name"
+                className={cx("input", { dark: theme === "dark" })}
+                placeholder={t("merchant.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -262,38 +280,82 @@ function NewMerchant() {
         <div className={cx("line-background")} />
         <div className={cx("grid-container")}>
           {data.map((item) => (
-            <div className={cx("box")} key={item._id}>
+            <div
+              className={cx("box", { dark: theme === "dark" })}
+              key={item._id}
+            >
               <div className={cx("titleBox")}>
                 <img src={logo} alt="logoMerchant" className={cx("logo")} />
-                <div className={cx("line")} />
+                <div className={cx("line", { dark: theme === "dark" })} />
                 <div className={cx("textTitle")}>
-                  <p className={cx("nameMerchant")}>{item.name}</p>
-                  <p className={cx("type")}>
+                  <p
+                    className={cx("nameMerchant", fontSize, {
+                      dark: theme === "dark",
+                    })}
+                  >
+                    {item.name}
+                  </p>
+                  <p className={cx("type", fontSize)}>
                     {item.type ? item.type.name : "N/A"}
                   </p>
                 </div>
               </div>
-              <div className={cx("line-bottom")} />
+              <div className={cx("line-bottom", { dark: theme === "dark" })} />
               <div className={cx("contentBox")}>
                 <div className={cx("item")}>
-                  <FontAwesomeIcon icon={faMap} className={cx("icon")} />
-                  <p className={cx("textContent")}>{item.address}</p>
+                  <FontAwesomeIcon
+                    icon={faMap}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {item.address}
+                  </p>
                 </div>
                 <div className={cx("item")}>
-                  <FontAwesomeIcon icon={faClock} className={cx("icon")} />
-                  <p className={cx("textContent")}>{item.openTime}</p>
+                  <FontAwesomeIcon
+                    icon={faClock}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {item.openTime}
+                  </p>
                 </div>
               </div>
-              <div className={cx("btn-detail")}>
-                <Button
-                  detail
-                  onClick={() => {
-                    selectDetail(item._id);
-                  }}
-                >
-                  Detail
-                </Button>
-              </div>
+              {theme === "dark" ? (
+                <div className={cx("btn-detail", { dark: theme === "dark" })}>
+                  <Button
+                    detail_dark
+                    onClick={() => {
+                      selectDetail(item._id);
+                    }}
+                  >
+                    {t("merchant.detail")}
+                  </Button>
+                </div>
+              ) : (
+                <div className={cx("btn-detail", { dark: theme === "dark" })}>
+                  <Button
+                    detail
+                    onClick={() => {
+                      selectDetail(item._id);
+                    }}
+                  >
+                    {t("merchant.detail")}
+                  </Button>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -305,70 +367,93 @@ function NewMerchant() {
         className={cx("modal")}
       >
         {selectMerchantById && (
-          <div className={cx("modal-container")}>
-            <div className={cx("logo-merchant")}>
+          <div className={cx("modal-container", { dark: theme === "dark" })}>
+            <div className={cx("logo-merchant", { dark: theme === "dark" })}>
               <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
               <img
-                src={image_merchant}
+                src={avatar ? avatar : image_merchant}
                 alt="Merchant"
                 className={cx("img-merchant")}
               />
             </div>
             <div className={cx("content-modal")}>
-              <Button awaiting>Awaiting Approve</Button>
+              <Button awaiting> {t("merchant.await")}</Button>
               <div className={cx("container-content")}>
-                <p className={cx("name-merchant")}>{name}</p>
-                <div className={cx("line")}></div>
-                <p className={cx("type-merchant")}>{type}</p>
+                <p className={cx("name-merchant", fontSize)}>{name}</p>
+                <div className={cx("line", { dark: theme === "dark" })}></div>
+                <p className={cx("type-merchant", fontSize)}>{type}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant")}>Address:</p>
-                <p className={cx("content-merchant")}>{address}</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.address")}:
+                </p>
+                <p className={cx("content-merchant", fontSize)}>{address}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant")}>Email:</p>
-                <p className={cx("content-merchant")}>{email}</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.email")}:
+                </p>
+                <p className={cx("content-merchant", fontSize)}>{email}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant")}>Store Owner:</p>
-                <p className={cx("content-merchant")}>{fullName}</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.storeOwner")}:
+                </p>
+                <p className={cx("content-merchant", fontSize)}>{fullName}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant")}>PhoneNumber:</p>
-                <p className={cx("content-merchant")}>{phoneNumber}</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.phone")}:
+                </p>
+                <p className={cx("content-merchant", fontSize)}>
+                  {phoneNumber}
+                </p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant")}>Open Time:</p>
-                <p className={cx("content-merchant")}>{openTime}</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.openTime")}:
+                </p>
+                <p className={cx("content-merchant", fontSize)}>{openTime}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant")}>Close Time:</p>
-                <p className={cx("content-merchant")}>{closeTime}</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.closeTime")}:
+                </p>
+                <p className={cx("content-merchant", fontSize)}>{closeTime}</p>
               </div>
               <div>
                 {idCardDocuments.map((doc, index) => (
                   <div key={index} className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-merchant")}>
-                        {doc.documentTypeID.name}:
+                      <p className={cx("title-merchant", fontSize)}>
+                        {t("merchant.idCard")}:
                       </p>
                       <div
                         className={cx("btn-check")}
                         onClick={() => handleCheckIDCard(doc.imageFontSide)}
                       >
-                        <p className={cx("text-check")}>Check</p>
+                        <p className={cx("text-check")}>
+                          {" "}
+                          {t("merchant.check")}
+                        </p>
                       </div>
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img
                         src={doc.imageFontSide}
                         alt="Document Front Side"
-                        className={cx("image-document")}
+                        className={cx("image-id-card-document")}
                       />
                       <img
                         src={doc.imageBackSide}
                         alt="Document Front Side"
-                        className={cx("image-document")}
+                        className={cx("image-id-card-document")}
                       />
                       {loading && (
                         <div className={cx("wrapper-loading")}>
@@ -389,11 +474,11 @@ function NewMerchant() {
                       )}
                       {checkIDCard ? (
                         <h2 className={cx("text-overAll-id-card")}>
-                          {overAllIDCard === "Cannot check" ? (
-                            "Cannot check"
+                          {overAllIDCard === t("merchant.cannotCheck") ? (
+                            t("merchant.cannotCheck")
                           ) : (
                             <>
-                              OverAll:
+                              {t("merchant.overAll")}:
                               <span
                                 style={{
                                   color:
@@ -419,14 +504,17 @@ function NewMerchant() {
                 {licenseDriverDocuments.map((doc, index) => (
                   <div key={index} className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-merchant")}>
-                        {doc.documentTypeID.name}:
+                      <p className={cx("title-merchant", fontSize)}>
+                        {t("merchant.businessLicense")}:
                       </p>
                       <div
                         className={cx("btn-check")}
                         onClick={() => handleCheckBusinessLicense()}
                       >
-                        <p className={cx("text-check")}>Check</p>
+                        <p className={cx("text-check")}>
+                          {" "}
+                          {t("merchant.check")}
+                        </p>
                       </div>
                     </div>
                     <div className={cx("wrapper-document")}>
@@ -453,7 +541,7 @@ function NewMerchant() {
               </div>
               <div className={cx("btn-delete")}>
                 <Button approve_btn onClick={() => handleApproval(id)}>
-                  Approval
+                  {t("merchant.approval")}
                 </Button>
               </div>
             </div>

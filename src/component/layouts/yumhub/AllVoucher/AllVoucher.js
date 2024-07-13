@@ -98,6 +98,8 @@ function AllVoucher() {
     return getStatus(voucher.startDate, voucher.endDate) === statusFilter;
   });
 
+  console.log(filteredVouchers);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
