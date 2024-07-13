@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEdit,
   faEye,
   faMagnifyingGlass,
-  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
-import Swal from "sweetalert2";
 import Tippy from "@tippyjs/react/headless";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
@@ -17,15 +13,19 @@ import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./DeletedShipper.module.scss";
 import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
-
-import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 Modal.setAppElement("#root");
 
 function DeletedShipper() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const formatDate = (date) => {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
@@ -58,7 +58,7 @@ function DeletedShipper() {
   const [drivingLicenseBackSide, setDrivingLicenseBackSide] = useState({});
   const [driverLicenseBackSide, setDriverLicenseBackSide] = useState({});
 
-  //gọi api allMerchant đã xóa
+  //gọi api allshipper đã xóa
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,7 +96,6 @@ function DeletedShipper() {
 
   useEffect(() => {
     if (selectShipperById) {
-      console.log(selectShipperById);
       setId(selectShipperById._id || "");
       setAddress(selectShipperById.address || "");
       setAvatar(selectShipperById.avatar || "");
@@ -139,6 +138,8 @@ function DeletedShipper() {
     }
   }, [selectShipperById]);
 
+  console.log(selectShipperById);
+
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
@@ -179,9 +180,9 @@ function DeletedShipper() {
   };
 
   return (
-    <div className={cx("contaienr")}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title")}>All Deleted Merchant</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('shipper.allDeletedShipper')}</p>
         <div>
           <Tippy
             animation="fade"
@@ -190,10 +191,10 @@ function DeletedShipper() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+              <div tabIndex="-1" {...attrs} className={cx("search-result", { dark: theme === "dark" })}>
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title")}>Accounts</h4>
+                    <h4 className={cx("search-title", fontSize)}>{t('shipper.accounts')}</h4>
                     {searchResult.length > 0
                       ? searchResult.map((shipper) => (
                           <AccountItemShipper
@@ -208,37 +209,37 @@ function DeletedShipper() {
               </div>
             )}
           >
-            <div className={cx("inputSearch")}>
+            <div className={cx("inputSearch", { dark: theme === "dark" })}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className={cx("icon-search")}
               />
               <input
-                className={cx("input")}
-                placeholder="Search by name"
+                className={cx("input", { dark: theme === "dark" })}
+                placeholder={t('shipper.searchByName')}
                 onChange={handleSearch}
               />
             </div>
           </Tippy>
         </div>
         <div className={cx("line-background")} />
-        <div className={cx("box-container")}>
-          <table className={cx("table")}>
+        <div className={cx("box-container", { dark: theme === "dark" })}>
+          <table className={cx("table", fontSize, { dark: theme === "dark" })}>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>ID Bike</th>
-                <th>Avatar</th>
-                <th>Actions</th>
+                <th>{t('shipper.name')}</th>
+                <th>{t('shipper.address')}</th>
+                <th>{t('shipper.numberPlate')}</th>
+                <th>{t('shipper.avatar')}</th>
+                <th>{t('shipper.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, index) => (
                 <tr
                   key={index}
-                  className={cx("table-row")}
+                  className={cx("table-row", { dark: theme === "dark" })}
                   onClick={() => handleView(item._id)}
                 >
                   <td>{index + 1}</td>
@@ -271,41 +272,41 @@ function DeletedShipper() {
           <Modal
             isOpen={showModal}
             onRequestClose={handleModalClose}
-            contentLabel="Update Merchant"
+            contentLabel="Update shipper"
             className={cx("modal")}
           >
             {selectShipperById && (
-              <div className={cx("modal-container")}>
-                <div className={cx("logo-shipper")}>
+              <div className={cx("modal-container", { dark: theme === "dark" })}>
+                <div className={cx("logo-shipper", { dark: theme === "dark" })}>
                   <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                   <img
                     src={avatar}
-                    alt="Merchant"
+                    alt="shipper"
                     className={cx("img-shipper")}
                   />
                 </div>
                 <div className={cx("content-modal")}>
-                  <Button awaiting>Deleted</Button>
+                  <Button awaiting>{t('shipper.deleted')}</Button>
                   <div className={cx("container-content")}>
-                    <p className={cx("name-shipper")}>{fullName}</p>
-                    <div className={cx("line")}></div>
-                    <p className={cx("text-gender")}>{gender}</p>
+                    <p className={cx("name-shipper", fontSize)}>{fullName}</p>
+                    <div className={cx("line", { dark: theme === "dark" })}></div>
+                    <p className={cx("text-gender", fontSize)}>{gender}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Address:</p>
-                    <p className={cx("content-merchant")}>{address}</p>
+                    <p className={cx("title-shipper", fontSize)}>{t('shipper.address')}:</p>
+                    <p className={cx("content-shipper", fontSize)}>{address}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Email:</p>
-                    <p className={cx("content-merchant")}>{email}</p>
+                    <p className={cx("title-shipper", fontSize)}>{t('shipper.email')}:</p>
+                    <p className={cx("content-shipper", fontSize)}>{email}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>PhoneNumber:</p>
-                    <p className={cx("content-merchant")}>{phoneNumber}</p>
+                    <p className={cx("title-shipper", fontSize)}>{t('shipper.phone')}:</p>
+                    <p className={cx("content-shipper", fontSize)}>{phoneNumber}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Birth Day:</p>
-                    <p className={cx("content-merchant")}>
+                    <p className={cx("title-shipper", fontSize)}>{t('shipper.birthDay')}:</p>
+                    <p className={cx("content-shipper", fontSize)}>
                       {birthDay instanceof Date
                         ? birthDay.toLocaleDateString("en-US", {
                             year: "numeric",
@@ -316,20 +317,20 @@ function DeletedShipper() {
                     </p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>ID Bike:</p>
-                    <p className={cx("content-merchant")}>{idBike}</p>
+                    <p className={cx("title-shipper", fontSize)}>{t('shipper.numberPlate')}:</p>
+                    <p className={cx("content-shipper", fontSize)}>{idBike}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Brand Bike:</p>
-                    <p className={cx("content-merchant")}>{brandBike}</p>
+                    <p className={cx("title-shipper", fontSize)}>{t('shipper.motorbikeBrand')}:</p>
+                    <p className={cx("content-shipper", fontSize)}>{brandBike}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant")}>Mode Code:</p>
-                    <p className={cx("content-merchant")}>{modeCode}</p>
+                    <p className={cx("title-shipper", fontSize)}>{t('shipper.motorbikeColor')}:</p>
+                    <p className={cx("content-shipper", fontSize)}>{modeCode}</p>
                   </div>
                   <div className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-merchant")}>ID Card:</p>
+                      <p className={cx("title-shipper", fontSize)}>{t('shipper.idCard')}:</p>
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img
@@ -346,7 +347,7 @@ function DeletedShipper() {
                   </div>
                   <div className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-merchant")}>Driving License:</p>
+                      <p className={cx("title-shipper", fontSize)}>{t('shipper.drivingLicense')}:</p>
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img
@@ -363,7 +364,7 @@ function DeletedShipper() {
                   </div>
                   <div className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-merchant")}>Driver License:</p>
+                      <p className={cx("title-shipper", fontSize)}>{t('shipper.driverLicense')}:</p>
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img

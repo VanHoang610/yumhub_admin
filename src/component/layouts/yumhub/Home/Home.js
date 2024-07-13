@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { format, subMonths } from "date-fns";
 import { Bar, Line, PolarArea } from "react-chartjs-2";
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
@@ -21,6 +20,8 @@ import {
   LineElement,
 } from "chart.js";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
 
 ChartJS.register(
   CategoryScale,
@@ -39,6 +40,8 @@ ChartJS.register(
 const cx = classNames.bind(styles);
 
 function Home() {
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const { t } = useTranslation();
   const [yumhubData, setYumhubData] = useState({});
   const [revenueData, setRevenueData] = useState({});
@@ -139,6 +142,18 @@ function Home() {
     t("home.lastMonth"),
     t("home.thisMonth"),
   ];
+
+  // chỉnh sửa fontsize của title
+  const getTitleFontSize = () => {
+    switch (fontSize) {
+      case "small":
+        return 16;
+      case "large":
+        return 24;
+      default:
+        return 20;
+    }
+  };
 
   const totalYumHub = {
     labels: [
@@ -306,14 +321,24 @@ function Home() {
   };
 
   return (
-    <div className={cx("container")}>
+    <div
+      className={cx("container", {
+        dark: theme === "dark",
+      })}
+    >
       <div className={cx("wrapper-date-picker")}>
-        <p className={cx("title-date-picker")}>{t("home.seleteDate")}</p>
+        <p
+          className={cx("title-date-picker", fontSize, {
+            dark: theme === "dark",
+          })}
+        >
+          {t("home.seleteDate")}
+        </p>
         <DatePicker
           selected={startDate}
           onChange={(date) => setStartDate(date)}
           dateFormat="MM/dd/yyyy"
-          className={cx("customDatePicker")}
+          className={cx("customDatePicker", fontSize)}
         />
       </div>
       <div className={cx("yumhub-chart-wrapper")}>
@@ -327,9 +352,10 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
+                color: theme === "dark" ? "#fff" : "#333",
                 text: t("home.yumhubChart"),
                 font: {
-                  size: 20,
+                  size: getTitleFontSize(),
                 },
                 padding: {
                   top: 20,
@@ -359,9 +385,10 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
+                color: theme === "dark" ? "#fff" : "#333",
                 text: t("home.revenueChart"),
                 font: {
-                  size: 20,
+                  size: getTitleFontSize(),
                 },
                 padding: {
                   top: 20,
@@ -396,9 +423,10 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
+                color: theme === "dark" ? "#fff" : "#333",
                 text: t("home.profitChart"),
                 font: {
-                  size: 20,
+                  size: getTitleFontSize(),
                 },
                 padding: {
                   top: 20,
@@ -492,9 +520,10 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
+                color: theme === "dark" ? "#fff" : "#333",
                 text: t("home.shipChart"),
                 font: {
-                  size: 20,
+                  size: getTitleFontSize(),
                 },
                 padding: {
                   top: 20,
@@ -535,9 +564,10 @@ function Home() {
               legend: { position: "bottom" },
               title: {
                 display: true,
+                color: theme === "dark" ? "#fff" : "#333",
                 text: t("home.foodChart"),
                 font: {
-                  size: 20,
+                  size: getTitleFontSize(),
                 },
                 padding: {
                   top: 20,

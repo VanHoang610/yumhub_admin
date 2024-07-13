@@ -1,12 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "../../../GlobalStyles/global.scss";
 
 // modal history
 .modal-history {
   display: flex;
   width: 80%;
   height: 80%;
-  background-color: #fff;
+  background-color: $bg-white;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -14,15 +13,113 @@
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 
+  &.dark {
+    background-color: $bg-gray-light-dark;
+  }
+
+  .table-row-history {
+    width: 100%;
+    th {
+      color: $color-title-box;
+      font-family: $ff-popins;
+      font-size: $fs-15;
+      font-weight: $fw-500;
+    }
+
+    td {
+      color: $color-content-box;
+      font-family: $ff-popins;
+      font-size: $fs-13;
+      font-weight: $fw-400;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+      overflow: hidden; /* Ẩn nội dung tràn */
+      text-overflow: ellipsis; /* Hiển thị dấu chấm lửng nếu nội dung tràn */
+      white-space: nowrap; /* Ngăn nội dung xuống dòng */
+      max-width: 269px; /* Thiết lập chiều rộng tối đa */
+      height: 23px; /* Thiết lập chiều cao cố định */
+    }
+    .action-button {
+      margin-right: 5px;
+      border: none;
+      background-color: transparent;
+      color: $color-title-box;
+    }
+  }
+
+  .table-row-history.small {
+    width: 100%;
+    th {
+      font-size: $fs-11;
+    }
+    td {
+      font-size: $fs-9;
+    }
+  }
+  .table-row-history.large {
+    width: 100%;
+    th {
+      font-size: $fs-19;
+    }
+    td {
+      font-size: $fs-16;
+    }
+  }
+
+  .table-row-history.dark {
+    width: 100%;
+    th {
+      color: $color-black;
+      font-weight: $fw-400;
+    }
+    td {
+      color: $color-content-box;
+    }
+  }
+
+  .iconLeft {
+    margin-right: 30px;
+    width: 24px;
+    height: 24px;
+    margin-left: 20px;
+    color: $color-gray;
+
+    &.small {
+      width: 20px;
+      height: 20px;
+    }
+
+    &.large {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
   .title-history {
     display: flex;
     width: 100%;
-    color: #383838;
-    font-size: 30px;
+    color: $color-title;
+    font-size: $fs-30;
     align-items: center;
     margin: 20px 30px;
+
+    &.small {
+      font-size: $fs-26;
+    }
+
+    &.large {
+      font-size: $fs-34;
+    }
+
+    &.dark {
+      color: $color-white;
+    }
   }
-  
+
   .box-history {
     width: 100%;
     height: 100%;
@@ -34,24 +131,24 @@
     display: flex;
     vertical-align: middle;
     padding: 7px 12px;
-    font-weight: 600;
-    letter-spacing: .3px;
+    font-weight: $fw-600;
+    letter-spacing: 0.3px;
     border-radius: 30px;
-    font-size: 12px;
+    font-size: $fs-12;
     justify-content: center;
-    align-items: center;  
-    font-family: 'Montserrat', sans-serif; 
+    align-items: center;
+    font-family: $ff-montserrat;
   }
   .status-cancel {
-    background-color: #dc3545;
-    color: #fff;
+    background-color: $bg-awaiting;
+    color: $color-white;
     width: 80px;
   }
 
   .status-work {
-    background-color: #63ed7a;
+    background-color: $bg-reviewed;
     width: 100px;
-    color: #fff;
+    color: $color-white;
   }
 }
 
@@ -63,10 +160,10 @@
 
 // search-input
 .search-result {
-  width: 1100px;
+  width: 1170px;
   height: 100%;
   max-height: 80vh;
-  background-color: rgb(249, 244, 244);
+  background-color: $bg-white;
   overflow: auto;
   scrollbar-width: none;
 
@@ -74,32 +171,44 @@
     font-size: 20px;
     padding-bottom: 20px;
     margin: 0;
-    font-family: "Poppins", sans-serif;
+    font-family: $ff-popins;
   }
+
+  .search-title.small {
+    font-size: $fs-16;
+  }
+
+  .search-title.large {
+    font-size: $fs-24;
+  }
+}
+
+.search-result.dark {
+  background-color: $bg-gray-light;
 }
 
 //sweet-alert
 .swal2-popup {
-  background-color: #d2f7f7;
+  background-color: $bg-modal;
   border-radius: 20px;
   padding: 10px;
 }
 
 .swal2-title {
-  color: #333;
-  font-family: "Montserrat", sans-serif;
+  color: $color-title;
+  font-family: $ff-montserrat;
 }
 
 .swal2-confirm {
-  background-color: #3085d6;
-  color: #fff;
+  background-color: $bg-blue;
+  color: $color-white;
   padding: 10px 20px;
   border-radius: 5px;
 }
 
 .swal2-cancel {
-  background-color: #d33;
-  color: #fff;
+  background-color: $bg-awaiting;
+  color: $color-white;
   padding: 10px 20px;
   border-radius: 5px;
 }
@@ -109,32 +218,31 @@
   display: flex;
   width: 80%;
   height: 80%;
-  background-color: #caf1f1;
+  background-color: $bg-line;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 
+  &.dark {
+    background-color: $bg-gray-light-dark;
+  }
+
   // logo
-  .logo-merchant {
-    width: 48%;
+  .logo-customer {
+    width: 35%;
     height: 100%;
-    background-color: #e3e5fa;
     position: relative;
+    background-color: $bg-light;
+
+    &.dark {
+      background-color: $bg-gray-light;
+    }
   }
 
-  .icon-back {
-    position: absolute;
-    color: #6f768d;
-    padding: 36px 36px;
-    width: 40px;
-    height: 40px;
-  }
-
-  .ellpse {
+  .ellipse {
     position: absolute;
     width: 80%;
     top: 50%;
@@ -142,7 +250,7 @@
     transform: translate(-50%, 20%);
   }
 
-  .img-merchant {
+  .img-customer {
     width: 70%;
     height: 80%;
     position: absolute;
@@ -165,33 +273,50 @@
     align-items: center;
   }
 
-  .name-merchant {
-    color: #000;
+  .name-customer {
+    color: $color-black;
     text-align: left;
-    font-size: 25px;
-    font-weight: 600;
-    font-family: "Montserrat Alternates", "sans-serif";
+    font-size: $fs-25;
+    font-weight: $fw-600;
+    font-family: $ff-montserrat;
     border: none;
+
+    &.small {
+      font-size: $fs-21;
+    }
+    &.large {
+      font-size: $fs-29;
+    }
   }
 
   .line {
     height: 30px;
     width: 1px;
-    background-color: #bfbfbf;
+    background-color: $bg-line-main;
     margin-left: 10px;
+
+    &.dark {
+      background-color: $bg-line-green;
+    }
   }
 
-  .type-merchant {
-    color: #50cc98;
-    font-family: "Montserrat Alternates", "sans-serif";
-    font-size: 15px;
-    font-weight: 400;
+  .type-customer {
+    color: $color-green;
+    font-family: $ff-montserrat;
+    font-size: $fs-15;
+    font-weight: $fw-400;
     margin-left: 15px;
     border: none;
+
+    &.small {
+      font-size: $fs-11;
+    }
+    &.large {
+      font-size: $fs-19;
+    }
   }
 
   .wrapper-content {
-
     display: flex;
     width: 90%;
     height: 8.1%;
@@ -200,34 +325,48 @@
     padding: 0;
   }
 
-  .title-merchant {
+  .title-customer {
     align-items: center;
     padding: 0;
     width: 32%;
     height: 100%;
-    color: #000;
-    font-size: 20px;
-    font-weight: 600;
-    font-family: "Montserrat Alternates", "sans-serif";
+    color: $color-black;
+    font-size: $fs-20;
+    font-weight: $fw-600;
+    font-family: $ff-montserrat;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     margin-left: 10px;
     display: flex;
     align-items: center;
+
+    &.small {
+      font-size: $fs-16;
+    }
+    &.large {
+      font-size: $fs-24;
+    }
   }
 
-  .content-merchant {
+  .content-customer {
     flex: 1;
-    color: #000;
+    color: $color-black;
     text-align: left;
-    font-size: 20px;
-    font-weight: 300;
-    font-family: "Montserrat Alternates", "sans-serif";
+    font-size: $fs-20;
+    font-weight: $fw-300;
+    font-family: $ff-montserrat;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     border: none;
+
+    &.small {
+      font-size: $fs-16;
+    }
+    &.large {
+      font-size: $fs-24;
+    }
   }
 
   .btn-delete {
@@ -258,7 +397,7 @@
 
 .box-container {
   position: relative;
-  background-color: #fff;
+  background-color: $color-white;
   border-radius: 8px;
   padding: 20px;
   margin-top: 52px;
@@ -268,23 +407,27 @@
   scrollbar-width: none;
 }
 
+.box-container.dark {
+  background-color: $bg-dark;
+}
+
 .table {
   width: 100%;
   border-collapse: separate; /* Sử dụng 'separate' để khoảng cách giữa các ô hoạt động */
   border-spacing: 34px 29px; /* Khoảng cách dọc giữa các hàng và ngang giữa các cột */
 
   th {
-    color: #9f9f9f;
-    font-family: "Poppins", "sans-serif";
-    font-size: 15px;
-    font-weight: 500;
+    color: $color-title-box;
+    font-family: $ff-popins;
+    font-size: $fs-15;
+    font-weight: $fw-500;
   }
 
   td {
-    color: #323c47;
-    font-family: "Poppins", "sans-serif";
-    font-size: 13px;
-    font-weight: 400;
+    color: $color-content-box;
+    font-family: $ff-popins;
+    font-size: $fs-13;
+    font-weight: $fw-400;
   }
 
   th,
@@ -301,31 +444,77 @@
     margin-right: 5px;
     border: none;
     background-color: transparent;
-    color: #98a9bc;
+    color: $color-title-box;
+  }
+}
+
+.table.small {
+  th {
+    font-size: $fs-11;
+  }
+
+  td {
+    font-size: $fs-9;
+  }
+}
+
+.table.large {
+  th {
+    font-size: $fs-19;
+  }
+
+  td {
+    font-size: $fs-17;
+  }
+}
+
+.table.dark {
+  th {
+    color: $color-white;
+  }
+
+  td {
+    color: $color-white;
   }
 }
 
 .line-background {
   display: flex;
   height: 0.5px;
-  background-color: #939292;
+  background-color: $bg-line-main;
   margin-top: 35px;
 }
 
 .title {
-  color: #6b6b6b;
-  font-family: "Poppins", sans-serif;
-  font-size: 36px;
-  font-weight: 600;
+  color: $color-title;
+  font-family: $ff-popins;
+  font-size: $fs-32;
+  font-weight: $fw-600;
   margin-bottom: 26px;
 }
 
+.title.small {
+  font-size: $fs-32;
+}
+
+.title.large {
+  font-size: $fs-40;
+}
+
+.title.dark {
+  color: $color-white;
+}
+
 .inputSearch {
-  width: 1100px;
+  width: 1170px;
   display: flex;
   height: 60px;
-  background-color: #fff;
+  background-color: $bg-white;
   align-items: center;
+}
+
+.inputSearch.dark {
+  background-color: $bg-gray-light;
 }
 
 .icon-search {
@@ -339,8 +528,8 @@
 .input {
   flex-grow: 1;
   margin: 0;
-  color: #90a0b7;
-  font-family: "Poppins", "sans-serif";
+  color: $color-title-box;
+  font-family: $ff-popins;
   border: none;
   outline: none; // bỏ mặc định
 
@@ -350,8 +539,10 @@
   }
 }
 
-.container {
-  background-color: aliceblue;
+.input.dark {
+  color: $color-title-box;
+  background-color: $bg-gray-light;
+  font-family: $ff-popins;
 }
 
 .content-modal {
@@ -367,4 +558,12 @@
   padding: 51px 94px;
   overflow: auto; /* Để có thể cuộn nếu nội dung quá dài */
   scrollbar-width: none;
+}
+
+.container {
+  background-color: $bg-primary;
+}
+
+.container.dark {
+  background-color: $bg-black;
 }

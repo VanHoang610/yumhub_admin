@@ -15,7 +15,8 @@ function Button({
   delete_btn = false, 
   forget_btn = false,
   awaiting = false,
-  reviewed = false
+  reviewed = false,
+  detail_dark = false,
 }) {
   let Comp = "button";
 
@@ -39,7 +40,8 @@ function Button({
     delete_btn,
     forget_btn,
     awaiting,
-    reviewed
+    reviewed,
+    detail_dark
   });
 
   return (

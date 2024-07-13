@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faChevronLeft,
   faEdit,
   faEye,
   faMagnifyingGlass,
@@ -19,12 +20,19 @@ import styles from "./AllShipper.module.scss";
 import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
 import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
 Modal.setAppElement("#root");
 
 function AllShipper() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const formatDate = (date) => {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
@@ -174,7 +182,7 @@ function AllShipper() {
       const updateData = {
         fullName,
         sex: gender,
-        birthDay: birthDay.toISOString().split('T')[0],
+        birthDay: birthDay.toISOString().split("T")[0],
         address,
       };
       console.log(birthDay);
@@ -301,7 +309,6 @@ function AllShipper() {
           const updatedHistory = response.data.historyShipper.map((item) => ({
             ...item,
             timeBook: formatDate(item.timeBook),
-            nameStatus: getOrderStatusName(item.status),
           }));
           console.log(updatedHistory);
           setDataHistory(updatedHistory);
@@ -318,7 +325,7 @@ function AllShipper() {
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        setOrderStatuses(response.data.orderStatus)
+        setOrderStatuses(response.data.orderStatus);
       } catch (error) {
         console.log(error);
       }
@@ -326,18 +333,12 @@ function AllShipper() {
     fetchData();
   }, []);
 
-  // lấy ra tên của status trong order
-  function getOrderStatusName(statusId) {
-    const matchingStatus = orderStatuses.find(
-      (status) => status._id === statusId
-    );
-    return matchingStatus ? matchingStatus.name : "N/A";
-  }
-
   return (
-    <div className={cx("container")}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title")}>All Shipper</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+         {t('shipper.allShipper')}
+        </p>
         <div>
           <Tippy
             animation="fade"
@@ -346,10 +347,14 @@ function AllShipper() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title")}>Accounts</h4>
+                    <h4 className={cx("search-title", fontSize)}> {t('shipper.accounts')}</h4>
                     {searchResult.length > 0
                       ? searchResult.map((shipper) => (
                           <AccountItemShipper
@@ -364,30 +369,30 @@ function AllShipper() {
               </div>
             )}
           >
-            <div className={cx("inputSearch")}>
+            <div className={cx("inputSearch", { dark: theme === "dark" })}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className={cx("icon-search")}
               />
               <input
-                className={cx("input")}
-                placeholder="Search by name"
+                className={cx("input", { dark: theme === "dark" })}
+                placeholder= {t('shipper.searchByName')}
                 onChange={handleSearch}
               />
             </div>
           </Tippy>
         </div>
         <div className={cx("line-background")} />
-        <div className={cx("box-container")}>
-          <table className={cx("table")}>
+        <div className={cx("box-container", { dark: theme === "dark" })}>
+          <table className={cx("table", fontSize, { dark: theme === "dark" })}>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>ID Bike</th>
-                <th>Avatar</th>
-                <th>Actions</th>
+                <th> {t('shipper.name')}</th>
+                <th> {t('shipper.address')}</th>
+                <th> {t('shipper.numberPlate')}</th>
+                <th> {t('shipper.avatar')}</th>
+                <th> {t('shipper.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -445,12 +450,12 @@ function AllShipper() {
         <Modal
           isOpen={showModal}
           onRequestClose={handleModalClose}
-          contentLabel="Update Merchant"
+          contentLabel="AllShipper"
           className={cx("modal")}
         >
           {selectShipperById && (
-            <div className={cx("modal-container")}>
-              <div className={cx("logo-shipper")}>
+            <div className={cx("modal-container", { dark: theme === "dark" })}>
+              <div className={cx("logo-shipper", { dark: theme === "dark" })}>
                 <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                 <img
                   src={avatar}
@@ -459,12 +464,12 @@ function AllShipper() {
                 />
               </div>
               <div className={cx("content-modal")}>
-                {!isEditModal ? <Button reviewed>Reviewed</Button> : ""}
+                {!isEditModal ? <Button reviewed> {t('shipper.reviewed')}</Button> : ""}
                 <div className={cx("container-content")}>
-                  <p className={cx("name-shipper")}>
+                  <p className={cx("name-shipper", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("name-shipper")}
+                        className={cx("name-shipper", fontSize)}
                         name="name"
                         defaultValue={fullName}
                         onChange={(e) => setFullName(e.target.value)}
@@ -473,16 +478,16 @@ function AllShipper() {
                       fullName
                     )}
                   </p>
-                  <div className={cx("line")}></div>
-                  <p className={cx("text-gender")}>
+                  <div className={cx("line", { dark: theme === "dark" })}></div>
+                  <p className={cx("text-gender", fontSize)}>
                     {isEditModal ? (
                       <select
-                        className={cx("text-gender")}
+                        className={cx("text-gender", fontSize)}
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
                       >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="male"> {t('shipper.male')}</option>
+                        <option value="female"> {t('shipper.famale')}</option>
                       </select>
                     ) : (
                       gender || "N/A"
@@ -490,11 +495,11 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Address:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-shipper", fontSize)}> {t('shipper.address')}:</p>
+                  <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("content-merchant")}
+                        className={cx("content-shipper", fontSize)}
                         name="address"
                         defaultValue={address}
                         onChange={(e) => setAddress(e.target.value)}
@@ -505,8 +510,8 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Email:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-shipper", fontSize)}> {t('shipper.email')}:</p>
+                  <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
                         {email || "N/A"}
@@ -517,8 +522,8 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>PhoneNumber:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-shipper", fontSize)}> {t('shipper.phone')}:</p>
+                  <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
                         {phoneNumber || "N/A"}
@@ -529,8 +534,8 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Birth Day:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-shipper", fontSize)}> {t('shipper.birthDay')}:</p>
+                  <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <DatePicker
                         selected={birthDay}
@@ -539,17 +544,23 @@ function AllShipper() {
                           setIsEditingBirthDay(false);
                         }}
                         dateFormat="MM-dd-yyyy"
-                        className={cx("content-merchant")}
+                        className={cx("content-shipper")}
                         onClickOutside={() => setIsEditingBirthDay(false)} // Ẩn DatePicker khi nhấn ra ngoài
                       />
+                    ) : birthDay instanceof Date ? (
+                      birthDay.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
                     ) : (
-                      birthDay instanceof Date ? birthDay.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) : "N/A"
+                      "N/A"
                     )}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>ID Bike:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-shipper", fontSize)}> {t('shipper.numberPlate')}:</p>
+                  <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
                         {idBike || "N/A"}
@@ -560,8 +571,8 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Brand Bike:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-shipper", fontSize)}> {t('shipper.motorbikeBrand')}:</p>
+                  <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
                         {brandBike || "N/A"}
@@ -572,8 +583,8 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Mode Code:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-shipper", fontSize)}> {t('shipper.motorbikeColor')}:</p>
+                  <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
                         {modeCode || "N/A"}
@@ -585,7 +596,7 @@ function AllShipper() {
                 </div>
                 <div className={cx("wrapper-image-content")}>
                   <div className={cx("wrapper-title-document")}>
-                    <p className={cx("title-merchant")}>ID Card:</p>
+                    <p className={cx("title-shipper", fontSize)}> {t('shipper.idCard')}:</p>
                   </div>
                   <div
                     className={cx("wrapper-document")}
@@ -608,7 +619,9 @@ function AllShipper() {
                   onClick={handleClickEditField}
                 >
                   <div className={cx("wrapper-title-document")}>
-                    <p className={cx("title-merchant")}>Driving License:</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                    {t('shipper.drivingLicense')}:
+                    </p>
                   </div>
                   <div className={cx("wrapper-document")}>
                     <img
@@ -628,7 +641,9 @@ function AllShipper() {
                   onClick={handleClickEditField}
                 >
                   <div className={cx("wrapper-title-document")}>
-                    <p className={cx("title-merchant")}>Driver License:</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                    {t('shipper.driverLicense')}:
+                    </p>
                   </div>
                   <div className={cx("wrapper-document")}>
                     <img
@@ -646,11 +661,11 @@ function AllShipper() {
                 <div className={cx("btn-delete")}>
                   {isEditModal ? (
                     <Button approve_btn onClick={() => handleUpdate()}>
-                      Update
+                       {t('shipper.update')}
                     </Button>
                   ) : (
                     <Button approve_btn onClick={() => handleHistory(id)}>
-                      History
+                       {t('shipper.history')}
                     </Button>
                   )}
                 </div>
@@ -664,28 +679,51 @@ function AllShipper() {
           isOpen={showModalHistory}
           onRequestClose={handleModalClose}
           contentLabel="HistoryShipper"
-          className={cx("modal-history")}
+          className={cx("modal-history", { dark: theme === "dark" })}
         >
           <div className={cx("box-history")}>
-            <h2 className={cx("title-history")}>History Shipper</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FontAwesomeIcon
+                onClick={() => setShowModalHistory(false)}
+                icon={faChevronLeft}
+                className={cx("iconLeft", fontSize)}
+              />
+              <h2
+                className={cx("title-history", fontSize, {
+                  dark: theme === "dark",
+                })}
+              >
+                {t('shipper.historyShipper')}
+              </h2>
+            </div>
             <table className={cx("table")}>
-              <thead className={cx("table-row-history")}>
+              <thead
+                className={cx("table-row-history", fontSize, {
+                  dark: theme === "dark",
+                })}
+              >
                 <tr>
                   <th>#</th>
-                  <th>Name Merchant</th>
-                  <th>Name Customer </th>
-                  <th>Delivery Address</th>
-                  <th>Time Book</th>
-                  <th>Total Price</th>
-                  <th>Status</th>
+                  <th>{t('shipper.nameMerchant')}</th>
+                  <th>{t('shipper.nameCustomer')} </th>
+                  <th>{t('shipper.deliveryAddress')}</th>
+                  <th>{t('shipper.timeBook')}</th>
+                  <th>{t('shipper.totalPrice')}</th>
+                  <th>{t('shipper.status')}</th>
                 </tr>
               </thead>
-              <tbody className={cx("table-row-history")}>
+              <tbody
+                className={cx("table-row-history", fontSize, {
+                  dark: theme === "dark",
+                })}
+              >
                 {dataHistory.map((item, index) => (
                   <tr key={index} onClick={() => handleView(item._id)}>
                     <td>{index + 1}</td>
                     <td>{item.merchantID ? item.merchantID.name : "N/A"}</td>
-                    <td>{item.customerID ? item.customerID.fullName : "N/A"}</td>
+                    <td>
+                      {item.customerID ? item.customerID.fullName : "N/A"}
+                    </td>
                     <td>{item ? item.deliveryAddress : "N/A"}</td>
                     <td>{item ? item.timeBook : "N/A"}</td>
                     <td>{item ? item.priceFood + " đ" : "N/A"}</td>
@@ -693,13 +731,14 @@ function AllShipper() {
                     <td>
                       <p
                         className={cx(
-                          "status", // Base class for all status elements
-                          item.nameStatus === "cancel"
+                          "status",
+                          fontSize, // Base class for all status elements
+                          item.status.name === "cancel"
                             ? "status-cancel"
                             : "status-work"
                         )}
                       >
-                        {item.nameStatus}
+                        {item.status ? item.status.name : "N/A"}
                       </p>
                     </td>
                   </tr>

@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEdit,
   faEye,
   faMagnifyingGlass,
-  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
-import Swal from "sweetalert2";
 import Tippy from "@tippyjs/react/headless";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
@@ -21,11 +17,18 @@ import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCusto
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
+
 const cx = classNames.bind(styles);
 
 Modal.setAppElement("#root");
 
 function Orders() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const formatDate = (date) => {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
@@ -41,6 +44,27 @@ function Orders() {
   const [showModal, setShowModal] = useState(false);
   const [orderStatuses, setOrderStatuses] = useState([]);
   const [showModalHistory, setShowModalHistory] = useState(false);
+
+  // gọi api lấy orderStatus
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await AxiosInstance.get("orders/getAllOrderStatus");
+        setOrderStatuses(response.data.orderStatus);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // lấy ra tên của status trong order
+  function getOrderStatusName(statusId) {
+    const matchingStatus = orderStatuses.find(
+      (status) => status._id === statusId._id
+    );
+    return matchingStatus ? matchingStatus.name : "Loading...";
+  }
 
   //gọi api all shipper
   useEffect(() => {
@@ -59,7 +83,6 @@ function Orders() {
     };
     fetchData();
   }, []);
-
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
@@ -106,31 +129,10 @@ function Orders() {
     setShowModalHistory(false);
   };
 
-  // gọi api lấy orderStatus
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        setOrderStatuses(response.data.orderStatus);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  // lấy ra tên của status trong order
-  function getOrderStatusName(statusId) {
-    const matchingStatus = orderStatuses.find(
-      (status) => status._id === statusId._id
-    );
-    return matchingStatus ? matchingStatus.name : "N/A";
-  }
-
   return (
-    <div className={cx("container")}>
+    <div className={cx("container", { dark: theme === 'dark'})}>
       <div className={cx("content")}>
-        <p className={cx("title")}>All Orders</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('order.allOrder')}</p>
         <div>
           <Tippy
             animation="fade"
@@ -139,10 +141,10 @@ function Orders() {
             onClickOutside={handleClickOutSide}
             visible
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+              <div tabIndex="-1" {...attrs} className={cx("search-result", { dark: theme === "dark" })}>
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title")}>Accounts</h4>
+                    <h4 className={cx("search-title", fontSize)}>{t('order.accounts')}</h4>
                     {searchResult.length > 0
                       ? searchResult.map((shipper) => (
                           <AccountItemShipper
@@ -157,32 +159,32 @@ function Orders() {
               </div>
             )}
           >
-            <div className={cx("inputSearch")}>
+            <div className={cx("inputSearch", { dark: theme === "dark" })}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className={cx("icon-search")}
               />
               <input
-                className={cx("input")}
-                placeholder="Search by name"
+                className={cx("input", { dark: theme === "dark" })}
+                placeholder={t('order.searchByName')}
                 onChange={handleSearch}
               />
             </div>
           </Tippy>
         </div>
         <div className={cx("line-background")} />
-        <div className={cx("box-container")}>
-          <table className={cx("table")}>
+        <div className={cx("box-container", { dark: theme === "dark" })}>
+          <table className={cx("table", fontSize, { dark: theme === "dark" })}>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Merchant</th>
-                <th>Shipper</th>
-                <th>Customer</th>
-                <th>Voucher</th>
-                <th>Time Book</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{t('order.id')}</th>
+                <th>{t('order.merchant')}</th>
+                <th>{t('order.shipper')}</th>
+                <th>{t('order.customer')}</th>
+                <th>{t('order.voucher')}</th>
+                <th>{t('order.timeBook')}</th>
+                <th>{t('order.status')}</th>
+                <th>{t('order.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -200,12 +202,9 @@ function Orders() {
                   <td>{item.customerID ? item.timeBook : "N/A"}</td>
                   <td>
                     <p
-                      className={cx(
-                        "status", // Base class for all status elements
-                        item.nameStatus === "cancel"
-                          ? "status-cancel"
-                          : "status-work"
-                      )}
+                      className={cx("status", {
+                        "status-cancel": item.nameStatus === "cancel",
+                      })}
                     >
                       {item.nameStatus}
                     </p>
@@ -233,13 +232,13 @@ function Orders() {
           className={cx("modal")}
         >
           {selectedOrder && (
-            <div className={cx("modal-container")}>
-              <div className={cx("logo-shipper")}>
+            <div className={cx("modal-container", { dark: theme === "dark" })}>
+              <div className={cx("logo-order", { dark: theme === "dark" })}>
                 <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                 <img
                   src={image_merchant}
                   alt="Merchant"
-                  className={cx("img-shipper")}
+                  className={cx("img-order")}
                 />
               </div>
               <div className={cx("content-modal")}>
@@ -250,52 +249,52 @@ function Orders() {
                 )}
 
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>ID:</p>
-                  <p className={cx("content-merchant")}>{selectedOrder._id}</p>
+                  <p className={cx("title-order", fontSize)}>{t('order.id')}:</p>
+                  <p className={cx("content-order", fontSize)}>{selectedOrder._id}</p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Name Customer:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.nameCustomer')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.customerID
                       ? selectedOrder.customerID.fullName
                       : "N/A"}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Phone Customer:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.phoneCustomer')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.customerID
                       ? selectedOrder.customerID.phoneNumber
                       : "N/A"}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Name Merchant:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.nameMerchant')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.merchantID
                       ? selectedOrder.merchantID.name
                       : "N/A"}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Name Shipper:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.nameShipper')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.shipperID
                       ? selectedOrder.shipperID.fullName
                       : "N/A"}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Phone Shipper:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.phoneShipper')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.shipperID
                       ? selectedOrder.shipperID.phoneNumber
                       : "N/A"}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Voucher:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.voucher')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.voucherID
                       ? selectedOrder.voucherID.nameVoucher
                       : "N/A"}
@@ -303,38 +302,38 @@ function Orders() {
                 </div>
 
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Date Book:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.timeBook')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.timeBook}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Delivery Address:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.deliveryAddress')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.deliveryAddress}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Delivery Cost:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.deliveryCost')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.deliveryCost} đ
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Price Food:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.priceFood')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.priceFood} đ
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Total:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.totalPrice')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {selectedOrder.totalPaid} đ
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Payment Method:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-order", fontSize)}>{t('order.paymentMethod')}:</p>
+                  <p className={cx("content-order", fontSize)}>
                     {(() => {
                       switch (selectedOrder.paymentMethod) {
                         case 1:

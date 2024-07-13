@@ -1,17 +1,51 @@
+@import "../../../GlobalStyles/global.scss";
 
 // modal
 .modal-container {
   display: flex;
   width: 80%;
   height: 80%;
-  background-color: #caf1f1;
+  background-color: $bg-line;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+  &.dark {
+    background-color: $bg-gray-light-dark;
+  }
+
+  .logo-shipper {
+    width: 35%;
+    height: 100%;
+    position: relative;
+    background-color: $bg-light;
+
+    &.dark {
+      background-color: $bg-gray-light;
+    }
+  }
+
+  .line {
+    height: 30px;
+    width: 1px;
+    background-color: $bg-line-main;
+    margin-left: 10px;
+
+    &.dark {
+      background-color: $bg-line-green;
+    }
+  }
+
+  .ellipse {
+    position: absolute;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 20%);
+  }
 
   //loading
   .wrapper-loading {
@@ -22,37 +56,13 @@
   }
 
   .text-loading {
-    color: #4bc2e6;
+    color: $color-loading;
     font-size: 15px;
-    font-family: "Montserrat Alternates", "sans-serif";
+    font-family: $ff-montserrat;
     margin-right: 30px;
   }
 
-  // logo
-  .logo-merchant {
-    width: 48%;
-    height: 100%;
-    background-color: #e3e5fa;
-    position: relative;
-  }
-
-  .icon-back {
-    position: absolute;
-    color: #6f768d;
-    padding: 36px 36px;
-    width: 40px;
-    height: 40px;
-  }
-
-  .ellpse {
-    position: absolute;
-    width: 80%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 20%);
-  }
-
-  .img-merchant {
+  .img-shipper {
     width: 70%;
     height: 80%;
     position: absolute;
@@ -76,31 +86,40 @@
   display: flex;
   align-items: center;
   margin: 0;
+  margin-top: 20px;
 }
 
 .name-shipper {
-  color: #000;
+  color: $color-black;
   text-align: left;
-  font-size: 25px;
-  font-weight: 600;
-  font-family: "Montserrat Alternates", "sans-serif";
+  font-size: $fs-25;
+  font-weight: $fw-600;
+  font-family: $ff-montserrat;
   border: none;
-}
 
-.line {
-  height: 30px;
-  width: 1px;
-  background-color: #bfbfbf;
-  margin-left: 10px;
+  &.small {
+    font-size: $fs-21;
+  }
+  &.large {
+    font-size: $fs-29;
+  }
 }
 
 .gender-modal {
-  color: #50cc98;
-  font-family: "Montserrat Alternates", "sans-serif";
-  font-size: 15px;
-  font-weight: 400;
+  color: $color-green;
+  font-family: $ff-montserrat;
+  font-size: $fs-15;
+  font-weight: $fw-400;
   margin-left: 15px;
   border: none;
+
+  &.small {
+    font-size: $fs-11;
+  }
+
+  &.large {
+    font-size: $fs-19;
+  }
 }
 
 .wrapper-content {
@@ -112,53 +131,65 @@
   padding: 0;
 }
 
-.title-merchant {
+.title-shipper {
   align-items: center;
   padding: 0;
   width: 35%;
   height: 100%;
-  color: #000;
-  font-size: 20px;
-  font-weight: 600;
-  font-family: "Montserrat Alternates", "sans-serif";
+  color: $color-black;
+  font-size: $fs-20;
+  font-weight: $fw-600;
+  font-family: $ff-montserrat;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-left: 10px;
   display: flex;
   align-items: center;
+
+  &.small {
+    font-size: $fs-16;
+  }
+  &.large {
+    font-size: $fs-24;
+  }
 }
 
-.content-merchant {
+.content-shipper {
   flex: 1;
-  color: #000;
+  color: $color-black;
   text-align: left;
-  font-size: 20px;
-  font-weight: 300;
-  font-family: "Montserrat Alternates", "sans-serif";
+  font-size: $fs-20;
+  font-weight: $fw-300;
+  font-family: $ff-montserrat;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   border: none;
-}
 
+  &.small {
+    font-size: $fs-16;
+  }
+  &.large {
+    font-size: $fs-24;
+  }
+}
 
 //image - document
 .wrapper-document {
-  display: flex ;
+  display: flex;
   flex: 1;
   margin-left: 30px;
   margin-top: 20px;
-  // background-color: #4bc2e6;
 }
 
 .text-overAll-id-card {
-  color: #000;
+  color: $color-black;
   margin-top: 20px;
   margin-left: 50px;
   width: 200px;
-  font-size: 18px;
-  font-family: "Montserrat Alternates", "sans-serif";
+  font-size: $fs-18;
+  font-family: $ff-montserrat;
 }
 
 .btn-delete {
@@ -187,21 +218,19 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-family: "Montserrat Alternates", "sans-serif";
-  background-color: #4bc2e6;
+  font-family: $ff-montserrat;
+  background-color: $bg-check;
 }
 
 .text-check {
-  color: #fff;
+  color: $color-white;
 }
 
 .image-document {
-  width: 120px;
-  height: 180px;
-  margin-left : 20px;
+  width: 200px;
+  height: 150px;
+  margin-left: 20px;
 }
-
-
 
 // box
 .grid-container {
@@ -214,23 +243,35 @@
 
 .btn-detail {
   display: flex;
-  font-family: "Poppins", sans-serif;
+  font-family: $ff-popins;
   width: 80px;
   height: 24px;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 15px;
   margin-left: 125px;
 }
 
 .textContent {
-  color: #6d76a4;
-  font-family: "Montserrat Alternates", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
+  color: $color-primary;
+  font-family: $ff-montserrat;
+  font-size: $fs-11;
+  font-weight: $fw-700;
   margin-left: 17px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.textContent.small {
+  font-size: $fs-7;
+}
+
+.textContent.large {
+  font-size: $fs-15;
+}
+
+.textContent.dark {
+  color: $color-white;
 }
 
 .icon {
@@ -239,10 +280,26 @@
   margin-bottom: 0;
 }
 
+.icon.dark {
+  color: $color-gray;
+}
+
+.icon.small {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 0;
+}
+
+.icon.large {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 0;
+}
+
 .item {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  height: 30px;
 }
 
 .contentBox {
@@ -251,24 +308,46 @@
 }
 
 .gender {
-  color: #c4c4c7;
-  font-family: "Montserrat Alternates", sans-serif;
-  font-size: 9px;
-  font-weight: 700;
+  color: $color-gray;
+  font-family: $ff-montserrat;
+  font-size: $fs-10;
+  font-weight: $fw-600;
   margin-top: 9px;
+  height: 20px;
+}
+
+.gender.small {
+  font-size: $fs-6;
+}
+
+.gender.large {
+  font-size: $fs-14;
 }
 
 .nameShipper {
-  color: #6d76a4;
-  font-family: "Montserrat Alternates", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  color: $color-primary;
+  font-family: $ff-montserrat;
+  font-size: $fs-16;
+  font-weight: $fw-700;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
+}
+
+.nameShipper.small {
+  font-size: $fs-12;
+}
+
+.nameShipper.large {
+  font-size: $fs-20;
+}
+
+.nameShipper.dark {
+  color: $color-danger;
 }
 
 .textTitle {
-  margin-top: 16px;
+  margin-top: 10px;
   width: 55%;
   padding-left: 18px;
   overflow: hidden;
@@ -279,13 +358,17 @@
 .line-bottom {
   height: 2px;
   width: 100%;
-  background-color: #f0f5fa;
+  background-color: $bg-line;
+}
+
+.line-bottom.dark {
+  background-color: $bg-line;
 }
 
 .line {
   width: 2px;
   height: 70px;
-  background-color: #f0f5fa;
+  background-color: $bg-line;
   margin-left: 20px;
   margin: 0 0 2px 5px;
 }
@@ -305,21 +388,21 @@
   width: 227px;
   height: 216px;
   border-radius: 6px;
-  background-color: #fff;
+  background-color: $bg-white;
+}
+
+.box.dark {
+  background-color: $bg-dark;
 }
 
 .line-background {
   display: flex;
   height: 0.5px;
-  background-color: #939292;
+  background-color: $bg-line-main;
   margin-top: 35px;
 }
 
 // container -> input search
-.container {
-  background-color: aliceblue;
-}
-
 .content {
   flex: 1;
   height: 800px;
@@ -329,36 +412,51 @@
 }
 
 .title {
-  color: #6b6b6b;
-  font-family: "Poppins", sans-serif;
-  font-size: 36px;
-  font-weight: 600;
+  color: $color-title;
+  font-family: $ff-popins;
+  font-size: $fs-36;
+  font-weight: $fw-600;
   margin-bottom: 26px;
+}
+
+.title.small {
+  font-size: $fs-32;
+}
+
+.title.large {
+  font-size: $fs-40;
+}
+
+.title.dark {
+  color: $color-white;
 }
 
 .inputSearch {
   display: flex;
   width: 1170px;
   height: 60px;
-  background-color: #fff;
+  background-color: $color-white;
   align-items: center;
   justify-content: center;
 }
 
+.inputSearch.dark {
+  background-color: $bg-gray-light;
+}
+
 .icon-search {
-  color: #c2cfe0;
+  color: $color-title-box;
   width: 20px;
   height: 20px;
   background-color: transparent;
   padding: 20px 36px;
-  
 }
 
 .input {
   margin: 0;
   flex-grow: 1;
-  color: #90a0b7;
-  font-family: "Poppins", "sans-serif";
+  color: $color-search;
+  font-family: $ff-popins;
   border: none;
   outline: none; // bỏ mặc định
 
@@ -368,12 +466,16 @@
   }
 }
 
+.input.dark {
+  background-color: $bg-gray-light;
+}
+
 // search-input
 .search-result {
   width: 1170px;
   height: 100%;
   max-height: 80vh;
-  background-color: #fff;
+  background-color: $bg-white;
   overflow: auto;
   scrollbar-width: none;
 
@@ -381,6 +483,26 @@
     font-size: 20px;
     padding-bottom: 20px;
     margin: 0;
-    font-family: "Poppins", sans-serif;
+    font-family: $ff-popins;
   }
+}
+
+.search-title.small {
+  font-size: $fs-16;
+}
+
+.search-title.large {
+  font-size: $fs-24;
+}
+
+.search-result.dark {
+  background-color: $bg-gray-light;
+}
+
+.container {
+  background-color: $bg-primary;
+}
+
+.container.dark {
+  background-color: $bg-black;
 }

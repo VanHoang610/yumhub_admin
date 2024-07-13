@@ -1,6 +1,6 @@
-//date picker
+@import "../../../GlobalStyles/global.scss";
 
-/* YourComponent.module.css */
+//date picker
 .wrapper-date-picker {
   display: flex;
   align-items: center;
@@ -11,34 +11,57 @@
 }
 
 .title-date-picker {
-  color: rgb(42, 41, 41);
-  font-size: 16px;
+  color: $color-black;
   margin-right: 15px;
-  font-weight: 600;
+  font-weight: $fw-600;
+  font-size: $fs-19;
+}
+
+.title-date-picker.small {
+  font-size: $fs-15;
+}
+.title-date-picker.large {
+  font-size: $fs-24;
+}
+
+.title-date-picker.dark {
+  color: $color-white;
 }
 
 .customDatePicker {
   border: 1px solid #ccc;
   border-radius: 20px;
   padding: 10px;
-  font-size: 16px;
   width: 200px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(8, 23, 194, 0.1);
   transition: all 0.3s ease;
-}
 
-.customDatePicker:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  outline: none;
+  .customDatePicker.small {
+    font-size: $fs-12;
+  }
+
+  .customDatePicker.large {
+    font-size: $fs-20;
+  }
+
+  .customDatePicker:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+  }
 }
 
 .container {
-  width: 80vw;
-  height: 800px;
+  flex: 1;
+  height: 900px;
   overflow: auto;
   scrollbar-width: none;
+  background-color: $bg-primary;
+}
+
+.container.dark {
+  background-color: $bg-black;
 }
 
 .box-chart {
@@ -61,12 +84,12 @@
 .line {
   width: 2px;
   height: 300px;
-  background-color: aquamarine;
+  background-color: $bg-line-green;
 }
 
 .line-bottom {
   width: 100%;
-  background-color: aquamarine;
+  background-color: $bg-line-green;
   height: 1px;
   margin-bottom: 90px;
 }

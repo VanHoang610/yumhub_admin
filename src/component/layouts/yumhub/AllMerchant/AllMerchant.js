@@ -6,9 +6,11 @@ import Tippy from "@tippyjs/react/headless";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import {
+  faChevronLeft,
   faEdit,
   faEye,
   faMagnifyingGlass,
+  faRightLeft,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import AxiosInstance from "../../../../utils/AxiosInstance";
@@ -19,10 +21,16 @@ import styles from "./AllMerchant.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
 function AllMerchant() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
   const formatDate = (date) => {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
@@ -40,6 +48,7 @@ function AllMerchant() {
   const [orderStatuses, setOrderStatuses] = useState([]);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [address, setAddress] = useState("");
   const [closeTime, setCloseTime] = useState("");
   const [openTime, setOpenTime] = useState("");
@@ -78,9 +87,9 @@ function AllMerchant() {
   //load data lên màn hình
   useEffect(() => {
     if (selectMerchantById) {
-      console.log(selectMerchantById);
       setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
+      setAvatar(selectMerchantById.user ? selectMerchantById.user.avatar : "");
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
       setOpenTime(selectMerchantById.openTime || "");
@@ -282,7 +291,6 @@ function AllMerchant() {
           const updatedHistory = response.data.history.map((item) => ({
             ...item,
             timeBook: formatDate(item.timeBook),
-            nameStatus: getOrderStatusName(item.status),
           }));
           console.log(updatedHistory);
           setDataHistory(updatedHistory);
@@ -294,17 +302,12 @@ function AllMerchant() {
     }
   };
 
-  function getOrderStatusName(statusId) {
-    const matchingStatus = orderStatuses.find(
-      (status) => status._id === statusId
-    );
-    return matchingStatus ? matchingStatus.name : "N/A";
-  }
-
   return (
-    <div className={cx("container")}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title")}>All Merchant</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t('merchant.allMerchant')}
+        </p>
         <div>
           <Tippy
             animation="fade"
@@ -313,10 +316,14 @@ function AllMerchant() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result")}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title")}>Accounts</h4>
+                    <h4 className={cx("search-title", fontSize)}>      {t('merchant.accounts')}</h4>
                     {searchResult.length > 0
                       ? searchResult.map((merchant) => (
                           <AccountItemMerchant
@@ -331,37 +338,37 @@ function AllMerchant() {
               </div>
             )}
           >
-            <div className={cx("inputSearch")}>
+            <div className={cx("inputSearch", { dark: theme === "dark" })}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className={cx("icon-search")}
               />
               <input
-                className={cx("input")}
-                placeholder="Search by name"
+                className={cx("input", fontSize, { dark: theme === "dark" })}
+                placeholder=      {t('merchant.searchByName')}
                 onChange={handleSearch}
               />
             </div>
           </Tippy>
         </div>
         <div className={cx("line-background")} />
-        <div className={cx("box-container")}>
-          <table className={cx("table")}>
+        <div className={cx("box-container", { dark: theme === "dark" })}>
+          <table className={cx("table", fontSize, { dark: theme === "dark" })}>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Time</th>
-                <th>Image</th>
-                <th>Actions</th>
+                <th>      {t('merchant.name')}</th>
+                <th>      {t('merchant.address')}</th>
+                <th>      {t('merchant.time')}</th>
+                <th>      {t('merchant.image')}</th>
+                <th>      {t('merchant.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, index) => (
                 <tr
                   key={index}
-                  className={cx("table-row")}
+                  className={cx("table-row", { dark: theme === "dark" })}
                   onClick={() => handleView(item._id)}
                 >
                   <td>{index + 1}</td>
@@ -369,11 +376,7 @@ function AllMerchant() {
                   <td>{item.address}</td>
                   <td>{item.openTime}</td>
                   <td>
-                    <img
-                      src={logo}
-                      alt={"avatar"}
-                      className={cx("logo")}
-                    />
+                    <img src={logo} alt={"avatar"} className={cx("logo")} />
                   </td>
                   <td>
                     <button
@@ -416,22 +419,22 @@ function AllMerchant() {
           className={cx("modal")}
         >
           {selectMerchantById && (
-            <div className={cx("modal-container")}>
-              <div className={cx("logo-merchant")}>
+            <div className={cx("modal-container", { dark: theme === "dark" })}>
+              <div className={cx("logo-merchant", { dark: theme === "dark" })}>
                 <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                 <img
-                  src={image_merchant}
+                  src={avatar ? avatar : image_merchant}
                   alt="Merchant"
                   className={cx("img-merchant")}
                 />
               </div>
               <div className={cx("content-modal")}>
-                {!isEditModal ? <Button reviewed>Reviewed</Button> : ""}
+                {!isEditModal ? <Button reviewed>      {t('merchant.reviewed')}</Button> : ""}
                 <div className={cx("container-content")}>
-                  <p className={cx("name-merchant")}>
+                  <p className={cx("name-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("name-merchant")}
+                        className={cx("name-merchant", fontSize)}
                         name="name"
                         defaultValue={name}
                         onChange={(e) => setName(e.target.value)}
@@ -440,11 +443,11 @@ function AllMerchant() {
                       name
                     )}
                   </p>
-                  <div className={cx("line")}></div>
-                  <p className={cx("type-merchant")}>
+                  <div className={cx("line", { dark: theme === "dark" })}></div>
+                  <p className={cx("type-merchant", fontSize)}>
                     {isEditModal ? (
                       <select
-                        className={cx("type-merchant")}
+                        className={cx("type-merchant", fontSize)}
                         value={typeId}
                         onChange={(e) => setTypeId(e.target.value)}
                       >
@@ -460,11 +463,11 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Address:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.address')}:</p>
+                  <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("content-merchant")}
+                        className={cx("content-merchant", fontSize)}
                         name="address"
                         defaultValue={address}
                         onChange={(e) => setAddress(e.target.value)}
@@ -475,11 +478,11 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Email:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.email')}:</p>
+                  <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("content-merchant")}
+                        className={cx("content-merchant", fontSize)}
                         name="email"
                         defaultValue={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -490,11 +493,11 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Store Owner:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.storeOwner')}:</p>
+                  <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("content-merchant")}
+                        className={cx("content-merchant", fontSize)}
                         name="fullName"
                         defaultValue={fullName}
                         onChange={(e) => setFullName(e.target.value)}
@@ -505,11 +508,11 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>PhoneNumber:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.phone')}:</p>
+                  <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("content-merchant")}
+                        className={cx("content-merchant", fontSize)}
                         name="phoneNumber"
                         defaultValue={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
@@ -520,11 +523,11 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Open Time:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.openTime')}:</p>
+                  <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("content-merchant")}
+                        className={cx("content-merchant", fontSize)}
                         name="openTime"
                         defaultValue={openTime}
                         onChange={(e) => setOpenTime(e.target.value)}
@@ -535,11 +538,11 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant")}>Close Time:</p>
-                  <p className={cx("content-merchant")}>
+                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.closeTime')}:</p>
+                  <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
-                        className={cx("content-merchant")}
+                        className={cx("content-merchant", fontSize)}
                         name="closeTime"
                         defaultValue={closeTime}
                         onChange={(e) => setCloseTime(e.target.value)}
@@ -553,8 +556,8 @@ function AllMerchant() {
                   {idCardDocuments.map((doc, index) => (
                     <div key={index} className={cx("wrapper-image-content")}>
                       <div className={cx("wrapper-title-document")}>
-                        <p className={cx("title-merchant")}>
-                          {doc.documentTypeID.name}:
+                        <p className={cx("title-merchant", fontSize)}>
+                        {t('merchant.idCard')}:
                         </p>
                       </div>
                       <div className={cx("wrapper-document")}>
@@ -576,8 +579,8 @@ function AllMerchant() {
                   {licenseDriverDocuments.map((doc, index) => (
                     <div key={index} className={cx("wrapper-image-content")}>
                       <div className={cx("wrapper-title-document")}>
-                        <p className={cx("title-merchant")}>
-                          {doc.documentTypeID.name}:
+                        <p className={cx("title-merchant", fontSize)}>
+                        {t('merchant.businessLicense')}:
                         </p>
                       </div>
                       <div className={cx("wrapper-document")}>
@@ -598,11 +601,11 @@ function AllMerchant() {
                 <div className={cx("btn-delete")}>
                   {isEditModal ? (
                     <Button approve_btn onClick={handleUpdate}>
-                      Update
+                      {t('merchant.history')}
                     </Button>
                   ) : (
                     <Button approve_btn onClick={() => handleHistory(id)}>
-                      History
+                      {t('merchant.history')}
                     </Button>
                   )}
                 </div>
@@ -616,23 +619,44 @@ function AllMerchant() {
           isOpen={showModalHistory}
           onRequestClose={handleModalClose}
           contentLabel="HistoryMerchant"
-          className={cx("modal-history")}
+          className={cx("modal-history", { dark: theme === "dark" })}
         >
           <div className={cx("box-history")}>
-            <h2 className={cx("title-history")}>History Merchant</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FontAwesomeIcon
+              onClick={() => setShowModalHistory(false)}
+                icon={faChevronLeft}
+                className={cx("iconLeft", fontSize)}
+              />
+              <h2
+                className={cx("title-history", fontSize, {
+                  dark: theme === "dark",
+                })}
+              >
+                {t('merchant.historyMerchant')}
+              </h2>
+            </div>
             <table className={cx("table")}>
-              <thead className={cx("table-row-history")}>
+              <thead
+                className={cx("table-row-history", fontSize, {
+                  dark: theme === "dark",
+                })}
+              >
                 <tr>
                   <th>#</th>
-                  <th>Name Customer</th>
-                  <th>Name Shipper </th>
-                  <th>Delivery Address</th>
-                  <th>Time Book</th>
-                  <th>Total Price</th>
-                  <th>Status</th>
+                  <th>{t('merchant.nameCustomer')}</th>
+                  <th>{t('merchant.nameShipper')} </th>
+                  <th>{t('merchant.deliveryAddress')}</th>
+                  <th>{t('merchant.timeBook')}</th>
+                  <th>{t('merchant.totalPrice')}</th>
+                  <th>{t('merchant.status')}</th>
                 </tr>
               </thead>
-              <tbody className={cx("table-row-history")}>
+              <tbody
+                className={cx("table-row-history", fontSize, {
+                  dark: theme === "dark",
+                })}
+              >
                 {dataHistory.map((item, index) => (
                   <tr key={index} onClick={() => handleView(item._id)}>
                     <td>{index + 1}</td>
@@ -647,13 +671,14 @@ function AllMerchant() {
                     <td>
                       <p
                         className={cx(
-                          "status", // Base class for all status elements
-                          item.nameStatus === "cancel"
+                          "status",
+                          fontSize, // Base class for all status elements
+                          item.status.name === "cancel"
                             ? "status-cancel"
                             : "status-work"
                         )}
                       >
-                        {item.nameStatus}
+                        {item.status ? item.status.name : "N/A "}
                       </p>
                     </td>
                   </tr>
