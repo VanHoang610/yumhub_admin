@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.540ba85c.css",
-    "main.js": "/static/js/main.279760d3.js",
-    "static/js/453.b93c8857.chunk.js": "/static/js/453.b93c8857.chunk.js",
-    "static/media/backgroundLogin.png": "/static/media/backgroundLogin.772bc89f50a757915604.png",
-    "static/media/logo_merchant.png": "/static/media/logo_merchant.a0cd5b947994be39338b.png",
-    "static/media/ellipse.png": "/static/media/ellipse.d109742c2e8af2b28c4d.png",
-    "static/media/backgroundOTP.png": "/static/media/backgroundOTP.5e9a02d4e2728bb1103e.png",
-    "static/media/backgroundResetPassword.png": "/static/media/backgroundResetPassword.f6044ef464e00b55ac9a.png",
-    "static/media/backgroundForgetPassword.png": "/static/media/backgroundForgetPassword.f4ea97c79ac077d6b3f1.png",
-    "static/media/logoYumhub.png": "/static/media/logoYumhub.459773ebacc881c1eb63.png",
-    "index.html": "/index.html",
-    "main.540ba85c.css.map": "/static/css/main.540ba85c.css.map",
-    "main.279760d3.js.map": "/static/js/main.279760d3.js.map",
-    "453.b93c8857.chunk.js.map": "/static/js/453.b93c8857.chunk.js.map"
+    "main.css": "/yumhub_admin/static/css/main.12f8d180.css",
+    "main.js": "/yumhub_admin/static/js/main.e11696ce.js",
+    "static/js/453.b93c8857.chunk.js": "/yumhub_admin/static/js/453.b93c8857.chunk.js",
+    "static/media/backgroundLogin.png": "/yumhub_admin/static/media/backgroundLogin.772bc89f50a757915604.png",
+    "static/media/logo_merchant.png": "/yumhub_admin/static/media/logo_merchant.a0cd5b947994be39338b.png",
+    "static/media/ellipse.png": "/yumhub_admin/static/media/ellipse.d109742c2e8af2b28c4d.png",
+    "static/media/backgroundOTP.png": "/yumhub_admin/static/media/backgroundOTP.5e9a02d4e2728bb1103e.png",
+    "static/media/backgroundResetPassword.png": "/yumhub_admin/static/media/backgroundResetPassword.f6044ef464e00b55ac9a.png",
+    "static/media/backgroundForgetPassword.png": "/yumhub_admin/static/media/backgroundForgetPassword.f4ea97c79ac077d6b3f1.png",
+    "static/media/logoYumhub.png": "/yumhub_admin/static/media/logoYumhub.459773ebacc881c1eb63.png",
+    "index.html": "/yumhub_admin/index.html",
+    "main.12f8d180.css.map": "/yumhub_admin/static/css/main.12f8d180.css.map",
+    "main.e11696ce.js.map": "/yumhub_admin/static/js/main.e11696ce.js.map",
+    "453.b93c8857.chunk.js.map": "/yumhub_admin/static/js/453.b93c8857.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.540ba85c.css",
-    "static/js/main.279760d3.js"
+    "static/css/main.12f8d180.css",
+    "static/js/main.e11696ce.js"
   ]
 }
