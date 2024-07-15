@@ -29,7 +29,7 @@ import Settings from "../component/layouts/defaultLayout/header/Settings"
 
 // public routes
 const publicRoutes = [
-    { path: "/yumhub_admin", component: Login, layout: null },
+    { path: "/", component: Login, layout: null },
     { path: '/forgetPassword', component: ForgetPassword, layout: null  }, 
     { path: '/otp', component: OTP, layout: null }, 
     { path: '/resetPassword', component: ResetPassword, layout: null }, 

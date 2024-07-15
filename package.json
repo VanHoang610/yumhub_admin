@@ -1,4 +1,5 @@
 {
+  "homepage": "https://vanHoang610.github.io/yumhub_admin",
   "name": "yumhub_admin",
   "version": "0.1.0",
   "private": true,
@@ -47,7 +48,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://VanHoang610.github.io/yumhub_admin",
+  
   "eslintConfig": {
     "extends": [
       "react-app",

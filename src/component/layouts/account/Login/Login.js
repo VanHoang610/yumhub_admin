@@ -34,6 +34,8 @@ function Login() {
 
   const handleSubmit = async () => {
     try {
+      console.log("process.env.PUBLIC_URL:",process.env.PUBLIC_URL);
+      
       const response = await AxiosInstance.post("admin/loginAdmin", {
         userName,
         password,
