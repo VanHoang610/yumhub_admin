@@ -1,22 +1,23 @@
 {
   "files": {
-    "main.css": "/yumhub_admin/static/css/main.12f8d180.css",
-    "main.js": "/yumhub_admin/static/js/main.d5581c15.js",
+    "main.css": "/yumhub_admin/static/css/main.888c3556.css",
+    "main.js": "/yumhub_admin/static/js/main.83db44c6.js",
     "static/js/453.b93c8857.chunk.js": "/yumhub_admin/static/js/453.b93c8857.chunk.js",
     "static/media/backgroundLogin.png": "/yumhub_admin/static/media/backgroundLogin.772bc89f50a757915604.png",
     "static/media/logo_merchant.png": "/yumhub_admin/static/media/logo_merchant.a0cd5b947994be39338b.png",
+    "static/media/voucheImage.png": "/yumhub_admin/static/media/voucheImage.3604530576324765e525.png",
     "static/media/ellipse.png": "/yumhub_admin/static/media/ellipse.d109742c2e8af2b28c4d.png",
     "static/media/backgroundOTP.png": "/yumhub_admin/static/media/backgroundOTP.5e9a02d4e2728bb1103e.png",
     "static/media/backgroundResetPassword.png": "/yumhub_admin/static/media/backgroundResetPassword.f6044ef464e00b55ac9a.png",
     "static/media/backgroundForgetPassword.png": "/yumhub_admin/static/media/backgroundForgetPassword.f4ea97c79ac077d6b3f1.png",
     "static/media/logoYumhub.png": "/yumhub_admin/static/media/logoYumhub.459773ebacc881c1eb63.png",
     "index.html": "/yumhub_admin/index.html",
-    "main.12f8d180.css.map": "/yumhub_admin/static/css/main.12f8d180.css.map",
-    "main.d5581c15.js.map": "/yumhub_admin/static/js/main.d5581c15.js.map",
+    "main.888c3556.css.map": "/yumhub_admin/static/css/main.888c3556.css.map",
+    "main.83db44c6.js.map": "/yumhub_admin/static/js/main.83db44c6.js.map",
     "453.b93c8857.chunk.js.map": "/yumhub_admin/static/js/453.b93c8857.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.12f8d180.css",
-    "static/js/main.d5581c15.js"
+    "static/css/main.888c3556.css",
+    "static/js/main.83db44c6.js"
   ]
 }
