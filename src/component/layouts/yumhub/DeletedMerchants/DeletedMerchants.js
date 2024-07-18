@@ -10,7 +10,7 @@ import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCus
 import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./DeletedMerchant.module.scss";
-import logo from "../../../../assets/images/logoYumhub.png";
+import noAvatar from "../../../../assets/images/noAvatar.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
@@ -30,6 +30,7 @@ function DeletedMerchant() {
 
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [address, setAddress] = useState("");
   const [closeTime, setCloseTime] = useState("");
   const [openTime, setOpenTime] = useState("");
@@ -63,9 +64,7 @@ function DeletedMerchant() {
         `merchants/getMerchantById?id=${id}`
       );
       const { detailMerchant } = response.data;
-      console.log(response);
       if (detailMerchant) {
-        console.log(detailMerchant);
         setSelectMerchantId(detailMerchant);
         setShowModal(true);
       } else {
@@ -82,6 +81,7 @@ function DeletedMerchant() {
       setName(selectMerchantById.name || "");
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
+      setAvatar(selectMerchantById.imageBackground || noAvatar);
       setOpenTime(selectMerchantById.openTime || "");
       setPhoneNumber(
         selectMerchantById.user ? selectMerchantById.user.phoneNumber : ""
@@ -211,7 +211,7 @@ function DeletedMerchant() {
                   <td>{item.openTime}</td>
                   <td>
                     <img
-                      src={logo}
+                      src={item.imageBackground}
                       alt={`${item.name} logo`}
                       className={cx("logo")}
                     />
@@ -243,7 +243,7 @@ function DeletedMerchant() {
                 <div className={cx("logo-merchant", { dark: theme === "dark" })}>
                   <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                   <img
-                    src={image_merchant}
+                    src={avatar || image_merchant}
                     alt="Merchant"
                     className={cx("img-merchant")}
                   />

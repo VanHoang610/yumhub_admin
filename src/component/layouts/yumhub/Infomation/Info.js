@@ -7,24 +7,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import classNames from "classnames/bind";
 import styles from "./Info.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAddressCard,
-  faBirthdayCake,
-  faCakeCandles,
-  faChevronDown,
-  faGenderless,
-  faLocationDot,
-  faPersonHalfDress,
-  faPhone,
-  faSignature,
-  faUser,
-  faUserGroup,
-  faUserTie,
-} from "@fortawesome/free-solid-svg-icons";
-import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import AxiosInstance from "../../../../utils/AxiosInstance";
-
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
 const cx = classNames.bind(styles);
 const GENDER = [
   {
@@ -41,6 +27,11 @@ const GENDER = [
   },
 ];
 function Infomation() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
+  const { user, setUser } = useContext(UserContext);
+
   const formatDate = (date) => {
     const now = new Date(date);
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
@@ -61,24 +52,6 @@ function Infomation() {
   const [showModal, setShowModal] = useState(false);
 
   const [itemGender] = useState(GENDER);
-
-  const [isOpenDay, setIsOpenDay] = useState(false);
-  const [isOpenMonth, setIsOpenMonth] = useState(false);
-  const [isOpenYear, setIsOpenYear] = useState(false);
-
-  const toggleDay = () => setIsOpenDay(!isOpenDay);
-  const toggleMonth = () => setIsOpenMonth(!isOpenMonth);
-  const toggleYear = () => setIsOpenYear(!isOpenYear);
-
-  const selectBtnUpdate = () => {
-    try {
-      setShowModal(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     if (user) {
@@ -114,6 +87,7 @@ function Infomation() {
     setSelectGender(e.target.value);
     setGender(e.target.value);
   };
+
   const handleChangeDate = () => {
     setShowDatePicker(true);
   };
@@ -148,7 +122,6 @@ function Infomation() {
           gender,
           dob: birthDay,
         });
-
         setShowModal(false);
       }
     } catch (error) {
@@ -168,59 +141,99 @@ function Infomation() {
   };
 
   return (
-    <div className={cx("container")}>
-      <p className={cx("title")}>My Profile</p>
-      <p className={cx("sub-title")}>Manage and protect your account</p>
+    <div className={cx("container", { dark: theme === "dark" })}>
+      <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+        {t('profile.myProfile')}
+      </p>
+      <p className={cx("sub-title", fontSize, { dark: theme === "dark" })}>
+      {t('profile.subTitle')}
+      </p>
       <div className={cx("line")} />
 
       <div className={cx("wrapper-info")}>
         <div className={cx("info-container")}>
           <div className={cx("box-info")}>
-            <p className={cx("title-info")}>Username</p>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('profile.userName')}
+            </p>
             <input
               type="text"
               defaultValue={userName}
               onChange={(e) => setUserName(e.target.value)}
               autoFocus
-              className={cx("input")}
+              className={cx("input", fontSize, { dark: theme === "dark" })}
             />
           </div>
-          <span className={cx("note-user")}>Username cannot be changed.</span>
+          <span
+            className={cx("note-user", fontSize, { dark: theme === "dark" })}
+          >
+              {t('profile.subUserName')}
+          </span>
           <div className={cx("box-info")}>
-            <p className={cx("title-info")}>Name</p>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('profile.name')}
+            </p>
             <input
               type="text"
               defaultValue={fullName}
               onChange={(e) => setFullName(e.target.value)}
               autoFocus
-              className={cx("input")}
+              className={cx("input", fontSize, { dark: theme === "dark" })}
             />
           </div>
           <div className={cx("box-info")}>
-            <p className={cx("title-info")}>Address</p>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('profile.address')}
+            </p>
             <input
               type="text"
               defaultValue={address}
               onChange={(e) => setAddress(e.target.value)}
               autoFocus
-              className={cx("input")}
+              className={cx("input", fontSize, { dark: theme === "dark" })}
             />
           </div>
           <div className={cx("box-info")}>
-            <p className={cx("title-info")}>Email</p>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('profile.email')}
+            </p>
             <div className={cx("text-info")}>
-              <p className={cx("info")}>{email}</p>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {email}
+              </p>
             </div>
           </div>
           <div className={cx("box-info")}>
-            <p className={cx("title-info")}>Phone Number</p>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('profile.phoneNumber')}
+            </p>
             <div className={cx("text-info")}>
-              <p className={cx("info")}>{phoneNumber}</p>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {phoneNumber}
+              </p>
             </div>
           </div>
           <div className={cx("box-info")}>
-            <p className={cx("title-info")}>Gender</p>
-            <div className={cx("radio-group")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('profile.gender')}
+            </p>
+            <div
+              className={cx("radio-group", fontSize, {
+                dark: theme === "dark",
+              })}
+            >
               {itemGender.map((gender) => (
                 <label key={gender.value}>
                   <input
@@ -237,7 +250,11 @@ function Infomation() {
           </div>
 
           <div className={cx("box-info")}>
-            <p className={cx("title-info")}>Date of birth</p>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('profile.dateOfBirth')}
+            </p>
             <div className={cx("text-info")}>
               <input
                 type="text"
@@ -245,7 +262,7 @@ function Infomation() {
                 onChange={(e) => setBirthDay(e)}
                 onClick={handleChangeDate}
                 readOnly
-                className={cx("input")}
+                className={cx("input", fontSize, { dark: theme === "dark" })}
               />
               {showDatePicker && (
                 <DatePicker
@@ -258,18 +275,23 @@ function Infomation() {
           </div>
 
           <div className={cx("btn-update")} onClick={handleUpdateUser}>
-            <span>Save</span>
+            <span>{t('profile.save')}</span>
           </div>
+          <span style={{ marginTop: 500 }}></span>
         </div>
         <div className={cx("line-info")}></div>
         <div className={cx("image-info")}>
-          <p style={{ marginTop: 50, marginBottom: 20 }}>{position}</p>
+          <p
+            className={cx("role", fontSize, { dark: theme === "dark" })}
+          >
+            {position}
+          </p>
           <img className={cx("avatar")} src={avatar}></img>
           <div
-            className={cx("box-text-select")}
+            className={cx("box-text-select", { dark: theme === "dark" })}
             onClick={() => document.getElementById("fileInput").click()}
           >
-            <span>Select Image</span>
+            <span>{t('profile.selectImage')}</span>
             <input
               id="fileInput"
               type="file"
@@ -278,161 +300,18 @@ function Infomation() {
               style={{ display: "none" }}
             />
           </div>
-          <p style={{ marginTop: 16 }}>File size: maximum 1 MB</p>
-          <p>File extension: .JPEG, .PNG</p>
+          <p
+            style={{ marginTop: 16 }}
+            className={cx("note-image", fontSize, { dark: theme === "dark" })}
+          >
+           {t('profile.fileSize')}
+          </p>
+          <p className={cx("note-image", fontSize, { dark: theme === "dark" })}>
+            F{t('profile.fileExtension')}
+          </p>
         </div>
       </div>
     </div>
-
-    // <div className={cx("container")}>
-    //   <div className={cx("contact")}>
-    //     <div>
-    //       <img src={avatar} alt="Avatar" className={cx("avatar")} />
-    //     </div>
-    //     <div className={cx("wrapper-name")}>
-    //       <p className={cx("name-info")}>{fullName}, </p>
-    //       <p className={cx("age-info")}>{age}</p>
-    //     </div>
-    //     <div>
-    //       <p className={cx("position")}>Admin YumHub</p>
-    //     </div>
-    //     <div className={cx("wrapper-phone")}>
-    //       <FontAwesomeIcon icon={faPhone} className={cx("icon-phone")} />
-    //       <p className={cx("text-phone")}>SDT: {phoneNumber}</p>
-    //     </div>
-    //     <div className={cx("wrapper-email")}>
-    //       <FontAwesomeIcon icon={faEnvelope} className={cx("icon-email")} />
-    //       <p className={cx("title-email")}>
-    //         Email:
-    //         <span className={cx("text-email")}>{email}</span>
-    //       </p>
-    //     </div>
-    //   </div>
-    //   <div className={cx("info-container")}>
-    //     <p className={cx("text-info-container")}>Infomation</p>
-    //     <div className={cx("info")}>
-    //       <div className={cx("wrapper-birth-day")}>
-    //         <FontAwesomeIcon icon={faUser} />
-    //         <p className={cx("title-info")}>
-    //           Username:
-    //           <span className={cx("text-info")}>{userName}</span>
-    //         </p>
-    //       </div>
-    //       <div className={cx("wrapper-birth-day")}>
-    //         <FontAwesomeIcon icon={faUserGroup} />
-    //         <p className={cx("title-info")}>
-    //           Role:
-    //           <span className={cx("text-info")}>{position}</span>
-    //         </p>
-    //       </div>
-    //       <div className={cx("wrapper-birth-day")}>
-    //         <FontAwesomeIcon icon={faUserTie} />
-    //         <p className={cx("title-info")}>
-    //           Create By:
-    //           <span className={cx("text-info")}>{createBy}</span>
-    //         </p>
-    //       </div>
-    //       <div className={cx("wrapper-birth-day")}>
-    //         <FontAwesomeIcon icon={faCakeCandles} />
-    //         <p className={cx("title-info")}>
-    //           Date of birth: <span className={cx("text-info")}>{birthDay}</span>
-    //         </p>
-    //       </div>
-    //       <div className={cx("wrapper-gender")}>
-    //         <FontAwesomeIcon icon={faPersonHalfDress} />
-    //         <p className={cx("title-info")}>
-    //           Gender:
-    //           <span className={cx("text-info")}>{gender}</span>
-    //         </p>
-    //       </div>
-
-    //       <div className={cx("wrapper-address")}>
-    //         <FontAwesomeIcon icon={faLocationDot} />
-    //         <p className={cx("title-info")}>
-    //           Address:
-    //           <span className={cx("text-info")}>{address}</span>
-    //         </p>
-    //       </div>
-    //       <div className={cx("wrapper-note")}>
-    //         <p className={cx("title-info")}>
-    //           Note:
-    //           <span className={cx("text-info")}>
-    //             I am avaliable everyday from 9:00 AM to 5:00 PM
-    //           </span>
-    //         </p>
-    //       </div>
-    //       <div className={cx("btn-update")}>
-    //         <button className={cx("text-btn")} onClick={selectBtnUpdate}>
-    //           Update
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   <Modal
-    //     isOpen={showModal}
-    //     onRequestClose={() => setShowModal(false)}
-    //     contentLabel="Update User"
-    //     className={cx("modal")}
-    //   >
-    //     <div className={cx("modal-container")}>
-    //       <h2 className={cx("title-modal")}>Update User</h2>
-    //       <div className={cx("input-modal")}>
-    //         <FontAwesomeIcon
-    //           icon={faSignature}
-    //           className={cx("icon-modal")}
-    //         ></FontAwesomeIcon>
-    //         <input
-    //           className={cx("input")}
-    //           defaultValue={fullName}
-    //           onChange={(e) => setFullName(e.target.value)}
-    //         />
-    //       </div>
-    //       <div className={cx("input-modal")}>
-    //         <FontAwesomeIcon
-    //           icon={faAddressCard}
-    //           className={cx("icon-modal")}
-    //         ></FontAwesomeIcon>
-    //         <input
-    //           className={cx("input")}
-    //           defaultValue={address}
-    //           onChange={(e) => setAddress(e.target.value)}
-    //         />
-    //       </div>
-    //       <div className={cx("input-modal")}>
-    //         <FontAwesomeIcon
-    //           icon={faGenderless}
-    //           className={cx("icon-modal")}
-    //         ></FontAwesomeIcon>
-    //         <select
-    //           className={cx("select-gender")}
-    //           value={gender}
-    //           onChange={(e) => setGender(e.target.value)}
-    //         >
-    //           <option value="Nam">Nam</option>
-    //           <option value="Nữ">Nữ</option>
-    //         </select>
-    //       </div>
-    //       <div className={cx("input-modal")}>
-    //         <FontAwesomeIcon
-    //           icon={faBirthdayCake}
-    //           className={cx("icon-modal")}
-    //         ></FontAwesomeIcon>
-    //         <input
-    //           type="date"
-    //           className={cx("input")}
-    //           defaultValue={birthDay}
-    //           onChange={(e) => setBirthDay(e.target.value)}
-    //         />
-    //       </div>
-    //       <div className={cx("btn-update-modal")}>
-    //         <button className={cx("btn-text-modal")} onClick={handleUpdateUser}>
-    //           Update
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </Modal>
-    // </div>
   );
 }
 

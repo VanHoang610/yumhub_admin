@@ -1,0 +1,57 @@
+@import "../../GlobalStyles/global.scss";
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  padding: 3px 16px;
+  margin-bottom: 15px;
+
+  &:hover {
+    background-color:$bg-hover-search;
+    border-radius: 10px;
+  }
+}
+
+.wrapper.dark {
+  &:hover {
+    background-color: $bg-line-main;
+  }
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.info {
+  flex: 1;
+  margin-left: 15px;
+}
+
+.name {
+  color: $color-content-box;
+  font-size: $fs-16;
+  font-weight: $fw-600;
+  font-family: $ff-popins;
+  margin: 0;
+}
+
+.name.dark {
+  color: $color-white;
+}
+
+.user-name {
+  color: $color-search;
+  font-size: $fs-14;
+  font-weight: $fw-400;
+  font-family: $ff-popins;
+}
+
+.user-name.dark {
+  color: $color-white;
+  font-size: $fs-12;
+  font-weight: $fw-400;
+  font-family: $ff-popins;
+}

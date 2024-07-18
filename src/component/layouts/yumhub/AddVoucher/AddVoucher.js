@@ -1,266 +1,353 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./AddVoucher.module.scss";
 import classNames from "classnames/bind";
 import AxiosInstance from "../../../../utils/AxiosInstance";
-import { FaRandom } from "react-icons/fa";
 import Modal from "react-modal";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import voucher from "../../../../assets/images/voucheImage.png";
+import Swal from "sweetalert2";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
-Modal.setAppElement('#root'); // Set the root element for accessibility
+Modal.setAppElement("#root"); // Set the root element for accessibility
 
 function AddVoucher() {
-  const [voucher, setVoucher] = useState({
-    nameVoucher: "",
-    code: "",
-    discountAmount: "",
-    startDate: "",
-    endDate: "",
-    conditionsApply: "",
-    typeOfVoucherID: "",
-  });
-  const [errors, setErrors] = useState({});
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalTitle, setModalTitle] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setVoucher((prevVoucher) => ({
-      ...prevVoucher,
-      [name]: value,
-    }));
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-    }));
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN");
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!voucher.nameVoucher) newErrors.nameVoucher = "Name Voucher is required";
-    if (!voucher.code) newErrors.code = "Code Voucher is required";
-    if (!voucher.discountAmount) newErrors.discountAmount = "Discount Amount is required";
-    if (!voucher.startDate) newErrors.startDate = "Start Date is required";
-    if (!voucher.endDate) newErrors.endDate = "End Date is required";
-    if (!voucher.conditionsApply) newErrors.conditionsApply = "Conditions Apply is required";
-    if (!voucher.typeOfVoucherID) newErrors.typeOfVoucherID = "Voucher Type is required";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const [imageVoucher, setImageVoucher] = useState("");
+  const [nameVoucher, setNameVoucher] = useState("");
+  const [code, setCode] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [discountAmount, setDiscountAmount] = useState("");
+  const [typeOfVoucher, setTypeOfVoucher] = useState("");
+  const [conditionsApply, setConditionsApply] = useState("");
+  const [typeVoucher, setTypeVoucher] = useState([]);
+
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const [startDateInput, setStartDateInput] = useState("");
+  const [endDateInput, setEndDateInput] = useState("");
+  const [errors, setErrors] = useState("");
+
+  const handleChangeStartDate = () => {
+    setShowStartDatePicker(true);
   };
 
-  const validateDates = () => {
-    const today = new Date().toISOString().split("T")[0];
-    let valid = true;
-    const newErrors = {};
-
-    if (voucher.startDate < today) {
-      newErrors.startDate = "Start date must be today or later.";
-      valid = false;
-    }
-
-    if (voucher.endDate < voucher.startDate) {
-      newErrors.endDate = "End date must be the same or later than the start date.";
-      valid = false;
-    }
-
-    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
-    return valid;
+  const handleChangeEndDate = () => {
+    setShowEndDatePicker(true);
   };
 
-  const handleReset = () => {
-    setVoucher({
-      nameVoucher: "",
-      code: "",
-      discountAmount: "",
-      startDate: "",
-      endDate: "",
-      conditionsApply: "",
-      typeOfVoucherID: "",
-    });
-    setErrors({});
+  const handleStartDateChange = (date) => {
+    setStartDate(formatDate(date));
+    setStartDateInput(new Date(date));
+    setShowStartDatePicker(false);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm() || !validateDates()) {
-      return;
-    }
-    
-    try {
-      const response = await AxiosInstance.post("/vouchers/createVoucher", voucher);
-      setModalTitle("Success");
-      
-      
-      setModalIsOpen(true);
-      // handleReset();
-      setTimeout(() => {
-        setModalMessage("Voucher Added Successfully!");
-      }, 3000);
-    } catch (error) {
-      if (error.response && error.response.data === "Mã đã tồn tại") {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          code: "Voucher code already exists.",
-        }));
+  const handleEndDateChange = (date) => {
+    setEndDate(formatDate(date));
+    setEndDateInput(new Date(date));
+    setShowEndDatePicker(false);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageVoucher(URL.createObjectURL(file));
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await AxiosInstance.get("vouchers/getTypeOfVoucher");
+      console.log(response.data.result);
+      if (response.data.result) {
+        setTypeVoucher(response.data.typeVoucher);
       } else {
-        setModalTitle("Error");
-        setModalMessage("Error adding voucher. Please try again.");
-        setModalIsOpen(true);
+        console.error("Error");
+      }
+    };
+    fetchData();
+  }, [typeOfVoucher]);
+
+  console.log(typeOfVoucher);
+
+  //lỗi
+  const handleAddVoucher = async () => {
+    const newErrors = {};
+
+    if (!nameVoucher) {
+      newErrors.nameVoucher = "Name Voucher is required";
+    }
+    if (!code) {
+      newErrors.code = "Code is required";
+    }
+    if (!startDate) {
+      newErrors.startDate = "Invalid format date";
+    }
+    if (!endDate) {
+      newErrors.endDate = "Invalid format date";
+    }
+
+    if (!discountAmount || discountAmount < 10000) {
+      newErrors.discountAmount =
+        "Discount Amount is required and must be greater than 10000";
+    }
+
+    if (!conditionsApply) {
+      newErrors.conditionsApply = "Conditions Apply is required";
+    }
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      if (startDateInput > endDateInput) {
+        Swal.fire("info", "The end date must be after the start date", "error");
+      } else {
+        const response = await AxiosInstance.post("vouchers/createVoucher", {
+          nameVoucher,
+          startDate: Date.parse(startDateInput),
+          endDate: Date.parse(endDateInput),
+          code,
+          discountAmount,
+          typeOfVoucherID: typeOfVoucher,
+          conditionsApply,
+        });
+        console.log(response.data.result);
+        if (response.data.result) {
+          Swal.fire("Success", "Add Voucher success", "success");
+          setNameVoucher("");
+          setCode("");
+          setStartDate("");
+          setEndDate("");
+          setTypeOfVoucher("");
+          setDiscountAmount("");
+          setConditionsApply("");
+        } else {
+          Swal.fire("Fail", "Add Voucher fail", "error");
+        }
       }
     }
   };
 
-  const generateRandomCode = () => {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    const length = Math.floor(Math.random() * 4) + 3;
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  };
-
-  const handleRandomCodeClick = () => {
-    const randomCode = generateRandomCode();
-    setVoucher((prevVoucher) => ({
-      ...prevVoucher,
-      code: randomCode,
-    }));
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
   return (
-    <div className={cx("container")}>
-      <h1 className={cx("title")}>Add Voucher</h1>
-      <div className={cx("form-container")}>
-        <form onSubmit={handleSubmit}>
-          <div className={cx("form-group")}>
-            <label>Name Voucher</label>
+    <div className={cx("container", { dark: theme === "dark" })}>
+      <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+        {t("newVoucher.addVoucher")}
+      </p>
+      <p className={cx("sub-title", fontSize, { dark: theme === "dark" })}>
+        {t("newVoucher.subTitle")}
+      </p>
+      <div className={cx("line")} />
+      <div className={cx("wrapper-info")}>
+        <div className={cx("info-container")}>
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('newVoucher.nameVoucher')}
+            </p>
             <input
               type="text"
-              name="nameVoucher"
-              placeholder="Placeholder"
-              value={voucher.nameVoucher}
-              onChange={handleChange}
+              value={nameVoucher}
+              onChange={(e) => setNameVoucher(e.target.value)}
+              autoFocus
+              className={cx(
+                "input",
+                { dark: theme === "dark" },
+                { errors: errors.nameVoucher }
+              )}
             />
-            <span className={cx("error-message")}>{errors.nameVoucher}</span>
           </div>
-          <div className={cx("form-group")}>
-            <label>Discount Amount</label>
+          {errors.nameVoucher && (
+            <p className={cx("error")}>{errors.nameVoucher}</p>
+          )}
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              Code
+            </p>
             <input
-              type="number"
-              name="discountAmount"
-              placeholder="Placeholder"
-              value={voucher.discountAmount}
-              onChange={handleChange}
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              autoFocus
+              className={cx(
+                "input",
+                fontSize,
+                { dark: theme === "dark" },
+                { errors: errors.code }
+              )}
             />
-            <span className={cx("error-message")}>{errors.discountAmount}</span>
-          </div>
-          <div className={cx("form-group", "code-group")}>
-            <label>Code Voucher</label>
-            <div className={cx("code-input-group")}>
+          </div>{" "}
+          {errors.code && <p className={cx("error")}>{errors.code}</p>}
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('newVoucher.startDate')}
+            </p>
+            <div className={cx("text-info")}>
               <input
                 type="text"
-                name="code"
-                placeholder="Placeholder"
-                value={voucher.code}
-                onChange={handleChange}
+                value={startDate ? startDate : "dd/mm/yyyy"}
+                onChange={(e) => setStartDate(e)}
+                onClick={handleChangeStartDate}
+                readOnly
+                className={cx(
+                  "input",
+                  fontSize,
+                  { dark: theme === "dark" },
+                  { errors: errors.startDate }
+                )}
               />
-              <FaRandom
-                className={cx("random-code-icon")}
-                title="Generate Random Code"
-                onClick={handleRandomCodeClick}
-              />
+              {showStartDatePicker && (
+                <DatePicker
+                  onChange={handleStartDateChange}
+                  dateFormat="dd/mm/yyyy"
+                  inline
+                  minDate={new Date()}
+                />
+              )}
             </div>
-            <span className={cx("error-message")}>{errors.code}</span>
           </div>
-          <div className={cx("date-group")}>
-            <div className={cx("form-group")}>
-              <label>Start Date</label>
+          {errors.startDate && (
+            <p className={cx("error")}>{errors.startDate}</p>
+          )}
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('newVoucher.endDate')}
+            </p>
+            <div className={cx("text-info")}>
               <input
-                className={cx("date-input")}
-                type="date"
-                name="startDate"
-                value={voucher.startDate}
-                onChange={handleChange}
+                type="text"
+                value={endDate ? endDate : "dd/mm/yyyy"}
+                onChange={(e) => setEndDate(e)}
+                onClick={handleChangeEndDate}
+                readOnly
+                className={cx(
+                  "input",
+                  fontSize,
+                  { dark: theme === "dark" },
+                  { errors: errors.endDate }
+                )}
               />
-              <span className={cx("error-message")}>{errors.startDate}</span>
+              {showEndDatePicker && (
+                <DatePicker
+                  onChange={handleEndDateChange}
+                  dateFormat="dd/mm/yyyy"
+                  inline
+                  value={endDate ? endDate : ""}
+                  minDate={Date.parse(startDateInput)}
+                />
+              )}
             </div>
-            <div className={cx("form-group")}>
-              <label>End Date</label>
-              <input
-                className={cx("date-input")}
-                type="date"
-                name="endDate"
-                value={voucher.endDate}
-                onChange={handleChange}
-              />
-              <span className={cx("error-message")}>{errors.endDate}</span>
-            </div>
+          </div>{" "}
+          {errors.endDate && <p className={cx("error")}>{errors.endDate}</p>}
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('newVoucher.discountVoucher')}
+            </p>
+            <input
+              type="number"
+              value={discountAmount}
+              onChange={(e) => setDiscountAmount(e.target.value)}
+              autoFocus
+              className={cx(
+                "input",
+                { dark: theme === "dark" },
+                { errors: errors.discountAmount }
+              )}
+              min={1}
+            />
           </div>
-          <div className={cx("form-group")}>
-            <label>Conditions Apply</label>
+          {errors.discountAmount && (
+            <p className={cx("error")}>{errors.discountAmount}</p>
+          )}
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('newVoucher.typeOfVoucher')}
+            </p>
             <select
-              name="conditionsApply"
-              value={voucher.conditionsApply}
-              onChange={handleChange}
+              value={typeOfVoucher}
+              onChange={(e) => setTypeOfVoucher(e.target.value)}
+              className={cx("input", fontSize, { dark: theme === "dark" })}
             >
-              <option value="">Please Select</option>
-              <option value="30000">Đơn hàng trên 30.000 vnđ</option>
-              <option value="50000">Đơn hàng trên 50.000 vnđ</option>
-              <option value="75000">Đơn hàng trên 75.000 vnđ</option>
-              <option value="100000">Đơn hàng trên 100.000 vnđ</option>
-              <option value="120000">Đơn hàng trên 120.000 vnđ</option>
-              <option value="150000">Đơn hàng trên 150.000 vnđ</option>
+              {typeVoucher.map((voucher) => (
+                <option key={voucher._id} value={voucher._id}>
+                  {voucher.name}
+                </option>
+              ))}
             </select>
-            <span className={cx("error-message")}>{errors.conditionsApply}</span>
           </div>
-          <div className={cx("form-group")}>
-            <label>Voucher Type</label>
-            <select
-              name="typeOfVoucherID"
-              value={voucher.typeOfVoucherID}
-              onChange={handleChange}
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
             >
-              <option value="">Please Select</option>
-              <option value="6656cfad8913d56206f64e06">Giảm giá trên đơn hàng</option>
-              <option value="6656cfad8913d56206f64e05">Giảm giá trên phí ship</option>
-            </select>
-            <span className={cx("error-message")}>{errors.typeOfVoucherID}</span>
+              {t('newVoucher.conditionsApply')}
+            </p>
+            <input
+              type="number"
+              value={conditionsApply}
+              onChange={(e) => setConditionsApply(e.target.value)}
+              autoFocus
+              className={cx(
+                "input",
+                fontSize,
+                { dark: theme === "dark" },
+                { errors: errors.conditionsApply }
+              )}
+              min={1}
+            />
           </div>
-          <div className={cx("form-actions")}>
-            <button
-              type="button"
-              onClick={handleReset}
-              className={cx("reset-button")}
-            >
-              Reset
-            </button>
-            <button type="submit" className={cx("add-button")}>
-              Add
-            </button>
+          {errors.conditionsApply && (
+            <p className={cx("error")}>{errors.conditionsApply}</p>
+          )}
+          <div className={cx("btn-update")} onClick={handleAddVoucher}>
+            <span>{t('newVoucher.add')}</span>
           </div>
-        </form>
-      </div>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Voucher Modal"
-        className={cx("modal")}
-        overlayClassName={cx("overlay")}
-      >
-        <div className={cx("modal-content")}>
-          <h2>{modalTitle}</h2>
-          <p>{modalMessage}</p>
-          <button onClick={closeModal} className={cx("modal-button")}>
-            OK
-          </button>
         </div>
-      </Modal>
+        <div className={cx("line-info")}></div>
+        <div className={cx("image-info")}>
+          <img className={cx("avatar")} src={voucher}></img>
+          <div
+            className={cx("box-text-select", { dark: theme === "dark" })}
+            onClick={() => document.getElementById("fileInput").click()}
+          >
+            <span>{t('newVoucher.selectImage')}</span>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </div>
+          <p
+            style={{ marginTop: 16 }}
+            className={cx("note-image", fontSize, { dark: theme === "dark" })}
+          >
+           {t('newVoucher.fileSize')}
+          </p>
+          <p className={cx("note-image", fontSize, { dark: theme === "dark" })}>
+          {t('newVoucher.fileExtension')}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -141,6 +141,21 @@ function Header({ showMenuProfile, setShowMenuProfile }) {
       setConfirmPassword("");
     }
   };
+  
+  //nhấn vào employee 
+  const handleEmployee = async () => {
+    try {
+      setShowMenuProfile(false);
+      const response = await AxiosInstance.get("admin/checkRole");
+      navigate("/employee");
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        Swal.fire("Info", "Access Denied Employee", "warning");
+      } else {
+        console.log(error);
+      }
+    }
+  }
 
   return (
     <div className={cx("container", fontSize, { dark: theme === "dark" })}>
@@ -153,7 +168,7 @@ function Header({ showMenuProfile, setShowMenuProfile }) {
         >
           {t('header.settings')}
         </Link>
-        <Link className={cx("item-menu", fontSize)} to="/employee" onClick={() => setShowMenuProfile(false)}>
+        <Link className={cx("item-menu", fontSize)} onClick={handleEmployee}>
         {t('header.employee')}
         </Link>
         <ul>

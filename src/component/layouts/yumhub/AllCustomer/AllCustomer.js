@@ -15,6 +15,7 @@ import {
 import classNames from "classnames/bind";
 import styles from "./AllCustomer.module.scss";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
+import noAvatar from "../../../../assets/images/noAvatar.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import Button from "../../../buttons";
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
@@ -63,7 +64,6 @@ function AllCustomer() {
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        console.log(response);
         setOrderStatuses(response.data.orderStatus);
       } catch (error) {
         console.log(error);
@@ -98,7 +98,6 @@ function AllCustomer() {
       const response = await AxiosInstance.get(
         `customers/getHistoryCustomer/?id=${id}`
       );
-      console.log(response);
       if (
         Array.isArray(response.data.history) &&
         response.data.history.length === 0
@@ -268,7 +267,7 @@ function AllCustomer() {
                   <td>{item.birthDay}</td>
                   <td>
                     <img
-                      src={item.avatar}
+                      src={item.avatar || noAvatar}
                       alt={`avatar`}
                       className={cx("logo")}
                     />
@@ -462,8 +461,8 @@ function AllCustomer() {
                   </tr>
                 ))}
               </tbody>
-              <div className={cx("line")} />
             </table>
+            
           </div>
         </Modal>
       </div>

@@ -1,45 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEye,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
-import Modal from "react-modal";
-import Tippy from "@tippyjs/react/headless";
+import { useTranslation } from "react-i18next";
 import "react-datepicker/dist/react-datepicker.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import Tippy from "@tippyjs/react/headless";
+import Modal from "react-modal";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import classNames from "classnames/bind";
-import styles from "./DeletedShipper.module.scss";
-import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
-import ellipse from "../../../../assets/images/ellipse.png";
-import Button from "../../../buttons";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
+import Button from "../../../buttons";
+import classNames from "classnames/bind";
+import styles from "./DeletedShipper.module.scss";
+import ellipse from "../../../../assets/images/ellipse.png";
 
 const cx = classNames.bind(styles);
-Modal.setAppElement("#root");
 
 function DeletedShipper() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
+
   const formatDate = (date) => {
     const now = new Date(date);
-    return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
+    return now.toLocaleDateString("vi-VN"); 
   };
 
   const [data, setData] = useState([{}]);
   const [selectShipperById, setSelectShipperId] = useState({});
-  const [isEditModal, setIsEditModal] = useState(false);
 
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
-  const [id, setId] = useState("");
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
   const [birthDay, setBirthDay] = useState(new Date());
@@ -47,7 +42,6 @@ function DeletedShipper() {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [idBike, setIdBike] = useState("");
-  const [joinDay, setJoinDay] = useState("");
   const [modeCode, setModeCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [gender, setGender] = useState([]);
@@ -85,7 +79,6 @@ function DeletedShipper() {
       if (detailShipper) {
         setSelectShipperId(detailShipper);
         setShowModal(true);
-        setIsEditModal(false);
       } else {
         console.log("Không tìm thấy thông tin ");
       }
@@ -96,7 +89,6 @@ function DeletedShipper() {
 
   useEffect(() => {
     if (selectShipperById) {
-      setId(selectShipperById._id || "");
       setAddress(selectShipperById.address || "");
       setAvatar(selectShipperById.avatar || "");
       setBirthDay(new Date(selectShipperById.birthDay) || "");
@@ -104,7 +96,6 @@ function DeletedShipper() {
       setEmail(selectShipperById.email || "");
       setFullName(selectShipperById.fullName || "");
       setIdBike(selectShipperById.idBike || "");
-      setJoinDay(selectShipperById.joinDay || "");
       setModeCode(selectShipperById.modeCode || "");
       setPhoneNumber(selectShipperById.phoneNumber || "");
       setGender(selectShipperById.sex || "");
@@ -137,8 +128,6 @@ function DeletedShipper() {
       );
     }
   }, [selectShipperById]);
-
-  console.log(selectShipperById);
 
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
@@ -182,7 +171,9 @@ function DeletedShipper() {
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('shipper.allDeletedShipper')}</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t("shipper.allDeletedShipper")}
+        </p>
         <div>
           <Tippy
             animation="fade"
@@ -191,10 +182,16 @@ function DeletedShipper() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result", { dark: theme === "dark" })}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}>{t('shipper.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {t("shipper.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((shipper) => (
                           <AccountItemShipper
@@ -216,7 +213,7 @@ function DeletedShipper() {
               />
               <input
                 className={cx("input", { dark: theme === "dark" })}
-                placeholder={t('shipper.searchByName')}
+                placeholder={t("shipper.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -228,11 +225,11 @@ function DeletedShipper() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>{t('shipper.name')}</th>
-                <th>{t('shipper.address')}</th>
-                <th>{t('shipper.numberPlate')}</th>
-                <th>{t('shipper.avatar')}</th>
-                <th>{t('shipper.actions')}</th>
+                <th>{t("shipper.name")}</th>
+                <th>{t("shipper.address")}</th>
+                <th>{t("shipper.numberPlate")}</th>
+                <th>{t("shipper.avatar")}</th>
+                <th>{t("shipper.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -276,7 +273,9 @@ function DeletedShipper() {
             className={cx("modal")}
           >
             {selectShipperById && (
-              <div className={cx("modal-container", { dark: theme === "dark" })}>
+              <div
+                className={cx("modal-container", { dark: theme === "dark" })}
+              >
                 <div className={cx("logo-shipper", { dark: theme === "dark" })}>
                   <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                   <img
@@ -286,51 +285,69 @@ function DeletedShipper() {
                   />
                 </div>
                 <div className={cx("content-modal")}>
-                  <Button awaiting>{t('shipper.deleted')}</Button>
+                  <Button awaiting>{t("shipper.deleted")}</Button>
                   <div className={cx("container-content")}>
                     <p className={cx("name-shipper", fontSize)}>{fullName}</p>
-                    <div className={cx("line", { dark: theme === "dark" })}></div>
+                    <div
+                      className={cx("line", { dark: theme === "dark" })}
+                    ></div>
                     <p className={cx("text-gender", fontSize)}>{gender}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-shipper", fontSize)}>{t('shipper.address')}:</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {t("shipper.address")}:
+                    </p>
                     <p className={cx("content-shipper", fontSize)}>{address}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-shipper", fontSize)}>{t('shipper.email')}:</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {t("shipper.email")}:
+                    </p>
                     <p className={cx("content-shipper", fontSize)}>{email}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-shipper", fontSize)}>{t('shipper.phone')}:</p>
-                    <p className={cx("content-shipper", fontSize)}>{phoneNumber}</p>
-                  </div>
-                  <div className={cx("wrapper-content")}>
-                    <p className={cx("title-shipper", fontSize)}>{t('shipper.birthDay')}:</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {t("shipper.phone")}:
+                    </p>
                     <p className={cx("content-shipper", fontSize)}>
-                      {birthDay instanceof Date
-                        ? birthDay.toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          })
-                        : "N/A"}
+                      {phoneNumber}
                     </p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-shipper", fontSize)}>{t('shipper.numberPlate')}:</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {t("shipper.birthDay")}:
+                    </p>
+                    <p className={cx("content-shipper", fontSize)}>
+                      {formatDate(birthDay)}
+                    </p>
+                  </div>
+                  <div className={cx("wrapper-content")}>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {t("shipper.numberPlate")}:
+                    </p>
                     <p className={cx("content-shipper", fontSize)}>{idBike}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-shipper", fontSize)}>{t('shipper.motorbikeBrand')}:</p>
-                    <p className={cx("content-shipper", fontSize)}>{brandBike}</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {t("shipper.motorbikeBrand")}:
+                    </p>
+                    <p className={cx("content-shipper", fontSize)}>
+                      {brandBike}
+                    </p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-shipper", fontSize)}>{t('shipper.motorbikeColor')}:</p>
-                    <p className={cx("content-shipper", fontSize)}>{modeCode}</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {t("shipper.motorbikeColor")}:
+                    </p>
+                    <p className={cx("content-shipper", fontSize)}>
+                      {modeCode}
+                    </p>
                   </div>
                   <div className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-shipper", fontSize)}>{t('shipper.idCard')}:</p>
+                      <p className={cx("title-shipper", fontSize)}>
+                        {t("shipper.idCard")}:
+                      </p>
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img
@@ -347,7 +364,9 @@ function DeletedShipper() {
                   </div>
                   <div className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-shipper", fontSize)}>{t('shipper.drivingLicense')}:</p>
+                      <p className={cx("title-shipper", fontSize)}>
+                        {t("shipper.drivingLicense")}:
+                      </p>
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img
@@ -364,7 +383,9 @@ function DeletedShipper() {
                   </div>
                   <div className={cx("wrapper-image-content")}>
                     <div className={cx("wrapper-title-document")}>
-                      <p className={cx("title-shipper", fontSize)}>{t('shipper.driverLicense')}:</p>
+                      <p className={cx("title-shipper", fontSize)}>
+                        {t("shipper.driverLicense")}:
+                      </p>
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import Tippy from "@tippyjs/react/headless";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import {
   faChevronLeft,
   faEdit,
   faEye,
   faMagnifyingGlass,
-  faRightLeft,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import AxiosInstance from "../../../../utils/AxiosInstance";
@@ -18,12 +20,9 @@ import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCus
 import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./AllMerchant.module.scss";
-import logo from "../../../../assets/images/logoYumhub.png";
+import noAvatar from "../../../../assets/images/noAvatar.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
@@ -89,7 +88,7 @@ function AllMerchant() {
     if (selectMerchantById) {
       setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
-      setAvatar(selectMerchantById.user ? selectMerchantById.user.avatar : "");
+      setAvatar(selectMerchantById.imageBackground ? selectMerchantById.imageBackground : image_merchant);
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
       setOpenTime(selectMerchantById.openTime || "");
@@ -246,7 +245,6 @@ function AllMerchant() {
         const response = await AxiosInstance.post("/merchants/findMerchant", {
           keyword,
         });
-        console.log(response);
         if (response.data.result && response.data.merchants.length > 0) {
           setSearchResult(response.data.merchants);
           setTippyVisible(true);
@@ -280,7 +278,6 @@ function AllMerchant() {
         Array.isArray(response.data.history) &&
         response.data.history.length === 0
       ) {
-        // Nếu history là một mảng rỗng, tức là không có đơn hàng
         Swal.fire({
           icon: "info",
           title: "No orders placed",
@@ -306,7 +303,7 @@ function AllMerchant() {
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
         <p className={cx("title", fontSize, { dark: theme === "dark" })}>
-          {t('merchant.allMerchant')}
+          {t("merchant.allMerchant")}
         </p>
         <div>
           <Tippy
@@ -323,7 +320,10 @@ function AllMerchant() {
               >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}>      {t('merchant.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {" "}
+                      {t("merchant.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((merchant) => (
                           <AccountItemMerchant
@@ -345,7 +345,7 @@ function AllMerchant() {
               />
               <input
                 className={cx("input", fontSize, { dark: theme === "dark" })}
-                placeholder=      {t('merchant.searchByName')}
+                placeholder={t("merchant.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -357,11 +357,11 @@ function AllMerchant() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>      {t('merchant.name')}</th>
-                <th>      {t('merchant.address')}</th>
-                <th>      {t('merchant.time')}</th>
-                <th>      {t('merchant.image')}</th>
-                <th>      {t('merchant.actions')}</th>
+                <th> {t("merchant.name")}</th>
+                <th> {t("merchant.address")}</th>
+                <th> {t("merchant.time")}</th>
+                <th> {t("merchant.image")}</th>
+                <th> {t("merchant.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -376,7 +376,7 @@ function AllMerchant() {
                   <td>{item.address}</td>
                   <td>{item.openTime}</td>
                   <td>
-                    <img src={logo} alt={"avatar"} className={cx("logo")} />
+                    <img src={item.imageBackground || noAvatar} alt={"avatar"} className={cx("logo")} />
                   </td>
                   <td>
                     <button
@@ -423,13 +423,17 @@ function AllMerchant() {
               <div className={cx("logo-merchant", { dark: theme === "dark" })}>
                 <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                 <img
-                  src={avatar ? avatar : image_merchant}
+                  src={avatar}
                   alt="Merchant"
                   className={cx("img-merchant")}
                 />
               </div>
               <div className={cx("content-modal")}>
-                {!isEditModal ? <Button reviewed>      {t('merchant.reviewed')}</Button> : ""}
+                {!isEditModal ? (
+                  <Button reviewed> {t("merchant.reviewed")}</Button>
+                ) : (
+                  ""
+                )}
                 <div className={cx("container-content")}>
                   <p className={cx("name-merchant", fontSize)}>
                     {isEditModal ? (
@@ -463,7 +467,10 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.address')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {" "}
+                    {t("merchant.address")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -478,7 +485,10 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.email')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {" "}
+                    {t("merchant.email")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -493,7 +503,10 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.storeOwner')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {" "}
+                    {t("merchant.storeOwner")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -508,7 +521,10 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.phone')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {" "}
+                    {t("merchant.phone")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -523,7 +539,10 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.openTime')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {" "}
+                    {t("merchant.openTime")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -538,7 +557,10 @@ function AllMerchant() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>      {t('merchant.closeTime')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {" "}
+                    {t("merchant.closeTime")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -557,7 +579,7 @@ function AllMerchant() {
                     <div key={index} className={cx("wrapper-image-content")}>
                       <div className={cx("wrapper-title-document")}>
                         <p className={cx("title-merchant", fontSize)}>
-                        {t('merchant.idCard')}:
+                          {t("merchant.idCard")}:
                         </p>
                       </div>
                       <div className={cx("wrapper-document")}>
@@ -580,7 +602,7 @@ function AllMerchant() {
                     <div key={index} className={cx("wrapper-image-content")}>
                       <div className={cx("wrapper-title-document")}>
                         <p className={cx("title-merchant", fontSize)}>
-                        {t('merchant.businessLicense')}:
+                          {t("merchant.businessLicense")}:
                         </p>
                       </div>
                       <div className={cx("wrapper-document")}>
@@ -601,11 +623,11 @@ function AllMerchant() {
                 <div className={cx("btn-delete")}>
                   {isEditModal ? (
                     <Button approve_btn onClick={handleUpdate}>
-                      {t('merchant.history')}
+                      {t("merchant.update")}
                     </Button>
                   ) : (
                     <Button approve_btn onClick={() => handleHistory(id)}>
-                      {t('merchant.history')}
+                      {t("merchant.history")}
                     </Button>
                   )}
                 </div>
@@ -624,7 +646,7 @@ function AllMerchant() {
           <div className={cx("box-history")}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <FontAwesomeIcon
-              onClick={() => setShowModalHistory(false)}
+                onClick={() => setShowModalHistory(false)}
                 icon={faChevronLeft}
                 className={cx("iconLeft", fontSize)}
               />
@@ -633,7 +655,7 @@ function AllMerchant() {
                   dark: theme === "dark",
                 })}
               >
-                {t('merchant.historyMerchant')}
+                {t("merchant.historyMerchant")}
               </h2>
             </div>
             <table className={cx("table")}>
@@ -644,12 +666,12 @@ function AllMerchant() {
               >
                 <tr>
                   <th>#</th>
-                  <th>{t('merchant.nameCustomer')}</th>
-                  <th>{t('merchant.nameShipper')} </th>
-                  <th>{t('merchant.deliveryAddress')}</th>
-                  <th>{t('merchant.timeBook')}</th>
-                  <th>{t('merchant.totalPrice')}</th>
-                  <th>{t('merchant.status')}</th>
+                  <th>{t("merchant.nameCustomer")}</th>
+                  <th>{t("merchant.nameShipper")} </th>
+                  <th>{t("merchant.deliveryAddress")}</th>
+                  <th>{t("merchant.timeBook")}</th>
+                  <th>{t("merchant.totalPrice")}</th>
+                  <th>{t("merchant.status")}</th>
                 </tr>
               </thead>
               <tbody

@@ -5,116 +5,253 @@ import classNames from "classnames/bind";
 import styles from "./Employee.module.scss";
 import debounce from "lodash/debounce";
 
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
+import Tippy from "@tippyjs/react/headless";
+import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCakeCandles,
+  faClock,
+  faEnvelope,
+  faLocationDot,
+  faMagnifyingGlass,
+  faMap,
+  faPerson,
+  faPhone,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import avatar from "../../../../assets/images/logoYumhub.png";
+import Button from "../../../buttons";
+import { format } from "date-fns";
+import Swal from "sweetalert2";
+
 const cx = classNames.bind(styles);
 
 function Employee() {
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN");
+  };
   const navigate = useNavigate();
-  const [Admins, setAdmin] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [search, setSearch] = useState("");
-  const inputRef = useRef(null);
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
 
-  const fetchAdmins = async (searchQuery = "") => {
-    setLoading(true);
-    setError(null);
+  const [data, setData] = useState([]);
+
+  // list manager
+  const fetchAdmins = async () => {
     try {
-      let response;
-      if (searchQuery) {
-        response = await AxiosInstance.get(
-          `admin/search?search=${searchQuery}`
-        );
-      } else {
-        response = await AxiosInstance.get("admin/showAll");
-      }
-      setAdmin(response.data.data);
+      const response = await AxiosInstance.get("admin/showAll");
+      setData(response.data.data);
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      console.error("Error fetching admins:", err);
     }
   };
 
-  // Sử dụng debounce cho hàm fetchAdmins
-  const debouncedFetchAdmins = useCallback(debounce(fetchAdmins, 500), []);
+  useEffect(() => {
+    fetchAdmins();
+  }, []);
 
   useEffect(() => {
-    debouncedFetchAdmins(search);
-    // Hủy bỏ debounce khi component bị unmount
-    return () => {
-      debouncedFetchAdmins.cancel();
+    const fetchRole = async () => {
+      try {
+        const response = await AxiosInstance.get("admin/checkRole");
+        if (response.data.result) {
+          console.log(response.data.role);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          Swal.fire("Info", "Access Denied Employee", "warning");
+          navigate("/all-vouchers");
+        } else {
+          console.log(error);
+        }
+      }
     };
-  }, [search, debouncedFetchAdmins]);
+    fetchRole();
+  }, []);
 
-  useEffect(() => {
-    // Focus input chỉ khi component mount lần đầu
-    if (inputRef.current) {
-      inputRef.current.focus();
+  // search
+  const handleSearch = async (e) => {
+    const keyword = e.target.value;
+    if (keyword) {
+      try {
+        const response = await AxiosInstance.get(
+          `admin/search?search=${keyword}`
+        );
+        if (response.data.result && response.data.data.length > 0) {
+          setData(response.data.data);
+        } else {
+          setData([]);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    } else {
+      fetchAdmins();
     }
-  }, []); // Only run once after the initial render
-
-  if (loading)
-    return (
-      <div className={cx("container")}>
-        <div className={cx("title")}>Listing Admin Active</div>
-        <p className={cx("loading")}>Loading...</p>
-      </div>
-    );
-  if (error) return <p>Error: {error}</p>;
-
-  const handleClick = (admin) => {
-    navigate(`/employee/${admin._id}`, { state: { employee: admin } });
   };
 
-  const handleAddAdminClick = () => {
-    navigate("/add-admin");
+  // nhấn vào từng item
+  const handleAddNew = () => {
+    try {
+      navigate("/add-admin");
+    } catch (error) {
+      console.error("Error navigating:", error);
+    }
   };
 
   return (
-    <div className={cx("container")}>
-      <div className={cx("title")}>Listing Admin Active</div>
-      <div className={cx("search-bar")}>
-        <button
-          onClick={handleAddAdminClick}
-          className={cx("add-admin-button")}
-        >
-          Add New Admin
-        </button>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Search by ID, userName, fullName, phoneNumber"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+    <div className={cx("container", { dark: theme === "dark" })}>
+      <div className={cx("wrapper-title")}>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          YumHub Management List
+        </p>
+        <div className={cx("btn-add")} onClick={() => handleAddNew()}>
+          Add New
+        </div>
       </div>
-      <div className={cx("card-container")}>
-        {Admins.map((admin) => (
-          <div
-            key={admin._id}
-            className={cx("card")}
-            onClick={() => handleClick(admin)}
-          >
-            <div className={cx("card-header")}>
-              <img
-                src={
-                  admin.avatar ||
-                  "https://th.bing.com/th/id/OIP.bbvSNRBEMEPuujn-OZ-aVgHaHa?rs=1&pid=ImgDetMain"
-                }
-                alt={admin.fullName}
-                className={cx("avatar")}
-              />
-              <div className={cx("info")}>
-                <div className={cx("name")}>{admin.fullName}</div>
-                <div className={cx("email")}>Email: {admin.email}</div>
-                <div className={cx("phone")}>
-                  PhoneNumber: {admin.phoneNumber}
+      <div>
+        <div className={cx("search-result", { dark: theme === "dark" })}>
+          <div className={cx("inputSearch", { dark: theme === "dark" })}>
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              className={cx("icon-search")}
+            />
+            <input
+              className={cx("input", fontSize, { dark: theme === "dark" })}
+              placeholder={t("merchant.searchByName")}
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
+
+        <div className={cx("line-background")} />
+        <div className={cx("grid-container")}>
+          {data.map((item) => (
+            <div
+              className={cx("box", { dark: theme === "dark" })}
+              key={item._id}
+            >
+              <div className={cx("titleBox")}>
+                <img
+                  src={item.avatar}
+                  alt="logoMerchant"
+                  className={cx("logo")}
+                />
+                <div className={cx("line", { dark: theme === "dark" })} />
+                <div className={cx("textTitle")}>
+                  <p
+                    className={cx("nameMerchant", fontSize, {
+                      dark: theme === "dark",
+                    })}
+                  >
+                    {item.fullName}
+                  </p>
+                  <p className={cx("type", fontSize)}>{item.gender}</p>
                 </div>
-                <div className={cx("position")}>Position: {admin.position}</div>
+              </div>
+              <div className={cx("line-bottom", { dark: theme === "dark" })} />
+              <div className={cx("contentBox")}>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {item.userName}
+                  </p>
+                </div>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon
+                    icon={faPerson}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {item.position}
+                  </p>
+                </div>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon
+                    icon={faLocationDot}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {item.address}
+                  </p>
+                </div>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon
+                    icon={faPhone}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {item.phoneNumber}
+                  </p>
+                </div>
+                <div className={cx("item")}>
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {item.email}
+                  </p>
+                </div>
+
+                <div className={cx("item")}>
+                  <FontAwesomeIcon
+                    icon={faCakeCandles}
+                    className={cx("icon", { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx(
+                      "textContent",
+                      { dark: theme === "dark" },
+                      fontSize
+                    )}
+                  >
+                    {formatDate(item.dob)}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ import Button from "../../../buttons";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
 import { useTranslation } from "react-i18next";
+import ItemOrder from "../../../AccountItem/ItemOrder/ItemOrder";
 
 const cx = classNames.bind(styles);
 
@@ -83,6 +84,7 @@ function Orders() {
     };
     fetchData();
   }, []);
+
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
@@ -101,11 +103,11 @@ function Orders() {
     if (keyword) {
       try {
         const response = await AxiosInstance.get(
-          `/orders/searchOrder?search=${keyword}`
+          `/orders/searchOrder?key=${keyword}`
         );
         console.log(response);
-        if (response.data.result && response.data.shippers.length > 0) {
-          setSearchResult(response.data.shippers);
+        if (response.data.result && response.data.orders.length > 0) {
+          setSearchResult(response.data.orders);
           setTippyVisible(true);
         } else {
           setSearchResult([]);
@@ -146,10 +148,10 @@ function Orders() {
                   <ProperWrapper>
                     <h4 className={cx("search-title", fontSize)}>{t('order.accounts')}</h4>
                     {searchResult.length > 0
-                      ? searchResult.map((shipper) => (
-                          <AccountItemShipper
-                            key={shipper._id}
-                            shipper={shipper}
+                      ? searchResult.map((order) => (
+                          <ItemOrder
+                            key={order._id}
+                            order={order}
                             handleView={handleView}
                           />
                         ))
