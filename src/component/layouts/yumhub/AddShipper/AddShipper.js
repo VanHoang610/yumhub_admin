@@ -19,7 +19,7 @@ import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./AddShipper.module.scss";
 import ellipse from "../../../../assets/images/ellipse.png";
-import logo from "../../../../assets/images/logoYumhub.png";
+import noAvatar from "../../../../assets/images/noAvatar.png";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
 import { useTranslation } from "react-i18next";
@@ -336,7 +336,7 @@ function AddShipper() {
           {data.map((item) => (
             <div className={cx("box", { dark: theme === "dark" })} key={item._id}>
               <div className={cx("titleBox")}>
-                <img src={logo} alt="logoShipper" className={cx("logo")} />
+                <img src={item.avatar || noAvatar} alt="logoShipper" className={cx("logo")} />
                 <div className={cx("line")} />
                 <div className={cx("textTitle")}>
                   <p className={cx("nameShipper", fontSize, { dark: theme === "dark" })}>{item.fullName}</p>
@@ -534,7 +534,7 @@ function AddShipper() {
                               marginLeft: "10px",
                             }}
                           >
-                            {overAllDrivingLicense}%
+                            {overAllDrivingLicense}
                           </span>
                         </>
                       )}
@@ -599,7 +599,7 @@ function AddShipper() {
                               marginLeft: "10px",
                             }}
                           >
-                            {overAllDriverLicense}%
+                            {overAllDriverLicense} %
                           </span>
                         </>
                       )}

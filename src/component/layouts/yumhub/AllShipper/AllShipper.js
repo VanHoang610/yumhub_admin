@@ -27,8 +27,6 @@ import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
-Modal.setAppElement("#root");
-
 function AllShipper() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -543,7 +541,6 @@ function AllShipper() {
                           setBirthDay(date);
                           setIsEditingBirthDay(false);
                         }}
-                        dateFormat="MM-dd-yyyy"
                         className={cx("content-shipper")}
                         onClickOutside={() => setIsEditingBirthDay(false)} // Ẩn DatePicker khi nhấn ra ngoài
                       />

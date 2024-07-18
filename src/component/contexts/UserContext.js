@@ -7,7 +7,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser &&  storedUser !== 'undefined') {
+    if (storedUser && storedUser !== "undefined") {
       try {
         setUser(JSON.parse(storedUser));
       } catch (error) {
@@ -24,7 +24,7 @@ export const UserProvider = ({ children }) => {
 
   const logoutUser = () => {
     setUser(null);
-    localStorage.removeItem("user"); 
+    localStorage.removeItem("user");
   };
 
   return (

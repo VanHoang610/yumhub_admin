@@ -23,6 +23,8 @@ import AddAdmin from "../component/layouts/yumhub/Employee/AddAdmin"
 import DeletedMerchant from "../component/layouts/yumhub/DeletedMerchants/DeletedMerchants"
 import Orders from "../component/layouts/yumhub/Order/Order"
 import Settings from "../component/layouts/defaultLayout/header/Settings"
+import WithdrawalShipper from "../component/layouts/yumhub/WithdrawalShipper/Shipper"
+import WithdrawalMerchant from "../component/layouts/yumhub/WithdrawalMerchant/Merchant"
 
 
 
@@ -57,6 +59,9 @@ const privateRoutes = [
     { path: '/employee', component: Employee, layout: DefaultLayout },
     { path: '/employee/:id', component: EmployeeDetails, layout: DefaultLayout },
     { path: '/add-admin', component: AddAdmin, layout: DefaultLayout },
+
+    { path: '/withdrawal-shippers/', component: WithdrawalShipper, layout: DefaultLayout },
+    { path: '/withdrawal-merchants', component: WithdrawalMerchant, layout: DefaultLayout },
 
 ]
 

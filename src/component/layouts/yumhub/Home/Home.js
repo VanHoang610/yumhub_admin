@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bar, Line, PolarArea } from "react-chartjs-2";
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
@@ -22,6 +23,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import Swal from "sweetalert2";
 
 ChartJS.register(
   CategoryScale,
@@ -40,6 +42,7 @@ ChartJS.register(
 const cx = classNames.bind(styles);
 
 function Home() {
+  const navigate = useNavigate();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
   const { t } = useTranslation();
@@ -58,6 +61,22 @@ function Home() {
     const year = date.getFullYear();
     return `${month}/${day}/${year}`;
   };
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const response = await AxiosInstance.get("admin/checkRole");
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          Swal.fire("Info", "Access Denied", "warning");
+          navigate("/all-vouchers");
+        } else {
+          console.log(error);
+        }
+      }
+    };
+    fetchRole();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {

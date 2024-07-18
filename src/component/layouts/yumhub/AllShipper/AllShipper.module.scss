@@ -413,6 +413,7 @@
     font-family: $ff-popins;
     font-size: $fs-13;
     font-weight: $fw-400;
+    border-bottom: 1px solid #c2cfe0;
   }
 
   th,
@@ -423,7 +424,7 @@
     text-overflow: ellipsis; /* Hiển thị dấu chấm lửng nếu nội dung tràn */
     white-space: nowrap; /* Ngăn nội dung xuống dòng */
     max-width: 269px; /* Thiết lập chiều rộng tối đa */
-    height: 23px; /* Thiết lập chiều cao cố định */
+    height: 70px; /* Thiết lập chiều cao cố định */
   }
   .action-button {
     margin-right: 5px;
@@ -479,7 +480,7 @@
 .title {
   color: $color-title;
   font-family: $ff-popins;
-  font-size: $fs-32;
+  font-size: $fs-36;
   font-weight: $fw-600;
   margin-bottom: 26px;
 }

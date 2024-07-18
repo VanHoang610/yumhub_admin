@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./Sidebar.module.scss";
 import classNames from "classnames/bind";
@@ -10,15 +10,17 @@ import {
   faTruckFast,
   faPerson,
   faCartShopping,
+  faMoneyBillTransfer,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UserContext } from "../../../contexts/UserContext";
 import { useTranslation } from "react-i18next";
 import logo from "../../../../assets/images/logoYumhub-removebg.png";
 import "react-dropdown/style.css";
 
 import { useTheme } from "../../defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../defaultLayout/header/Settings/Context/FontSizeContext";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import Swal from "sweetalert2";
 
 const cx = classNames.bind(styles);
 
@@ -27,23 +29,17 @@ function Sidebar() {
   const { fontSize } = useFontSize();
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const { logoutUser } = useContext(UserContext);
 
-  const handleLogout = async () => {
-    await logoutUser();
-    navigate("/");
-  };
-
-  const [showVoucherMenu, setShowVoucherMenu] = useState(false);
+  const [showVoucherMenu, setShowVoucherMenu] = useState(true);
   const [showMerchantMenu, setShowMerchantMenu] = useState(false);
   const [showShipperMenu, setShowShipperMenu] = useState(false);
+  const [showWithdrawal, setShowWithdrawal] = useState(false);
 
-  const [activeLink, setActiveLink] = useState("");
-  
+  const [activeLink, setActiveLink] = useState("/all-vouchers");
+
   // nhấn menu-main
   const toggleVoucherMenu = () => {
     setShowVoucherMenu(!showVoucherMenu);
-    console.log(showVoucherMenu);
   };
   const toggleMerchantMenu = () => {
     setShowMerchantMenu(!showMerchantMenu);
@@ -51,11 +47,15 @@ function Sidebar() {
   const toggleShipperMenu = () => {
     setShowShipperMenu(!showShipperMenu);
   };
+  const toggleWithdrawal = () => {
+    setShowWithdrawal(!showWithdrawal);
+  };
   const [activeMenuItem, setActiveMenuItem] = useState(null);
 
   // nhấn menu cha
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
+    setActiveLink("");
   };
 
   //nhấn menu con
@@ -64,6 +64,24 @@ function Sidebar() {
     setActiveMenuItem("");
     setActiveLink(link);
   };
+
+  // nhấn vào home
+  const handleHome = async () => {
+    try {
+      const response = await AxiosInstance.get("admin/checkRole");
+      if (response.data.result) {
+        handleMenuItemClick("home");
+      }
+      navigate("/home");
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        Swal.fire("Info", "Access Denied Chart", "warning");
+      } else {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className={cx("container", fontSize, { dark: theme === "dark" })}>
       <div className={cx("logo_yumhub", { dark: theme === "dark" })}>
@@ -77,9 +95,8 @@ function Sidebar() {
           {t("sidebar.reportsStatistics")}
         </p>
         <Link
-          to="/home"
           className={cx("wrapper-item", fontSize, { dark: theme === "dark" })}
-          onClick={() => handleMenuItemClick("home")}
+          onClick={handleHome}
         >
           <FontAwesomeIcon
             className={cx("icon-menu", { dark: theme === "dark" })}
@@ -150,7 +167,7 @@ function Sidebar() {
                         "active-link": activeLink === "/all-vouchers",
                       })}
                     >
-                      All Vouchers
+                     {t("sidebar.allVouchers")}
                     </Link>
                   </li>
                   <li onClick={(e) => handleLinkClick("/add-voucher", e)}>
@@ -162,7 +179,7 @@ function Sidebar() {
                         "active-link": activeLink === "/add-voucher",
                       })}
                     >
-                      Add Voucher
+                     {t("sidebar.addVoucher")}
                     </Link>
                   </li>
                 </ul>
@@ -249,6 +266,7 @@ function Sidebar() {
                 </ul>
               )}
             </li>
+
             {/** shipper */}
             <li onClick={toggleShipperMenu}>
               <div
@@ -317,6 +335,64 @@ function Sidebar() {
                 </ul>
               )}
             </li>
+
+            {/** withdrawal */}
+            <li onClick={toggleWithdrawal}>
+              <div
+                className={cx("text-menu-container", {
+                  active: showWithdrawal,
+                })}
+              >
+                <FontAwesomeIcon
+                  icon={faMoneyBillTransfer}
+                  className={cx("icon-menu", fontSize, {
+                    dark: theme === "dark",
+                  })}
+                />
+                <div className={cx("wrapper-title-menu")}>
+                  <p
+                    className={cx("title-manager", fontSize, {
+                      dark: theme === "dark",
+                    })}
+                  >
+                     {t("sidebar.withdrawal")}
+                  </p>
+                  <FontAwesomeIcon
+                    icon={faAngleRight}
+                    className={cx("angle-icon", { rotate: showWithdrawal })}
+                  />
+                </div>
+              </div>
+              {showWithdrawal && (
+                <ul className={cx("sub-menu")}>
+                  <li onClick={(e) => handleLinkClick("/withdrawal-shippers", e)}>
+                    <Link
+                      to="/withdrawal-shippers"
+                      className={cx({
+                        [fontSize]: true,
+                        dark: "theme" === "dark",
+                        "active-link": activeLink === "/withdrawal-shippers",
+                      })}
+                    >
+                       {t("sidebar.shipper")}
+                    </Link>
+                  </li>
+                  <li onClick={(e) => handleLinkClick("/withdrawal-merchants", e)}>
+                    <Link
+                      to="/withdrawal-merchants"
+                      className={cx({
+                        [fontSize]: true,
+                        dark: "theme" === "dark",
+                        "active-link": activeLink === "/withdrawal-merchants",
+                      })}
+                    >
+                       {t("sidebar.merchant")}
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
             {/** customer */}
             <li>
               <Link

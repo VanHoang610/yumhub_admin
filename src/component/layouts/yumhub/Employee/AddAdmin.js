@@ -1,252 +1,284 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./AddAdmin.module.scss";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import Swal from "sweetalert2";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Button from "@mui/material/Button"; // Importing Button from MUI
+import axios from "axios";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
+const GENDER = [
+  {
+    value: "male",
+    lable: "Male",
+  },
+  {
+    value: "female",
+    lable: "Female",
+  },
+  {
+    value: "other",
+    lable: "Other",
+  },
+];
 
 function AddAdmin() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    userName: "",
-    fullName: "",
-    avatar: "",
-    email: "",
-    address: "",
-    gender: "",
-    phoneNumber: "",
-    position: "",
-    dob: ""
-  });
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN");
   };
 
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, dob: date });
-    setErrors({ ...errors, dob: "" });
-  };
+  const [userName, setUserName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [avatar] = useState("");
+  const [fileAvatar, setFileAvatar] = useState("");
+  const [showAvatar, setShowAvatar] = useState("");
+  const [gender, setGender] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [birthDay, setBirthDay] = useState("");
+  const [position, setPosition] = useState("");
+  const [address, setAddress] = useState("");
+  const [selectGender, setSelectGender] = useState("");
+  const [errors, setErrors] = useState("");
 
-  const validate = () => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [birthDayInput, setBirthDayInput] = useState("");
+  const [itemGender] = useState(GENDER);
+
+  //thêm manager
+  const handleAddNew = async () => {
     const newErrors = {};
-    const phonePattern = /^[0-9]{10}$/;
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.userName) newErrors.userName = "Username is required";
-    if (!formData.fullName) newErrors.fullName = "Full Name is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    else if (!emailPattern.test(formData.email)) newErrors.email = "Invalid email format";
-    if (!formData.phoneNumber) newErrors.phoneNumber = "Phone Number is required";
-    else if (!phonePattern.test(formData.phoneNumber)) newErrors.phoneNumber = "Phone Number must be 10 digits";
-    if (!formData.position) newErrors.position = "Position is required";
-    if (!formData.gender) newErrors.gender = "Gender is required";
-    if (!formData.dob) newErrors.dob = "Date of Birth is required";
+    if (!userName) {
+      newErrors.userName = "User Name is required";
+    }
+    if (!fullName) {
+      newErrors.fullName = "Full Name is required";
+    }
+
+    if (!address) {
+      newErrors.address = "Address is required";
+    }
+
+    if (!gender) {
+      newErrors.gender = "Gender is required";
+    }
+
+    if (!phoneNumber) {
+      newErrors.phoneNumber = "Phone Number is required";
+    }
+
+    if (!birthDay) {
+      newErrors.birthDay = "Date of birth is required";
+    }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setConfirmDialogOpen(true);
-  };
-
-  const handleConfirmAdd = async () => {
-    setLoading(true);
-    setApiError(null);
-    setConfirmDialogOpen(false);
-    try {
-      await AxiosInstance.post("/admin/createAdmin", formData);
-      setSnackbarMessage("Admin added successfully.");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      setLoading(false);
-
-      setTimeout(() => {
-        navigate("/employee");
-      }, 1000);
-    } catch (err) {
-      if (err.response && err.response.data) {
-        const { message } = err.response.data;
-        setApiError(message);
+    if (Object.keys(newErrors).length === 0) {
+      let avatarUrl = avatar;
+      if (fileAvatar) {
+        const formData = new FormData();
+        formData.append("file", fileAvatar);
+        const response = await axios.post(
+          "https://duantotnghiep-api-a32664265dc1.herokuapp.com/files/upload",
+          formData
+        );
+        const url = response.data.url;
+        avatarUrl = url;
+      }
+      const response = await AxiosInstance.post("admin/createAdmin", {
+        userName,
+        fullName,
+        avatar: avatarUrl,
+        address,
+        gender,
+        email,
+        phoneNumber,
+        dob: Date.parse(birthDayInput),
+        position,
+      });
+      if (response.data.result) {
+        Swal.fire("Success", "Add New Manager Success", "success");
+        setTimeout(() => {
+          window.location.href = "/employee";
+        }, 3000);
       } else {
-        setApiError(err.message);
+        Swal.fire("Fail", response.data.data + "", "error");
       }
-      setLoading(false);
     }
   };
 
-  const handleCancel = () => {
-    const isFormFilled = Object.values(formData).some((value) => value !== "");
-    if (isFormFilled) {
-      if (window.confirm("You have unsaved changes. Are you sure you want to leave?")) {
-        navigate("/employee");
-      }
-    } else {
-      navigate("/employee");
-    }
+  const handleGenderChange = (e) => {
+    setSelectGender(e.target.value);
+    setGender(e.target.value);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFileAvatar(file);
+    setShowAvatar(URL.createObjectURL(file));
+  };
+
+  const handleInputDate = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleBirthDayChange = (date) => {
+    setBirthDay(formatDate(date));
+    setBirthDayInput(new Date(date));
+    setShowDatePicker(false);
   };
 
   return (
-    <div className={cx("container")}>
-      <h2>Add New Admin</h2>
-      {apiError && <p className={cx("error")}>{apiError}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="userName"
-          placeholder="Username"
-          value={formData.userName}
-          onChange={handleChange}
-          required
-        />
-        <span className={cx("error-message")}>{errors.userName}</span>
+    <div className={cx("container", { dark: theme === "dark" })}>
+      <p className={cx("title", fontSize, { dark: theme === "dark" })}>Add manager or employee</p>
+      <p className={cx("sub-title", fontSize, { dark: theme === "dark" })}>
+        Add a new manager or employee to your team.
+      </p>
+      <div className={cx("line")} />
+      <div className={cx("wrapper-info")}>
+        <div className={cx("info-container")}>
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>User Name</p>
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              autoFocus
+              className={cx("input", fontSize, { dark: theme === "dark" }, { errors: errors.userName })}
+            />
+          </div>
+          {errors.userName && <p className={cx("error")}>{errors.userName}</p>}
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>Full Name</p>
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              autoFocus
+              className={cx("input", fontSize, { dark: theme === "dark" }, { errors: errors.fullName })}
+            />
+          </div>
+          {errors.fullName && <p className={cx("error")}>{errors.fullName}</p>}
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>Phone Number</p>
+            <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              autoFocus
+              className={cx("input", fontSize, { dark: theme === "dark" }, { errors: errors.phoneNumber })}
+            />
+          </div>
+          {errors.phoneNumber && (
+            <p className={cx("error")}>{errors.phoneNumber}</p>
+          )}
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>Email</p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoFocus
+              className={cx("input", fontSize, { dark: theme === "dark" }, { errors: errors.email })}
+            />
+          </div>
+          {errors.email && <p className={cx("error")}>{errors.email}</p>}
 
-        <input
-          type="text"
-          name="fullName"
-          placeholder="Full Name"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-        />
-        <span className={cx("error-message")}>{errors.fullName}</span>
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <span className={cx("error-message")}>{errors.email}</span>
-
-        <input
-          type="text"
-          name="phoneNumber"
-          placeholder="Phone Number"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          required
-        />
-        <span className={cx("error-message")}>{errors.phoneNumber}</span>
-
-        <select
-          name="position"
-          value={formData.position}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Position</option>
-          <option value="employee">Employee</option>
-          <option value="manager">Manager</option>
-        </select>
-        <span className={cx("error-message")}>{errors.position}</span>
-
-        <select
-          name="gender"
-          value={formData.gender}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-        <span className={cx("error-message")}>{errors.gender}</span>
-
-        <div className={cx("form-group")}>
-          <label>Date of Birth</label>
-          <input
-            className={cx("date-input")}
-            type="date"
-            name="dob"
-            value={formData.dob}
-            onChange={handleChange}
-            required
-          />
-          <span className={cx("error-message")}>{errors.dob}</span>
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>Address</p>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              autoFocus
+              className={cx("input", fontSize, { dark: theme === "dark" }, { errors: errors.address })}
+            />
+          </div>
+          {errors.address && <p className={cx("error")}>{errors.address}</p>}
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>Date of birth</p>
+            <div className={cx("text-info")}>
+              <input
+                type="text"
+                value={birthDay}
+                onChange={(e) => setBirthDay(e)}
+                onClick={handleInputDate}
+                readOnly
+                className={cx("input", fontSize, { dark: theme === "dark" }, { errors: errors.startDate })}
+              />
+              {showDatePicker && (
+                <DatePicker
+                  onChange={handleBirthDayChange}
+                  dateFormat="dd/mm/yyyy"
+                  inline
+                />
+              )}
+            </div>
+          </div>
+          {errors.startDate && (
+            <p className={cx("error")}>{errors.startDate}</p>
+          )}
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>Gender</p>
+            <div className={cx("radio-group", fontSize, { dark: theme === "dark" })}>
+              {itemGender.map((gender) => (
+                <label key={gender.value}>
+                  <input
+                    type="radio"
+                    value={gender.value}
+                    checked={selectGender === gender.value}
+                    onChange={handleGenderChange}
+                    className={cx("input-radio", { errors: errors.gender })}
+                  />
+                  {gender.lable}
+                </label>
+              ))}
+            </div>
+          </div>
+          {errors.gender && <p className={cx("error")}>{errors.gender}</p>}
+          <div className={cx("box-info")}>
+            <p className={cx("title-info", fontSize, { dark: theme === "dark" })}>Role</p>
+            <select
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              className={cx("select", fontSize, { dark: theme === "dark" })}
+            >
+              <option className={cx("option", fontSize, { dark: theme === "dark" })} value={"employee"}>Employee</option>
+              <option className={cx("option", fontSize, { dark: theme === "dark" })} value={"manager"}>Manager</option>
+            </select>
+          </div>
+          <div className={cx("btn-update")} onClick={handleAddNew}>
+            <span>Add New</span>
+          </div>
         </div>
-
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleChange}
-        />
-
-        <input
-          type="text"
-          name="avatar"
-          placeholder="Avatar URL"
-          value={formData.avatar}
-          onChange={handleChange}
-        />
-
-        <div className={cx("buttons")}>
-          <button type="submit" disabled={loading}>
-            {loading ? "Adding..." : "Add Admin"}
-          </button>
-          <button type="button" onClick={handleCancel}>
-            Cancel
-          </button>
+        <div className={cx("line-info")}></div>
+        <div className={cx("image-info")}>
+          <img className={cx("avatar")} src={showAvatar}></img>
+          <div
+            className={cx("box-text-select", { dark: theme === "dark" })}
+            onClick={() => document.getElementById("fileInput").click()}
+          >
+            <span>Select Image</span>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </div>
+          <p style={{ marginTop: 16 }} className={cx("note-image", fontSize, { dark: theme === "dark" })}>File size: maximum 1 MB</p>
+          <p className={cx("note-image", fontSize, { dark: theme === "dark" })}>File extension: .JPEG, .PNG</p>
         </div>
-      </form>
-
-      {/* Confirmation Dialog */}
-      <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
-        <DialogTitle>Confirm Add Admin</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to add this admin?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleConfirmAdd} color="primary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Snackbar for Success/Error Messages */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-        >
-          {snackbarMessage}
-        </MuiAlert>
-      </Snackbar>
+      </div>
     </div>
   );
 }

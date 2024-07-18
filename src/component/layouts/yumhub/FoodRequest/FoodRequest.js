@@ -49,7 +49,6 @@ function FoodRequest() {
         const response = await AxiosInstance.post("/food/getFoodByStatus", {
           status: 1,
         });
-        console.log(response.data.processingFood);
         setData(response.data.processingFood);
       } catch (error) {
         console.log(error);
@@ -76,7 +75,6 @@ function FoodRequest() {
     try {
       const response = await AxiosInstance.get(`food/getFoodById/?id=${id}`);
       setDetailFood(response.data.Foods);
-      console.log(detailFood);
       setShowModal(true);
     } catch (error) {
       console.log(error);

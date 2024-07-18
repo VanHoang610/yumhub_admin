@@ -45,7 +45,7 @@ function Login() {
       setAuthToken(token);
 
       if (response.data.result === true) {
-        navigate("/home");
+        navigate("/all-vouchers");
       } else {
         alert("Đăng nhập thất bại");
       }

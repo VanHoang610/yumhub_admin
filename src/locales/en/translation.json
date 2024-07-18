@@ -27,6 +27,9 @@
     "allShippers": "All Shippers",
     "deletedShippers": "Deleted Shippers",
     "userManager": "User manager",
+    "withdrawal": "Withdrawal",
+    "merchant": "Merchants",
+    "shipper": "Shippers",
     "customer": "Customer",
     "orderManager": "Order",
     "order": "Order",
@@ -88,7 +91,8 @@
     "approval": "Approval",
     "accounts": "Accounts",
     "overAll": "Over all",
-    "cannotCheck": "Cannot check business license",
+    "cannotCheck": "Cannot check",
+    "update": "Update",
 
     "allMerchant": "All Merchant",
     "name": "Name",
@@ -134,7 +138,7 @@
     "approval": "Approval",
     "accounts": "Accounts",
     "overAll": "Over all",
-    "cannotCheck": "Cannot check business license",
+    "cannotCheck": "Cannot check",
 
     "allShipper": "All Shipper",
     "name": "Name",
@@ -203,5 +207,83 @@
     "priceFood": "Price Food",
     "totalPrice": "Total Price",
     "paymentMethod": "Payment Method"
+  },
+  
+  "allVoucher" : {
+    "allVoucher": "All Voucher",
+    "filter": "Filter by Status",
+    "searchByName": "Search by name",
+    "discountVoucher": "Discount Voucher",
+    "nameVoucher": "Name Voucher",
+    "code": "Code",
+    "startDate":"Start Date",
+    "endDate": "End Date",
+    "status": "Status",
+    "actions": "Actions",
+    "notValid":"Not Valid",
+    "typeOfVoucher": "Type Of Voucher",
+    "conditionsApply": "Conditions Apply",
+    "all": "All",
+    "valid": "Valid",
+    "update": "Update"
+  },
+
+  "newVoucher" : {
+    "addVoucher": "Add Voucher",
+    "subTitle": "Create and manage vouchers easily.",
+    "nameVoucher": "Name Voucher",
+    "code": "Code",
+    "startDate":"Start Date",
+    "endDate": "End Date",
+    "discountVoucher": "Discount Voucher",
+    "typeOfVoucher": "Type Of Voucher",
+    "conditionsApply": "Conditions Apply",
+    "add": "Add",
+    "selectImage": "Select Image",
+    "fileSize":"File size: maximum 1 MB",
+    "fileExtension":"File extension: .JPEG, .PNG"
+  },
+
+  "profile" : {
+    "myProfile": "My Profile",
+    "subTitle": "Manage and protect your account.",
+    "userName": "Username",
+    "subUserName": "Username cannot be changed.",
+    "name": "Name",
+    "address":"Address",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "gender": "Gender",
+    "dateOfBirth": "Date of birth",
+    "save": "Save",
+    "selectImage": "Select Image",
+    "fileSize":"File size: maximum 1 MB",
+    "fileExtension":"File extension: .JPEG, .PNG"
+  },
+  
+  "withdrawalShipper" : {
+    "title": "Withdrawal Shippers List",
+    "approval": "Approval",
+    "withdrawalShipper": "Withdrawal Approval Shipper",
+    "subWithdrawalShipper": "Are you sure you want to approve this withdrawal request?",
+    "yes": "Yes, approve it!",
+    "no": "No, cancel",
+    "swalTileFail": "Approval Failed",
+    "swalTextFail": "There was an error updating the withdrawal shipper!",
+    "swalTileSuccess": "Approval Successful",
+    "swalTextSuccess": "The withdrawal shipper has been successfully updated!"
+  },
+
+  "withdrawalMerchant" : {
+    "title": "Withdrawal Merchants List",
+    "approval": "Approval",
+    "withdrawalMerchant": "Withdrawal Approval Merchant",
+    "subWithdrawalMerchant": "Are you sure you want to approve this withdrawal request?",
+    "yes": "Yes, approve it!",
+    "no": "No, cancel",
+    "swalTileFail": "Approval Failed",
+    "swalTextFail": "There was an error updating the withdrawal merchant!",
+    "swalTileSuccess": "Approval Successful",
+    "swalTextSuccess": "The withdrawal merchant has been successfully updated!"
   }
 }

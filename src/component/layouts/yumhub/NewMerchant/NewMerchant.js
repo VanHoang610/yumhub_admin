@@ -17,7 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames/bind";
 import styles from "./NewMerchant.module.scss";
-import logo from "../../../../assets/images/logoYumhub.png";
+import noAvatar from "../../../../assets/images/noAvatar.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
@@ -82,7 +82,11 @@ function NewMerchant() {
     if (selectMerchantById) {
       setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
-      setAvatar(selectMerchantById.user ? selectMerchantById.user.avatar : "");
+      setAvatar(
+        selectMerchantById.imageBackground
+          ? selectMerchantById.imageBackground
+          : image_merchant
+      );
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
       setOpenTime(selectMerchantById.openTime || "");
@@ -285,7 +289,11 @@ function NewMerchant() {
               key={item._id}
             >
               <div className={cx("titleBox")}>
-                <img src={logo} alt="logoMerchant" className={cx("logo")} />
+                <img
+                  src={item.imageBackground ? item.imageBackground : noAvatar}
+                  alt="logoMerchant"
+                  className={cx("logo")}
+                />
                 <div className={cx("line", { dark: theme === "dark" })} />
                 <div className={cx("textTitle")}>
                   <p
