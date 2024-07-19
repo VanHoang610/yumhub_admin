@@ -1,78 +1,156 @@
 @import "../../../../GlobalStyles/global.scss";
 
+// language
+.select {
+  width: 150px;
+  height: 35px;
+  background-color: $bg-box-info;
+  border: transparent;
+  font-size: $fs-16;
+  font-weight: $fw-500;
+  padding-left: 10px;
+  outline: none;
+}
+
+.option {
+  width: 150px;
+  height: 50px;
+  background-color: $bg-box-info;
+  border: transparent;
+  font-size: $fs-16;
+  font-weight: $fw-500;
+  outline: none;
+}
+
+// dark light
+.wrapper-title {
+  display: flex;
+  width: 400px;
+  height: 40px;
+  align-items: center;
+}
+
+.icon {
+  color: $color-title-header;
+  width: 24px;
+  height: 24px;
+}
+
+.text-title {
+  color: $color-content-box;
+  font-weight: 550;
+  font-size: $fs-20;
+  font-family: $ff-popins;
+  margin-left: 37px;
+}
+
+.text-title.dark {
+  color: $color-white;
+}
+.text-title.small {
+  font-size: $fs-16;
+}
+.text-title.large {
+  font-size: $fs-24;
+}
+
+.line-item {
+  width: 90%;
+  height: 1px;
+  background-color: $bg-line-main;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.wrapper-subTitle {
+  display: flex;
+  width: 900px;
+  height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-left: 60px;
+}
+
+.text-subTitle {
+  color: $color-title;
+  font-weight: 500;
+  font-size: $fs-18;
+  font-family: $ff-popins;
+}
+.text-subTitle.dark {
+  color: $color-gray;
+}
+.text-subTitle.small {
+  font-size: $fs-16;
+}
+.text-subTitle.large {
+  font-size: $fs-24;
+}
+
+// container
 .container {
   flex: 1;
-  height: 800px;
-  padding: 51px 94px;
+  height: 900px;
   overflow: auto;
   scrollbar-width: none;
   background-color: $bg-primary;
-  transition: background-color 0.3s, color 0.3s;
+  padding: 51px 94px;
+  box-sizing: border-box;
 }
 
 .container.dark {
-  background-color: $bg-dark;
+  background-color: $bg-black;
 }
 
-h1 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 1.5rem;  
+.title {
+  color: $color-title;
+  font-family: $ff-popins;
+  font-size: $fs-36;
+  font-weight: $fw-600;
+  margin-bottom: 26px;
+  margin: 0;
 }
 
-.wrapper-language {
+.title.small {
+  font-size: $fs-32;
+}
+
+.title.large {
+  font-size: $fs-40;
+}
+
+.title.dark {
+  color: $color-white;
+}
+
+.sub-title {
+  color: $color-title;
+  font-family: $ff-popins;
+  font-size: $fs-24;
+  font-weight: $fw-400;
+  margin-bottom: 26px;
+  margin: 0;
+}
+
+.sub-title.small {
+  font-size: $fs-20;
+}
+
+.sub-title.large {
+  font-size: $fs-28;
+}
+
+.sub-title.dark {
+  color: $color-white;
+}
+
+.line {
   display: flex;
-  align-items: center;
-}
-
-.title-language {
-  margin-right: 20px;
-}
-
-.wrapper-dark-mode {
-  display: flex;
-  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 1px;
   margin-top: 20px;
-}
-
-.title-dark-mode {
-  margin-right: 20px;
-}
-
-.wrapper-font-size {
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.title-font-size {
-  color: #333;
-  margin-right: 20px;
-}
-
-.wrapper-button-font-size {
-  display: flex;
-  gap: 10px;
-}
-
-.button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-  background-color: #007bff;
-  color: #fff;
-  margin-left: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-
-.button:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+  background-color: $bg-box-info;
+  margin-bottom: 50px;
 }

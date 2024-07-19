@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { ThreeDots } from "react-loader-spinner";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import Tippy from "@tippyjs/react";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
 import Button from "../../../buttons";
@@ -13,9 +17,6 @@ import styles from "./DeletedMerchant.module.scss";
 import noAvatar from "../../../../assets/images/noAvatar.png";
 import ellipse from "../../../../assets/images/ellipse.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
@@ -23,7 +24,9 @@ function DeletedMerchant() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
-  const [data, setData] = useState([{}]);
+
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
   const [selectMerchantById, setSelectMerchantId] = useState({});
@@ -43,6 +46,7 @@ function DeletedMerchant() {
 
   //gọi api allMerchant đã xóa
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get(
@@ -52,12 +56,15 @@ function DeletedMerchant() {
         setData(merchants);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
 
   const handleView = async (id) => {
+    setLoading(true);
     setSearchResult([]);
     try {
       const response = await AxiosInstance.get(
@@ -72,6 +79,8 @@ function DeletedMerchant() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,7 +128,6 @@ function DeletedMerchant() {
             keyword,
           }
         );
-        console.log(response);
         if (response.data.result && response.data.merchants.length > 0) {
           setSearchResult(response.data.merchants);
           setTippyVisible(true);
@@ -142,10 +150,21 @@ function DeletedMerchant() {
     setShowModal(false);
   };
 
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
+
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('merchant.allDeletedMerchant')}</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t("merchant.allDeletedMerchant")}
+        </p>
         <div>
           <Tippy
             animation="fade"
@@ -154,10 +173,16 @@ function DeletedMerchant() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result", { dark: theme === "dark" })}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}>{t('merchant.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {t("merchant.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((merchant) => (
                           <AccountItemMerchant
@@ -179,7 +204,7 @@ function DeletedMerchant() {
               />
               <input
                 className={cx("input", { dark: theme === "dark" })}
-                placeholder={t('merchant.searchByName')}
+                placeholder={t("merchant.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -191,11 +216,11 @@ function DeletedMerchant() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>{t('merchant.name')}</th>
-                <th>{t('merchant.address')}</th>
-                <th>{t('merchant.time')}</th>
-                <th>{t('merchant.image')}</th>
-                <th>{t('merchant.actions')}</th>
+                <th>{t("merchant.name")}</th>
+                <th>{t("merchant.address")}</th>
+                <th>{t("merchant.time")}</th>
+                <th>{t("merchant.image")}</th>
+                <th>{t("merchant.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -239,8 +264,12 @@ function DeletedMerchant() {
             className={cx("modal")}
           >
             {selectMerchantById && (
-              <div className={cx("modal-container", { dark: theme === "dark" })}>
-                <div className={cx("logo-merchant", { dark: theme === "dark" })}>
+              <div
+                className={cx("modal-container", { dark: theme === "dark" })}
+              >
+                <div
+                  className={cx("logo-merchant", { dark: theme === "dark" })}
+                >
                   <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
                   <img
                     src={avatar || image_merchant}
@@ -249,42 +278,66 @@ function DeletedMerchant() {
                   />
                 </div>
                 <div className={cx("content-modal")}>
-                  <Button awaiting>{t('merchant.deleted')}</Button>
+                  <Button awaiting>{t("merchant.deleted")}</Button>
                   <div className={cx("container-content")}>
                     <p className={cx("name-merchant", fontSize)}>{name}</p>
-                    <div className={cx("line", { dark: theme === "dark" })}></div>
+                    <div
+                      className={cx("line", { dark: theme === "dark" })}
+                    ></div>
                     <p className={cx("type-merchant", fontSize)}>{type}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant", fontSize)}>{t('merchant.address')}:</p>
-                    <p className={cx("content-merchant", fontSize)}>{address}</p>
+                    <p className={cx("title-merchant", fontSize)}>
+                      {t("merchant.address")}:
+                    </p>
+                    <p className={cx("content-merchant", fontSize)}>
+                      {address}
+                    </p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant", fontSize)}>{t('merchant.email')}:</p>
+                    <p className={cx("title-merchant", fontSize)}>
+                      {t("merchant.email")}:
+                    </p>
                     <p className={cx("content-merchant", fontSize)}>{email}</p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant", fontSize)}>{t('merchant.storeOwner')}:</p>
-                    <p className={cx("content-merchant", fontSize)}>{fullName}</p>
+                    <p className={cx("title-merchant", fontSize)}>
+                      {t("merchant.storeOwner")}:
+                    </p>
+                    <p className={cx("content-merchant", fontSize)}>
+                      {fullName}
+                    </p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant", fontSize)}>{t('merchant.phone')}:</p>
-                    <p className={cx("content-merchant", fontSize)}>{phoneNumber}</p>
+                    <p className={cx("title-merchant", fontSize)}>
+                      {t("merchant.phone")}:
+                    </p>
+                    <p className={cx("content-merchant", fontSize)}>
+                      {phoneNumber}
+                    </p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant", fontSize)}>{t('merchant.openTime')}:</p>
-                    <p className={cx("content-merchant", fontSize)}>{openTime}</p>
+                    <p className={cx("title-merchant", fontSize)}>
+                      {t("merchant.openTime")}:
+                    </p>
+                    <p className={cx("content-merchant", fontSize)}>
+                      {openTime}
+                    </p>
                   </div>
                   <div className={cx("wrapper-content")}>
-                    <p className={cx("title-merchant", fontSize)}>{t('merchant.closeTime')}:</p>
-                    <p className={cx("content-merchant", fontSize)}>{closeTime}</p>
+                    <p className={cx("title-merchant", fontSize)}>
+                      {t("merchant.closeTime")}:
+                    </p>
+                    <p className={cx("content-merchant", fontSize)}>
+                      {closeTime}
+                    </p>
                   </div>
                   <div>
                     {idCardDocuments.map((doc, index) => (
                       <div key={index} className={cx("wrapper-image-content")}>
                         <div className={cx("wrapper-title-document")}>
                           <p className={cx("title-merchant", fontSize)}>
-                          {t('merchant.idCard')}:
+                            {t("merchant.idCard")}:
                           </p>
                         </div>
                         <div className={cx("wrapper-document")}>
@@ -307,7 +360,7 @@ function DeletedMerchant() {
                       <div key={index} className={cx("wrapper-image-content")}>
                         <div className={cx("wrapper-title-document")}>
                           <p className={cx("title-merchant", fontSize)}>
-                          {t('merchant.businessLicense')}:
+                            {t("merchant.businessLicense")}:
                           </p>
                         </div>
                         <div className={cx("wrapper-document")}>

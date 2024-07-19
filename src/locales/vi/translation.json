@@ -1,11 +1,15 @@
 {
   "settings": {
     "title": "Cài đặt",
-    "theme": "Chủ đề",
-    "lightMode": "Chế độ Sáng",
-    "darkMode": "Chế độ Tối",
-    "language": "Ngôn ngữ",
-    "fontSize": "Cỡ Chữ",
+    "subTitle": "Thiết lập cấu hình dễ dàng.",
+    "theme": "Chế độ hiển thị",
+    "subTheme": "Chuyển đổi giữa chế độ sáng và chế độ tối.",
+    "language": "Tùy chọn ngôn ngữ",
+    "subLanguage": "Chọn ngôn ngữ bạn muốn từ các tùy chọn.",
+    "fontSize": "Tùy chọn kích cỡ",
+    "subFontSize": "Chỉnh sửa kích thước chữ để có độ đọc tốt nhất.",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt",
     "small": "Nhỏ",
     "medium": "Vừa",
     "large": "Lớn"

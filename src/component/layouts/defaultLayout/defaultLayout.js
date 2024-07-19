@@ -3,13 +3,14 @@ import Header from "./header";
 import Sidebar from "./sidebar";
 import styles from "./DefaultLayout.module.scss";
 import classNames from "classnames/bind";
+
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
   const [showMenuProfile, setShowMenuProfile] = useState(false);
 
   const hideMenuProfile = () => {
-    setShowMenuProfile(false); // Ẩn menu con khi nhấn vào content hoặc sidebar
+    setShowMenuProfile(false);
   };
 
   return (

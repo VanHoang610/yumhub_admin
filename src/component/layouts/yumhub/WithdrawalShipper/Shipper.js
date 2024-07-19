@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";
-
+import { ThreeDots } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import Button from "../../../buttons/index";
-
+import { useTranslation } from "react-i18next";
 import {
   faBuildingColumns,
   faMagnifyingGlass,
@@ -12,19 +9,33 @@ import {
   faPerson,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
+
+import { useTheme } from "../../defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../defaultLayout/header/Settings/Context/FontSizeContext";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import Button from "../../../buttons/index";
 import classNames from "classnames/bind";
 import styles from "./Shipper.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
-import { useTheme } from "../../defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
+
 
 const cx = classNames.bind(styles);
 
 function WithdrawalShipper() {
+  const formatMoney = (number) => {
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND"
+    });
+    return formatter.format(number);
+  }
+  
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
+
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   //list withdrawal shipper
@@ -36,6 +47,8 @@ function WithdrawalShipper() {
       setData(response.data.walletShipper);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -68,14 +81,15 @@ function WithdrawalShipper() {
 
   // xác nhận rút tiền shipper
   const handleWithdrawal = async (id) => {
+    setLoading(true);
     try {
       Swal.fire({
-        title: t('withdrawalShipper.withdrawalShipper'),
-        text: t('withdrawalShipper.subWithdrawalShipper'),
+        title: t("withdrawalShipper.withdrawalShipper"),
+        text: t("withdrawalShipper.subWithdrawalShipper"),
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: t('withdrawalShipper.yes'),
-        cancelButtonText: t('withdrawalShipper.no'),
+        confirmButtonText: t("withdrawalShipper.yes"),
+        cancelButtonText: t("withdrawalShipper.no"),
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await AxiosInstance.get(
@@ -84,14 +98,14 @@ function WithdrawalShipper() {
           if (response.data.result === false) {
             Swal.fire({
               icon: "info",
-              title: t('withdrawalShipper.swalTitleFail'),
-              text: t('withdrawalShipper.swalTextFail'),
+              title: t("withdrawalShipper.swalTitleFail"),
+              text: t("withdrawalShipper.swalTextFail"),
             });
           } else {
             Swal.fire({
               icon: "success",
-              title: t('withdrawalShipper.swalTitleSuccess'),
-              text: t('withdrawalShipper.swalTextSuccess'),
+              title: t("withdrawalShipper.swalTitleSuccess"),
+              text: t("withdrawalShipper.swalTextSuccess"),
             }).then(() => {
               setData(data.filter((merchant) => merchant._id !== id));
             });
@@ -102,8 +116,18 @@ function WithdrawalShipper() {
       });
     } catch (error) {
       console.log(error);
-    }
+    } finally {
+      setLoading(false);}
   };
+
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
@@ -208,7 +232,7 @@ function WithdrawalShipper() {
                       fontSize
                     )}
                   >
-                    {item.amountTransantion ? item.amountTransantion : "N/A"}
+                    {item.amountTransantion ? formatMoney(item.amountTransantion) : "N/A"}
                   </p>
                 </div>
                 {theme === "dark" ? (
@@ -219,7 +243,7 @@ function WithdrawalShipper() {
                         handleWithdrawal(item._id);
                       }}
                     >
-                           {t("withdrawalShipper.approval")}
+                      {t("withdrawalShipper.approval")}
                     </Button>
                   </div>
                 ) : (
@@ -230,7 +254,7 @@ function WithdrawalShipper() {
                         handleWithdrawal(item._id);
                       }}
                     >
-                           {t("withdrawalShipper.approval")}
+                      {t("withdrawalShipper.approval")}
                     </Button>
                   </div>
                 )}

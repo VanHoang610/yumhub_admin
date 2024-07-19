@@ -31,7 +31,7 @@ import WithdrawalMerchant from "../component/layouts/yumhub/WithdrawalMerchant/M
 
 // public routes
 const publicRoutes = [
-    { path: "/", component: Login, layout: null },
+    { path: "/yumhub_admin", component: Login, layout: null },
     { path: '/forgetPassword', component: ForgetPassword, layout: null  }, 
     { path: '/otp', component: OTP, layout: null }, 
     { path: '/resetPassword', component: ResetPassword, layout: null }, 

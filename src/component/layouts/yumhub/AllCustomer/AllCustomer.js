@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-import Tippy from "@tippyjs/react/headless";
-
-import AxiosInstance from "../../../../utils/AxiosInstance";
+import { ThreeDots } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -12,17 +9,21 @@ import {
   faMagnifyingGlass,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Swal from "sweetalert2";
+import Tippy from "@tippyjs/react/headless";
+
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import AccountItem from "../../../AccountItem/AccountCustomer/AccountCustomer";
+import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./AllCustomer.module.scss";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import noAvatar from "../../../../assets/images/noAvatar.png";
 import ellipse from "../../../../assets/images/ellipse.png";
-import Button from "../../../buttons";
-import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import AccountItem from "../../../AccountItem/AccountCustomer/AccountCustomer";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
@@ -35,7 +36,7 @@ function AllCustomer() {
     return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
   };
 
-  const [orderStatuses, setOrderStatuses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
   const [detailCustomer, setDetailCustomer] = useState({});
@@ -54,25 +55,15 @@ function AllCustomer() {
         setData(customers);
       } catch (error) {
         console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  // gọi api lấy orderStatus
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        setOrderStatuses(response.data.orderStatus);
-      } catch (error) {
-        console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
 
   const handleView = async (id) => {
+    setLoading(true);
     setSearchResult([]);
     try {
       const response = await AxiosInstance.get(`customers/?id=${id}`);
@@ -89,11 +80,14 @@ function AllCustomer() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // show history customer
   const handleHistory = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.get(
         `customers/getHistoryCustomer/?id=${id}`
@@ -120,7 +114,8 @@ function AllCustomer() {
       }
     } catch (error) {
       console.log(error);
-    }
+    } finally {
+      setLoading(false);}
   };
 
   const handleDelete = async (id) => {
@@ -192,11 +187,20 @@ function AllCustomer() {
     setSearchResult([]);
   };
 
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
+
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
         <p className={cx("title", fontSize, { dark: theme === "dark" })}>
-          {t('customer.allCustomer')}
+          {t("customer.allCustomer")}
         </p>
         <div>
           <Tippy
@@ -213,7 +217,9 @@ function AllCustomer() {
               >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}>{t('customer.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {t("customer.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((customer) => (
                           <AccountItem
@@ -235,7 +241,7 @@ function AllCustomer() {
               />
               <input
                 className={cx("input", { dark: theme === "dark" })}
-                placeholder={t('customer.searchByName')}
+                placeholder={t("customer.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -247,11 +253,11 @@ function AllCustomer() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>{t('customer.name')}</th>
-                <th>{t('customer.phone')}</th>
-                <th>{t('customer.birthDay')}</th>
-                <th>{t('customer.avatar')}</th>
-                <th>{t('customer.actions')}</th>
+                <th>{t("customer.name")}</th>
+                <th>{t("customer.phone")}</th>
+                <th>{t("customer.birthDay")}</th>
+                <th>{t("customer.avatar")}</th>
+                <th>{t("customer.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -339,7 +345,9 @@ function AllCustomer() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-customer", fontSize)}>{t('customer.address')}:</p>
+                  <p className={cx("title-customer", fontSize)}>
+                    {t("customer.address")}:
+                  </p>
                   {detailAddress.map((address, index) => (
                     <p key={index} className={cx("content-customer", fontSize)}>
                       {[
@@ -353,33 +361,41 @@ function AllCustomer() {
                   ))}
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-customer", fontSize)}>{t('customer.email')}:</p>
+                  <p className={cx("title-customer", fontSize)}>
+                    {t("customer.email")}:
+                  </p>
                   <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.email}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-customer", fontSize)}>{t('customer.birthDay')}:</p>
+                  <p className={cx("title-customer", fontSize)}>
+                    {t("customer.birthDay")}:
+                  </p>
                   <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.birthDay}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-customer", fontSize)}>
-                  {t('customer.phone')}:
+                    {t("customer.phone")}:
                   </p>
                   <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.phoneNumber}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-customer", fontSize)}>{t('customer.joinDay')}:</p>
+                  <p className={cx("title-customer", fontSize)}>
+                    {t("customer.joinDay")}:
+                  </p>
                   <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.joinDay}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-customer", fontSize)}>{t('customer.rating')}:</p>
+                  <p className={cx("title-customer", fontSize)}>
+                    {t("customer.rating")}:
+                  </p>
                   <p className={cx("content-customer", fontSize)}>
                     {detailCustomer.rating}
                   </p>
@@ -391,7 +407,7 @@ function AllCustomer() {
                       handleHistory(detailCustomer._id);
                     }}
                   >
-                    {t('customer.history')}
+                    {t("customer.history")}
                   </Button>
                 </div>
               </div>
@@ -418,26 +434,30 @@ function AllCustomer() {
                   dark: theme === "dark",
                 })}
               >
-                {t('customer.historyCustomer')}
+                {t("customer.historyCustomer")}
               </h2>
             </div>
             <table className={cx("table")}>
-              <thead className={cx("table-row-history", fontSize, {
+              <thead
+                className={cx("table-row-history", fontSize, {
                   dark: theme === "dark",
-                })}>
+                })}
+              >
                 <tr>
                   <th>#</th>
-                  <th>{t('customer.nameMerchant')}</th>
-                  <th>{t('customer.nameShipper')} </th>
-                  <th>{t('customer.deliveryAddress')}</th>
-                  <th>{t('customer.timeBook')}</th>
-                  <th>{t('customer.totalPrice')}</th>
-                  <th>{t('customer.status')}</th>
+                  <th>{t("customer.nameMerchant")}</th>
+                  <th>{t("customer.nameShipper")} </th>
+                  <th>{t("customer.deliveryAddress")}</th>
+                  <th>{t("customer.timeBook")}</th>
+                  <th>{t("customer.totalPrice")}</th>
+                  <th>{t("customer.status")}</th>
                 </tr>
               </thead>
-              <tbody className={cx("table-row-history", fontSize, {
+              <tbody
+                className={cx("table-row-history", fontSize, {
                   dark: theme === "dark",
-                })}>
+                })}
+              >
                 {dataHistory.map((item, index) => (
                   <tr key={index} onClick={() => handleView(item._id)}>
                     <td>{index + 1}</td>
@@ -462,7 +482,6 @@ function AllCustomer() {
                 ))}
               </tbody>
             </table>
-            
           </div>
         </Modal>
       </div>

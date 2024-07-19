@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ThreeDots } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 import {
   faChevronLeft,
   faEdit,
@@ -13,30 +15,31 @@ import Tippy from "@tippyjs/react/headless";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import classNames from "classnames/bind";
-import styles from "./AllShipper.module.scss";
-import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
-import ellipse from "../../../../assets/images/ellipse.png";
-import Button from "../../../buttons";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-
-import { useTranslation } from "react-i18next";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
+import Button from "../../../buttons";
+import classNames from "classnames/bind";
+import styles from "./AllShipper.module.scss";
+import ellipse from "../../../../assets/images/ellipse.png";
 
 const cx = classNames.bind(styles);
 
 function AllShipper() {
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN");
+  };
+
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
-  const formatDate = (date) => {
-    const now = new Date(date);
-    return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
-  };
 
-  const [data, setData] = useState([{}]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
   const [selectShipperById, setSelectShipperId] = useState({});
   const [isEditModal, setIsEditModal] = useState(false);
 
@@ -52,7 +55,6 @@ function AllShipper() {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [idBike, setIdBike] = useState("");
-  const [joinDay, setJoinDay] = useState("");
   const [modeCode, setModeCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [gender, setGender] = useState([]);
@@ -62,11 +64,9 @@ function AllShipper() {
   const [idCardBackSide, setIdCardBackSide] = useState({});
   const [drivingLicenseBackSide, setDrivingLicenseBackSide] = useState({});
   const [driverLicenseBackSide, setDriverLicenseBackSide] = useState({});
-
-  const [orderStatuses, setOrderStatuses] = useState([]);
   const [showModalHistory, setShowModalHistory] = useState(false);
   const [dataHistory, setDataHistory] = useState([]);
-  const [isEditingBirthDay, setIsEditingBirthDay] = useState(false);
+
   //gọi api all shipper
   useEffect(() => {
     const fetchData = async () => {
@@ -76,6 +76,8 @@ function AllShipper() {
         setData(shippers);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -92,7 +94,6 @@ function AllShipper() {
       setEmail(selectShipperById.email || "");
       setFullName(selectShipperById.fullName || "");
       setIdBike(selectShipperById.idBike || "");
-      setJoinDay(selectShipperById.joinDay || "");
       setModeCode(selectShipperById.modeCode || "");
       setPhoneNumber(selectShipperById.phoneNumber || "");
       setGender(selectShipperById.sex || "");
@@ -134,6 +135,7 @@ function AllShipper() {
   // nhấn xem chi tiết
   const handleView = async (id) => {
     setSearchResult([]);
+    setLoading(true);
     try {
       const response = await AxiosInstance.get(
         `shippers/getShipperById/?id=${id}`
@@ -148,11 +150,14 @@ function AllShipper() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // nhấn edit shipper
   const handleEdit = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.get(
         `shippers/getShipperById?id=${id}`
@@ -171,11 +176,14 @@ function AllShipper() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // nhấn btn update shipper
   const handleUpdate = async () => {
+    setLoading(true);
     try {
       const updateData = {
         fullName,
@@ -206,6 +214,8 @@ function AllShipper() {
     } catch (error) {
       console.error("Failed to update shipper:", error);
       Swal.fire("Error", "Failed to update shipper.", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -220,6 +230,7 @@ function AllShipper() {
 
   // nhấn xóa shipper
   const handleDelete = async (id) => {
+    setLoading(true);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -251,6 +262,7 @@ function AllShipper() {
         }
       }
     });
+    setLoading(false);
   };
 
   // search
@@ -288,6 +300,7 @@ function AllShipper() {
 
   // show history shipper
   const handleHistory = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.get(
         `shippers/getHistoryOrder/?id=${id}`
@@ -315,27 +328,24 @@ function AllShipper() {
       }
     } catch (error) {
       console.log(error);
-    }
+    } finally {
+      setLoading(false);}
   };
 
-  // gọi api lấy orderStatus
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        setOrderStatuses(response.data.orderStatus);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
         <p className={cx("title", fontSize, { dark: theme === "dark" })}>
-         {t('shipper.allShipper')}
+          {t("shipper.allShipper")}
         </p>
         <div>
           <Tippy
@@ -352,7 +362,10 @@ function AllShipper() {
               >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}> {t('shipper.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {" "}
+                      {t("shipper.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((shipper) => (
                           <AccountItemShipper
@@ -374,7 +387,7 @@ function AllShipper() {
               />
               <input
                 className={cx("input", { dark: theme === "dark" })}
-                placeholder= {t('shipper.searchByName')}
+                placeholder={t("shipper.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -386,11 +399,11 @@ function AllShipper() {
             <thead>
               <tr>
                 <th>#</th>
-                <th> {t('shipper.name')}</th>
-                <th> {t('shipper.address')}</th>
-                <th> {t('shipper.numberPlate')}</th>
-                <th> {t('shipper.avatar')}</th>
-                <th> {t('shipper.actions')}</th>
+                <th> {t("shipper.name")}</th>
+                <th> {t("shipper.address")}</th>
+                <th> {t("shipper.numberPlate")}</th>
+                <th> {t("shipper.avatar")}</th>
+                <th> {t("shipper.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -462,7 +475,11 @@ function AllShipper() {
                 />
               </div>
               <div className={cx("content-modal")}>
-                {!isEditModal ? <Button reviewed> {t('shipper.reviewed')}</Button> : ""}
+                {!isEditModal ? (
+                  <Button reviewed> {t("shipper.reviewed")}</Button>
+                ) : (
+                  ""
+                )}
                 <div className={cx("container-content")}>
                   <p className={cx("name-shipper", fontSize)}>
                     {isEditModal ? (
@@ -484,8 +501,8 @@ function AllShipper() {
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
                       >
-                        <option value="male"> {t('shipper.male')}</option>
-                        <option value="female"> {t('shipper.famale')}</option>
+                        <option value="male"> {t("shipper.male")}</option>
+                        <option value="female"> {t("shipper.famale")}</option>
                       </select>
                     ) : (
                       gender || "N/A"
@@ -493,7 +510,10 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-shipper", fontSize)}> {t('shipper.address')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {" "}
+                    {t("shipper.address")}:
+                  </p>
                   <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -508,7 +528,10 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-shipper", fontSize)}> {t('shipper.email')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {" "}
+                    {t("shipper.email")}:
+                  </p>
                   <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
@@ -520,7 +543,10 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-shipper", fontSize)}> {t('shipper.phone')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {" "}
+                    {t("shipper.phone")}:
+                  </p>
                   <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
@@ -532,17 +558,18 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-shipper", fontSize)}> {t('shipper.birthDay')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {" "}
+                    {t("shipper.birthDay")}:
+                  </p>
                   <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <DatePicker
                         selected={birthDay}
                         onChange={(date) => {
                           setBirthDay(date);
-                          setIsEditingBirthDay(false);
                         }}
                         className={cx("content-shipper")}
-                        onClickOutside={() => setIsEditingBirthDay(false)} // Ẩn DatePicker khi nhấn ra ngoài
                       />
                     ) : birthDay instanceof Date ? (
                       birthDay.toLocaleDateString("en-US", {
@@ -556,7 +583,10 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-shipper", fontSize)}> {t('shipper.numberPlate')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {" "}
+                    {t("shipper.numberPlate")}:
+                  </p>
                   <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
@@ -568,7 +598,10 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-shipper", fontSize)}> {t('shipper.motorbikeBrand')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {" "}
+                    {t("shipper.motorbikeBrand")}:
+                  </p>
                   <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
@@ -580,7 +613,10 @@ function AllShipper() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-shipper", fontSize)}> {t('shipper.motorbikeColor')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {" "}
+                    {t("shipper.motorbikeColor")}:
+                  </p>
                   <p className={cx("content-shipper", fontSize)}>
                     {isEditModal ? (
                       <span onClick={handleClickEditField}>
@@ -593,7 +629,10 @@ function AllShipper() {
                 </div>
                 <div className={cx("wrapper-image-content")}>
                   <div className={cx("wrapper-title-document")}>
-                    <p className={cx("title-shipper", fontSize)}> {t('shipper.idCard')}:</p>
+                    <p className={cx("title-shipper", fontSize)}>
+                      {" "}
+                      {t("shipper.idCard")}:
+                    </p>
                   </div>
                   <div
                     className={cx("wrapper-document")}
@@ -617,7 +656,7 @@ function AllShipper() {
                 >
                   <div className={cx("wrapper-title-document")}>
                     <p className={cx("title-shipper", fontSize)}>
-                    {t('shipper.drivingLicense')}:
+                      {t("shipper.drivingLicense")}:
                     </p>
                   </div>
                   <div className={cx("wrapper-document")}>
@@ -639,7 +678,7 @@ function AllShipper() {
                 >
                   <div className={cx("wrapper-title-document")}>
                     <p className={cx("title-shipper", fontSize)}>
-                    {t('shipper.driverLicense')}:
+                      {t("shipper.driverLicense")}:
                     </p>
                   </div>
                   <div className={cx("wrapper-document")}>
@@ -658,11 +697,11 @@ function AllShipper() {
                 <div className={cx("btn-delete")}>
                   {isEditModal ? (
                     <Button approve_btn onClick={() => handleUpdate()}>
-                       {t('shipper.update')}
+                      {t("shipper.update")}
                     </Button>
                   ) : (
                     <Button approve_btn onClick={() => handleHistory(id)}>
-                       {t('shipper.history')}
+                      {t("shipper.history")}
                     </Button>
                   )}
                 </div>
@@ -690,7 +729,7 @@ function AllShipper() {
                   dark: theme === "dark",
                 })}
               >
-                {t('shipper.historyShipper')}
+                {t("shipper.historyShipper")}
               </h2>
             </div>
             <table className={cx("table")}>
@@ -701,12 +740,12 @@ function AllShipper() {
               >
                 <tr>
                   <th>#</th>
-                  <th>{t('shipper.nameMerchant')}</th>
-                  <th>{t('shipper.nameCustomer')} </th>
-                  <th>{t('shipper.deliveryAddress')}</th>
-                  <th>{t('shipper.timeBook')}</th>
-                  <th>{t('shipper.totalPrice')}</th>
-                  <th>{t('shipper.status')}</th>
+                  <th>{t("shipper.nameMerchant")}</th>
+                  <th>{t("shipper.nameCustomer")} </th>
+                  <th>{t("shipper.deliveryAddress")}</th>
+                  <th>{t("shipper.timeBook")}</th>
+                  <th>{t("shipper.totalPrice")}</th>
+                  <th>{t("shipper.status")}</th>
                 </tr>
               </thead>
               <tbody

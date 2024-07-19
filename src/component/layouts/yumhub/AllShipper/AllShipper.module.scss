@@ -1,5 +1,11 @@
 @import "../../../GlobalStyles/global.scss";
 
+.container-loading {
+  width: 100px;
+  margin-top: 200px;
+  margin-left: 50%;
+}
+
 //sweet-alert
 .swal2-popup {
   background-color: $bg-modal;
