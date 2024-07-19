@@ -1,32 +1,24 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import classNames from "classnames/bind";
-import styles from "./Employee.module.scss";
-import debounce from "lodash/debounce";
-
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
-import Tippy from "@tippyjs/react/headless";
-import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
-import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCakeCandles,
-  faClock,
   faEnvelope,
   faLocationDot,
   faMagnifyingGlass,
-  faMap,
   faPerson,
   faPhone,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import avatar from "../../../../assets/images/logoYumhub.png";
-import Button from "../../../buttons";
-import { format } from "date-fns";
 import Swal from "sweetalert2";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import classNames from "classnames/bind";
+import styles from "./Employee.module.scss";
+
 
 const cx = classNames.bind(styles);
 

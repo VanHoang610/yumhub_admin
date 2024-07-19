@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import classNames from "classnames/bind";
-import styles from "./AddAdmin.module.scss";
-import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import Swal from "sweetalert2";
 import axios from "axios";
+import "react-datepicker/dist/react-datepicker.css";
+
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
 import { useTranslation } from "react-i18next";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import classNames from "classnames/bind";
+import styles from "./AddAdmin.module.scss";
 
 const cx = classNames.bind(styles);
 const GENDER = [

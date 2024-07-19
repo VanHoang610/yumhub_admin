@@ -3,7 +3,7 @@ import axios from 'axios';
 let authToken = localStorage.getItem('authToken');
 
 const AxiosInstance = axios.create({
-    baseURL: 'http://localhost:3001/'
+    baseURL: 'https://vanHoang610.github.io/yumhub_admin/'
 });
 
 AxiosInstance.interceptors.request.use(
