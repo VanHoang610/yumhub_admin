@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
-import Tippy from "@tippyjs/react";
-import Swal from "sweetalert2";
-import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
 import { TailSpin } from "react-loader-spinner";
-
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import Button from "../../../buttons/index";
-import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
 import {
   faClock,
   faMagnifyingGlass,
   faMap,
 } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Tippy from "@tippyjs/react";
+import Swal from "sweetalert2";
+import axios from "axios";
+
+
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import Button from "../../../buttons/index";
 import classNames from "classnames/bind";
 import styles from "./NewMerchant.module.scss";
 import noAvatar from "../../../../assets/images/noAvatar.png";
 import image_merchant from "../../../../assets/images/logo_merchant.png";
 import ellipse from "../../../../assets/images/ellipse.png";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 function NewMerchant() {
@@ -51,10 +53,11 @@ function NewMerchant() {
   const [checkBusinessLicense, setCheckBusinessLicense] = useState(false);
   const [overAllIDCard, setOverAllIDCard] = useState();
   const [messageBusiness, setMessageBusiness] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // hiển thị chi tiết
   const selectDetail = async (id) => {
+    setLoading(true);
     try {
       setCheckIDCard(false);
       setCheckBusinessLicense(false);
@@ -68,12 +71,13 @@ function NewMerchant() {
       if (detailMerchant) {
         setSelectMerchantId(detailMerchant);
         setShowModal(true);
-        console.log(document);
       } else {
         console.log("Không tìm thấy thông tin ");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,7 +114,6 @@ function NewMerchant() {
     }
   }, [selectMerchantById]);
 
-  console.log(selectMerchantById);
   //list mercahnt
   useEffect(() => {
     const fetchData = async () => {
@@ -121,6 +124,8 @@ function NewMerchant() {
         setData(response.data.listMerchantApproval);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -163,6 +168,7 @@ function NewMerchant() {
 
   // xác nhận merchant
   const handleApproval = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.patch(
         `merchants/updateMerchant?id=${id}`,
@@ -182,11 +188,13 @@ function NewMerchant() {
           title: "Approval Successful",
           text: "The merchant has been successfully updated!",
         }).then(() => {
-          window.location.reload();
+          setData((prevData) => prevData.filter((item) => item._id !== id));
         });
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -228,6 +236,15 @@ function NewMerchant() {
       setCheckBusinessLicense(true);
     } catch (error) {}
   };
+
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
   return (
     <div className={cx("container", { dark: theme === "dark" })}>

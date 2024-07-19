@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import styles from "./Sidebar.module.scss";
-import classNames from "classnames/bind";
 import {
   faStore,
   faChartSimple,
@@ -12,15 +10,17 @@ import {
   faCartShopping,
   faMoneyBillTransfer,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTranslation } from "react-i18next";
-import logo from "../../../../assets/images/logoYumhub-removebg.png";
+import Swal from "sweetalert2";
 import "react-dropdown/style.css";
 
-import { useTheme } from "../../defaultLayout/header/Settings/Context/ThemeContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from "react-i18next";
 import { useFontSize } from "../../defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTheme } from "../../defaultLayout/header/Settings/Context/ThemeContext";
 import AxiosInstance from "../../../../utils/AxiosInstance";
-import Swal from "sweetalert2";
+import classNames from "classnames/bind";
+import styles from "./Sidebar.module.scss";
+import logo from "../../../../assets/images/logoYumhub-removebg.png";
 
 const cx = classNames.bind(styles);
 
@@ -85,7 +85,7 @@ function Sidebar() {
   return (
     <div className={cx("container", fontSize, { dark: theme === "dark" })}>
       <div className={cx("logo_yumhub", { dark: theme === "dark" })}>
-        <img className={cx("logo")} src={logo} />
+        <img className={cx("logo")} src={logo} alt="LOGO" />
         <p className={cx("text-logo", fontSize, { dark: theme === "dark" })}>
           YumHub
         </p>

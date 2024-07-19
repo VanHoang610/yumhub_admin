@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
-import styles from "./AddVoucher.module.scss";
-import classNames from "classnames/bind";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import Modal from "react-modal";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import voucher from "../../../../assets/images/voucheImage.png";
-import Swal from "sweetalert2";
+
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import classNames from "classnames/bind";
+import styles from "./AddVoucher.module.scss";
+import voucher from "../../../../assets/images/voucheImage.png"
 
 const cx = classNames.bind(styles);
-
-Modal.setAppElement("#root"); // Set the root element for accessibility
 
 function AddVoucher() {
   const { t } = useTranslation();
@@ -24,7 +22,7 @@ function AddVoucher() {
     return now.toLocaleDateString("vi-VN");
   };
 
-  const [imageVoucher, setImageVoucher] = useState("");
+  const [imageVoucher, setImageVoucher] = useState(voucher);
   const [nameVoucher, setNameVoucher] = useState("");
   const [code, setCode] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -68,7 +66,6 @@ function AddVoucher() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await AxiosInstance.get("vouchers/getTypeOfVoucher");
-      console.log(response.data.result);
       if (response.data.result) {
         setTypeVoucher(response.data.typeVoucher);
       } else {
@@ -77,8 +74,6 @@ function AddVoucher() {
     };
     fetchData();
   }, [typeOfVoucher]);
-
-  console.log(typeOfVoucher);
 
   //lỗi
   const handleAddVoucher = async () => {
@@ -120,7 +115,6 @@ function AddVoucher() {
           typeOfVoucherID: typeOfVoucher,
           conditionsApply,
         });
-        console.log(response.data.result);
         if (response.data.result) {
           Swal.fire("Success", "Add Voucher success", "success");
           setNameVoucher("");
@@ -323,7 +317,7 @@ function AddVoucher() {
         </div>
         <div className={cx("line-info")}></div>
         <div className={cx("image-info")}>
-          <img className={cx("avatar")} src={voucher}></img>
+          <img className={cx("avatar")} src={imageVoucher} alt="imageVoucher"></img>
           <div
             className={cx("box-text-select", { dark: theme === "dark" })}
             onClick={() => document.getElementById("fileInput").click()}

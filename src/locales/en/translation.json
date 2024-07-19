@@ -1,11 +1,15 @@
 {
   "settings": {
     "title": "Settings",
-    "theme": "Theme",
-    "lightMode": "Light Mode",
-    "darkMode": "Dark Mode",
-    "language": "Language",
-    "fontSize": "Font Size",
+    "subTitle": "Easy configuration setup.",
+    "theme": "Display Mode",
+    "subTheme": "Switch Between Light and Dark Modes.",
+    "language": "Language Preferences",
+    "subLanguage": "Choose your preferred language from the options.",
+    "fontSize": "Text Size Options",
+    "subFontSize": "Modify the font size for optimal readability.",
+    "english": "English",
+    "vietnamese": "VietNamese",
     "small": "Small",
     "medium": "Medium",
     "large": "Large"

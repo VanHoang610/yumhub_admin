@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Bar, Line, PolarArea } from "react-chartjs-2";
-import classNames from "classnames/bind";
-import styles from "./Home.module.scss";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import AxiosInstance from "../../../../utils/AxiosInstance";
+import { ThreeDots } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,10 +15,17 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import DatePicker from "react-datepicker";
+import Swal from "sweetalert2";
+import classNames from "classnames/bind";
+import styles from "./Home.module.scss";
+import "react-datepicker/dist/react-datepicker.css";
+
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import Swal from "sweetalert2";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 
 ChartJS.register(
   CategoryScale,
@@ -46,6 +48,8 @@ function Home() {
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
   const { t } = useTranslation();
+
+  const [loading, setLoading] = useState(true);
   const [yumhubData, setYumhubData] = useState({});
   const [revenueData, setRevenueData] = useState({});
   const [foodData, setFoodData] = useState({});
@@ -56,7 +60,7 @@ function Home() {
   const [startDate, setStartDate] = useState(new Date());
 
   const formatDate = (date) => {
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     return `${month}/${day}/${year}`;
@@ -65,7 +69,7 @@ function Home() {
   useEffect(() => {
     const fetchRole = async () => {
       try {
-        const response = await AxiosInstance.get("admin/checkRole");
+        await AxiosInstance.get("admin/checkRole");
       } catch (error) {
         if (error.response && error.response.status === 403) {
           Swal.fire("Info", "Access Denied", "warning");
@@ -76,9 +80,10 @@ function Home() {
       }
     };
     fetchRole();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const month = formatDate(startDate);
@@ -151,6 +156,8 @@ function Home() {
         }
       } catch (error) {
         console.log("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -338,6 +345,15 @@ function Home() {
       },
     ],
   };
+
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
   return (
     <div

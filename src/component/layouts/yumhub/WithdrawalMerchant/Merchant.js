@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";
-
+import { ThreeDots } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import Button from "../../../buttons/index";
-
+import { useTranslation } from "react-i18next";
 import {
   faBuildingColumns,
   faMagnifyingGlass,
@@ -12,19 +9,32 @@ import {
   faPerson,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
+
+import { useTheme } from "../../defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../defaultLayout/header/Settings/Context/FontSizeContext";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import Button from "../../../buttons/index";
 import classNames from "classnames/bind";
 import styles from "./Merchant.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
-import { useTheme } from "../../defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
 function WithdrawalShipper() {
+  const formatMoney = (number) => {
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND"
+    });
+    return formatter.format(number);
+  }
+
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
+
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   //list withdrawal merchant
@@ -36,12 +46,13 @@ function WithdrawalShipper() {
       setData(response.data.walletMerchant);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, []);
-
 
   // search
   const handleSearch = async (e) => {
@@ -49,8 +60,9 @@ function WithdrawalShipper() {
     if (keyword) {
       try {
         const response = await AxiosInstance.post(
-          `merchants/findWithdrawalMerchant`, {
-            keyword
+          `merchants/findWithdrawalMerchant`,
+          {
+            keyword,
           }
         );
         if (response.data.result && response.data.walletMerchant.length > 0) {
@@ -60,7 +72,7 @@ function WithdrawalShipper() {
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
-      }
+      } 
     } else {
       fetchData();
     }
@@ -68,14 +80,15 @@ function WithdrawalShipper() {
 
   // xác nhận rút tiền merchant
   const handleWithdrawal = async (id) => {
+    setLoading(true);
     try {
       Swal.fire({
-        title: t('withdrawalMerchant.withdrawalMerchant'),
-        text: t('withdrawalMerchant.subWithdrawalMerchant'),
+        title: t("withdrawalMerchant.withdrawalMerchant"),
+        text: t("withdrawalMerchant.subWithdrawalMerchant"),
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: t('withdrawalMerchant.yes'),
-        cancelButtonText: t('withdrawalMerchant.no'),
+        confirmButtonText: t("withdrawalMerchant.yes"),
+        cancelButtonText: t("withdrawalMerchant.no"),
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await AxiosInstance.get(
@@ -84,14 +97,14 @@ function WithdrawalShipper() {
           if (response.data.result === false) {
             Swal.fire({
               icon: "info",
-              title: t('withdrawalMerchant.swalTitleFail'),
-              text: t('withdrawalMerchant.swalTextFail'),
+              title: t("withdrawalMerchant.swalTitleFail"),
+              text: t("withdrawalMerchant.swalTextFail"),
             });
           } else {
             Swal.fire({
               icon: "success",
-              title: t('withdrawalMerchant.swalTitleSuccess'),
-              text: t('withdrawalMerchant.swalTextSuccess'),
+              title: t("withdrawalMerchant.swalTitleSuccess"),
+              text: t("withdrawalMerchant.swalTextSuccess"),
             }).then(() => {
               setData(data.filter((merchant) => merchant._id !== id));
             });
@@ -102,14 +115,25 @@ function WithdrawalShipper() {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
         <p className={cx("title", fontSize, { dark: theme === "dark" })}>
-        {t("withdrawalMerchant.title")}
+          {t("withdrawalMerchant.title")}
         </p>
         <div>
           <div className={cx("search-result", { dark: theme === "dark" })}>
@@ -208,7 +232,7 @@ function WithdrawalShipper() {
                       fontSize
                     )}
                   >
-                    {item.amountTransantion ? item.amountTransantion : "N/A"}
+                    {item.amountTransantion ? formatMoney(item.amountTransantion) : "N/A"}
                   </p>
                 </div>
                 {theme === "dark" ? (
@@ -219,7 +243,7 @@ function WithdrawalShipper() {
                         handleWithdrawal(item._id);
                       }}
                     >
-                     {t("withdrawalMerchant.approval")}
+                      {t("withdrawalMerchant.approval")}
                     </Button>
                   </div>
                 ) : (
@@ -230,7 +254,7 @@ function WithdrawalShipper() {
                         handleWithdrawal(item._id);
                       }}
                     >
-                       {t("withdrawalMerchant.approval")}
+                      {t("withdrawalMerchant.approval")}
                     </Button>
                   </div>
                 )}

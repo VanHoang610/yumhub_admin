@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-import Tippy from "@tippyjs/react/headless";
-
-import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { ThreeDots } from "react-loader-spinner";
 import {
   faChevronLeft,
   faEdit,
@@ -15,6 +9,13 @@ import {
   faMagnifyingGlass,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Swal from "sweetalert2";
+import Tippy from "@tippyjs/react/headless";
+
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import AccountItemMerchant from "../../../AccountItem/AccountMerchant/AccountCustomer/AccountMerchant";
 import Button from "../../../buttons";
@@ -32,10 +33,11 @@ function AllMerchant() {
   const { fontSize } = useFontSize();
   const formatDate = (date) => {
     const now = new Date(date);
-    return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
+    return now.toLocaleDateString("vi-VN");
   };
 
-  const [data, setData] = useState([{}]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
   const [selectMerchantById, setSelectMerchantId] = useState({});
   const [isEditModal, setIsEditModal] = useState(false);
 
@@ -43,8 +45,6 @@ function AllMerchant() {
   const [tippyVisible, setTippyVisible] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
-
-  const [orderStatuses, setOrderStatuses] = useState([]);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -55,7 +55,6 @@ function AllMerchant() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
-  const [documents, setDocuments] = useState([]);
   const [idCardDocuments, setIdCardDocuments] = useState([]);
   const [licenseDriverDocuments, setLicenseDriverDocuments] = useState([]);
   const [typeId, setTypeId] = useState("");
@@ -78,6 +77,8 @@ function AllMerchant() {
       } catch (error) {
         setTypes([]);
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -88,7 +89,11 @@ function AllMerchant() {
     if (selectMerchantById) {
       setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
-      setAvatar(selectMerchantById.imageBackground ? selectMerchantById.imageBackground : image_merchant);
+      setAvatar(
+        selectMerchantById.imageBackground
+          ? selectMerchantById.imageBackground
+          : image_merchant
+      );
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
       setOpenTime(selectMerchantById.openTime || "");
@@ -107,27 +112,14 @@ function AllMerchant() {
           (doc) => doc.documentTypeID.name === "Business License"
         )
       );
-      setDocuments(filteredDocuments);
       setTypeId(selectMerchantById.type ? selectMerchantById.type._id : "");
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "N/A");
       setType(selectMerchantById.type ? selectMerchantById.type.name : "N/A");
     }
   }, [selectMerchantById]);
 
-  // gọi api lấy orderStatus
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        setOrderStatuses(response.data.orderStatus);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
-
   const handleEdit = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.get(`merchants/?id=${id}`);
       const { detailMerchant } = response.data;
@@ -144,6 +136,8 @@ function AllMerchant() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -163,6 +157,7 @@ function AllMerchant() {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
+      setLoading(true);
       if (result.isConfirmed) {
         try {
           const response = await AxiosInstance.post(
@@ -174,6 +169,8 @@ function AllMerchant() {
         } catch (error) {
           console.error("Failed to delete merchant:", error);
           Swal.fire("Error!", "Failed to delete merchant.", "error");
+        } finally {
+          setLoading(false);
         }
       }
     });
@@ -186,6 +183,7 @@ function AllMerchant() {
   };
 
   const handleView = async (id) => {
+    setLoading(true);
     setSearchResult([]);
     try {
       const response = await AxiosInstance.get(
@@ -201,10 +199,13 @@ function AllMerchant() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleUpdate = async () => {
+    setLoading(true);
     try {
       const updateData = {
         name,
@@ -234,7 +235,8 @@ function AllMerchant() {
     } catch (error) {
       console.error("Failed to update merchant:", error);
       Swal.fire("Error", "Failed to update merchant.", "error");
-    }
+    } finally {
+      setLoading(false);}
   };
 
   // search
@@ -270,6 +272,7 @@ function AllMerchant() {
 
   // show history merchant
   const handleHistory = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.get(
         `merchants/getHistoryMerchant/?id=${id}`
@@ -296,8 +299,18 @@ function AllMerchant() {
       }
     } catch (error) {
       console.log(error);
-    }
+    } finally {
+      setLoading(false);}
   };
+
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
@@ -376,7 +389,11 @@ function AllMerchant() {
                   <td>{item.address}</td>
                   <td>{item.openTime}</td>
                   <td>
-                    <img src={item.imageBackground || noAvatar} alt={"avatar"} className={cx("logo")} />
+                    <img
+                      src={item.imageBackground || noAvatar}
+                      alt={"avatar"}
+                      className={cx("logo")}
+                    />
                   </td>
                   <td>
                     <button

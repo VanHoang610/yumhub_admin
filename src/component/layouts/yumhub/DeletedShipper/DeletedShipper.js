@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { ThreeDots } from "react-loader-spinner";
 import "react-datepicker/dist/react-datepicker.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -28,12 +29,12 @@ function DeletedShipper() {
     return now.toLocaleDateString("vi-VN"); 
   };
 
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([{}]);
   const [selectShipperById, setSelectShipperId] = useState({});
 
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -63,6 +64,8 @@ function DeletedShipper() {
         setData(shippers);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -70,6 +73,7 @@ function DeletedShipper() {
 
   // nhấn xem chi tiết
   const handleView = async (id) => {
+    setLoading(true);
     setSearchResult([]);
     try {
       const response = await AxiosInstance.get(
@@ -84,7 +88,8 @@ function DeletedShipper() {
       }
     } catch (error) {
       console.log(error);
-    }
+    } finally {
+      setLoading(false);}
   };
 
   useEffect(() => {
@@ -167,6 +172,15 @@ function DeletedShipper() {
   const handleModalClose = () => {
     setShowModal(false);
   };
+
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
   return (
     <div className={cx("container", { dark: theme === "dark" })}>

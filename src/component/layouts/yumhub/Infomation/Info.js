@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../contexts/UserContext";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-
+import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
+import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
-import classNames from "classnames/bind";
-import styles from "./Info.module.scss";
-import AxiosInstance from "../../../../utils/AxiosInstance";
+
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import classNames from "classnames/bind";
+import styles from "./Info.module.scss";
+import noAvatar from "../../../../assets/images/noAvatar.png"
+
 const cx = classNames.bind(styles);
+
 const GENDER = [
   {
     value: "male",
@@ -45,11 +47,8 @@ function Infomation() {
   const [email, setEmail] = useState("");
   const [position, setPositon] = useState("");
   const [address, setAddress] = useState("");
-  const [createBy, setCreateBy] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [birthDay, setBirthDay] = useState("");
-  const [age, setAge] = useState("");
-  const [showModal, setShowModal] = useState(false);
 
   const [itemGender] = useState(GENDER);
 
@@ -58,25 +57,13 @@ function Infomation() {
       setId(user._id || "N/A");
       setUserName(user.userName || "N/A");
       setFullName(user.fullName || "N/A");
-      setAvatar(user.avatar || "N/A");
+      setAvatar(user.avatar || noAvatar);
       setGender(user.gender || "N/A");
       setEmail(user.email || "N/A");
       setPositon(user.position || "N/A");
       setAddress(user.address || "N/A");
-      setCreateBy(user.createBy || "N/A");
       setPhoneNumber(user.phoneNumber || "N/A");
       setBirthDay(formatDate(user.dob) || "N/A");
-      const dob = new Date(user.dob);
-      const currentDate = new Date();
-      let age = currentDate.getFullYear() - dob.getFullYear();
-      if (
-        currentDate.getMonth() < dob.getMonth() ||
-        (currentDate.getMonth() === dob.getMonth() &&
-          currentDate.getDate() < dob.getDate())
-      ) {
-        age--;
-      }
-      setAge(age);
     }
   }, [user]);
 
@@ -122,7 +109,6 @@ function Infomation() {
           gender,
           dob: birthDay,
         });
-        setShowModal(false);
       }
     } catch (error) {
       console.log(error);
@@ -286,7 +272,7 @@ function Infomation() {
           >
             {position}
           </p>
-          <img className={cx("avatar")} src={avatar}></img>
+          <img className={cx("avatar")} src={avatar} alt="Avatar"></img>
           <div
             className={cx("box-text-select", { dark: theme === "dark" })}
             onClick={() => document.getElementById("fileInput").click()}

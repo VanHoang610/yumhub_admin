@@ -1,53 +1,57 @@
 import React, { useState, useEffect } from "react";
+import { ThreeDots } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEye,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
 import Tippy from "@tippyjs/react/headless";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import classNames from "classnames/bind";
-import styles from "./Order.module.scss";
-import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
-
-import image_merchant from "../../../../assets/images/logo_merchant.png";
-import ellipse from "../../../../assets/images/ellipse.png";
-import Button from "../../../buttons";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
 import { useTranslation } from "react-i18next";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import Button from "../../../buttons";
 import ItemOrder from "../../../AccountItem/ItemOrder/ItemOrder";
+import classNames from "classnames/bind";
+import styles from "./Order.module.scss";
+import image_merchant from "../../../../assets/images/logo_merchant.png";
+import ellipse from "../../../../assets/images/ellipse.png";
+
 
 const cx = classNames.bind(styles);
 
-Modal.setAppElement("#root");
-
 function Orders() {
+  const formatMoney = (number) => {
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return formatter.format(number);
+  };
+
+  const formatDate = (date) => {
+    const now = new Date(date);
+    return now.toLocaleDateString("vi-VN");
+  };
+
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
-  const formatDate = (date) => {
-    const now = new Date(date);
-    return now.toLocaleDateString("vi-VN"); // Định dạng theo kiểu Việt Nam ngày/tháng/năm
-  };
 
-  const [data, setData] = useState([{}]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState({});
-  const [isEditModal, setIsEditModal] = useState(false);
 
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [orderStatuses, setOrderStatuses] = useState([]);
-  const [showModalHistory, setShowModalHistory] = useState(false);
 
   // gọi api lấy orderStatus
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get("orders/getAllOrderStatus");
@@ -57,7 +61,7 @@ function Orders() {
       }
     };
     fetchData();
-  }, []);
+  }, [orderStatuses]);
 
   // lấy ra tên của status trong order
   function getOrderStatusName(statusId) {
@@ -67,7 +71,7 @@ function Orders() {
     return matchingStatus ? matchingStatus.name : "Loading...";
   }
 
-  //gọi api all shipper
+  //gọi api all order
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,6 +84,8 @@ function Orders() {
         setData(updatedOrder);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -91,10 +97,27 @@ function Orders() {
   };
 
   // nhấn xem chi tiết
-  const handleView = async (order) => {
+  const handleView = async (id) => {
     setSearchResult([]);
-    setShowModal(true);
-    setSelectedOrder(order);
+    try {
+      setLoading(true);
+      const response = await AxiosInstance.get(`orders/getOrderById/?id=${id}`);
+      if (response.data.result === true) {
+        const updatedOrder = {
+          ...response.data.order,
+          nameStatus: getOrderStatusName(response.data.order.status),
+          timeBook: formatDate(response.data.order.timeBook)
+        }
+        setSelectedOrder(updatedOrder);
+        setShowModal(true);
+      } else {
+        console.log("Không tìm thấy thông tin ");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // search
@@ -105,7 +128,6 @@ function Orders() {
         const response = await AxiosInstance.get(
           `/orders/searchOrder?key=${keyword}`
         );
-        console.log(response);
         if (response.data.result && response.data.orders.length > 0) {
           setSearchResult(response.data.orders);
           setTippyVisible(true);
@@ -127,26 +149,41 @@ function Orders() {
   // nhấn tắt modal
   const handleModalClose = () => {
     setShowModal(false);
-    setIsEditModal(false);
-    setShowModalHistory(false);
   };
 
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
+
   return (
-    <div className={cx("container", { dark: theme === 'dark'})}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('order.allOrder')}</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t("order.allOrder")}
+        </p>
         <div>
           <Tippy
             animation="fade"
             interactive
             placement="bottom"
             onClickOutside={handleClickOutSide}
-            visible
+            visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result", { dark: theme === "dark" })}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}>{t('order.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {t("order.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((order) => (
                           <ItemOrder
@@ -168,7 +205,7 @@ function Orders() {
               />
               <input
                 className={cx("input", { dark: theme === "dark" })}
-                placeholder={t('order.searchByName')}
+                placeholder={t("order.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -179,14 +216,14 @@ function Orders() {
           <table className={cx("table", fontSize, { dark: theme === "dark" })}>
             <thead>
               <tr>
-                <th>{t('order.id')}</th>
-                <th>{t('order.merchant')}</th>
-                <th>{t('order.shipper')}</th>
-                <th>{t('order.customer')}</th>
-                <th>{t('order.voucher')}</th>
-                <th>{t('order.timeBook')}</th>
-                <th>{t('order.status')}</th>
-                <th>{t('order.actions')}</th>
+                <th>{t("order.id")}</th>
+                <th>{t("order.merchant")}</th>
+                <th>{t("order.shipper")}</th>
+                <th>{t("order.customer")}</th>
+                <th>{t("order.voucher")}</th>
+                <th>{t("order.timeBook")}</th>
+                <th>{t("order.status")}</th>
+                <th>{t("order.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -194,7 +231,7 @@ function Orders() {
                 <tr
                   key={index}
                   className={cx("table-row")}
-                  onClick={() => handleView(item)}
+                  onClick={() => handleView(item._id)}
                 >
                   <td>{item._id}</td>
                   <td>{item.merchantID ? item.merchantID.name : "N/A"}</td>
@@ -233,7 +270,7 @@ function Orders() {
           contentLabel="Table Order"
           className={cx("modal")}
         >
-          {selectedOrder && (
+          {showModal && (
             <div className={cx("modal-container", { dark: theme === "dark" })}>
               <div className={cx("logo-order", { dark: theme === "dark" })}>
                 <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
@@ -251,11 +288,17 @@ function Orders() {
                 )}
 
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.id')}:</p>
-                  <p className={cx("content-order", fontSize)}>{selectedOrder._id}</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.id")}:
+                  </p>
+                  <p className={cx("content-order", fontSize)}>
+                    {selectedOrder._id}
+                  </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.nameCustomer')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.nameCustomer")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.customerID
                       ? selectedOrder.customerID.fullName
@@ -263,7 +306,9 @@ function Orders() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.phoneCustomer')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.phoneCustomer")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.customerID
                       ? selectedOrder.customerID.phoneNumber
@@ -271,7 +316,9 @@ function Orders() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.nameMerchant')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.nameMerchant")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.merchantID
                       ? selectedOrder.merchantID.name
@@ -279,7 +326,9 @@ function Orders() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.nameShipper')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.nameShipper")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.shipperID
                       ? selectedOrder.shipperID.fullName
@@ -287,7 +336,9 @@ function Orders() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.phoneShipper')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.phoneShipper")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.shipperID
                       ? selectedOrder.shipperID.phoneNumber
@@ -295,7 +346,9 @@ function Orders() {
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.voucher')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.voucher")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.voucherID
                       ? selectedOrder.voucherID.nameVoucher
@@ -304,37 +357,49 @@ function Orders() {
                 </div>
 
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.timeBook')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.timeBook")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.timeBook}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.deliveryAddress')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.deliveryAddress")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {selectedOrder.deliveryAddress}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.deliveryCost')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.deliveryCost")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
-                    {selectedOrder.deliveryCost} đ
+                    {formatMoney(selectedOrder.deliveryCost)}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.priceFood')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.priceFood")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
-                    {selectedOrder.priceFood} đ
+                    {formatMoney(selectedOrder.priceFood)}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.totalPrice')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.totalPrice")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
-                    {selectedOrder.totalPaid} đ
+                    {formatMoney(selectedOrder.totalPaid)}
                   </p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-order", fontSize)}>{t('order.paymentMethod')}:</p>
+                  <p className={cx("title-order", fontSize)}>
+                    {t("order.paymentMethod")}:
+                  </p>
                   <p className={cx("content-order", fontSize)}>
                     {(() => {
                       switch (selectedOrder.paymentMethod) {

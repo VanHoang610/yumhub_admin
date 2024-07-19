@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { ThreeDots, TailSpin } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TailSpin } from "react-loader-spinner";
-import Modal from "react-modal";
-import Tippy from "@tippyjs/react";
-import Swal from "sweetalert2";
-import axios from "axios";
+import { useTranslation } from "react-i18next";
 import {
   faBicycle,
   faMagnifyingGlass,
   faMap,
   faPalette,
 } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Tippy from "@tippyjs/react";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
 import AxiosInstance from "../../../../utils/AxiosInstance";
 import AccountItemShipper from "../../../AccountItem/AccountShipper/AccountCustomer/AccountShipper";
 import Button from "../../../buttons";
@@ -20,9 +23,6 @@ import classNames from "classnames/bind";
 import styles from "./AddShipper.module.scss";
 import ellipse from "../../../../assets/images/ellipse.png";
 import noAvatar from "../../../../assets/images/noAvatar.png";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
@@ -32,6 +32,8 @@ function AddShipper() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
+
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [selectShipperById, setSelectShipperId] = useState({});
   const [searchResult, setSearchResult] = useState([]);
@@ -47,7 +49,6 @@ function AddShipper() {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [idBike, setIdBike] = useState("");
-  const [joinDay, setJoinDay] = useState("");
   const [modeCode, setModeCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [gender, setGender] = useState([]);
@@ -55,10 +56,8 @@ function AddShipper() {
   const [drivingLicenseFrontSide, setDrivingLicenseFrontSide] = useState([]);
   const [driverLicenseFrontSide, setDriverLicenseFrontSide] = useState([]);
   const [idCardBackSide, setIdCardBackSide] = useState([]);
-  const [drivingLicenseBackSide, setDrivingLicenseBackSide] = useState([]);
-  const [driverLicenseBackSide, setDriverLicenseBackSide] = useState([]);
 
-  const [checkIDCard, setCheckIDCard] = useState(false);  // nhấn nút check
+  const [checkIDCard, setCheckIDCard] = useState(false); // nhấn nút check
   const [overAllIDCard, setOverAllIDCard] = useState(""); // hiển thị overAll(% căn cước)
   const [loadingIdCard, setLoadingIdCard] = useState(false); // hiển thị nút loading khi nhấn check
   const [checkDrivingLicense, setCheckDrivingLicense] = useState(false);
@@ -69,6 +68,7 @@ function AddShipper() {
 
   // hiển thị chi tiết
   const selectDetail = async (id) => {
+    setLoading(true);
     try {
       setSearchResult([]);
       const response = await AxiosInstance.get(
@@ -83,6 +83,8 @@ function AddShipper() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,7 +99,6 @@ function AddShipper() {
       setEmail(selectShipperById.email || "");
       setFullName(selectShipperById.fullName || "");
       setIdBike(selectShipperById.idBike || "");
-      setJoinDay(selectShipperById.joinDay || "");
       setModeCode(selectShipperById.modeCode || "");
       setPhoneNumber(selectShipperById.phoneNumber || "");
       setGender(selectShipperById.sex || "");
@@ -114,19 +115,8 @@ function AddShipper() {
           ? selectShipperById.vehicleCertificate.front
           : ""
       );
-
       setIdCardBackSide(
         selectShipperById.idCard ? selectShipperById.idCard.back : ""
-      );
-      setDriverLicenseBackSide(
-        selectShipperById.driverLicense
-          ? selectShipperById.driverLicense.back
-          : ""
-      );
-      setDrivingLicenseBackSide(
-        selectShipperById.vehicleCertificate
-          ? selectShipperById.vehicleCertificate.back
-          : ""
       );
     }
   }, [selectShipperById]);
@@ -141,6 +131,8 @@ function AddShipper() {
         setData(response.data.listShipper);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -182,6 +174,7 @@ function AddShipper() {
 
   // xác nhận shipper
   const handleApproval = async (id) => {
+    setLoading(true);
     try {
       const responseUpdate = await AxiosInstance.patch(
         `shippers/updateShipper?id=${id}`,
@@ -215,6 +208,8 @@ function AddShipper() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -241,7 +236,7 @@ function AddShipper() {
     } catch (error) {
       console.log(overAllIDCard);
       console.log(checkIDCard);
-      setOverAllIDCard(t('shipper.cannotCheck'));
+      setOverAllIDCard(t("shipper.cannotCheck"));
       setCheckIDCard(true);
       console.error("Error checking ID card:", error);
     } finally {
@@ -270,7 +265,7 @@ function AddShipper() {
       setOverAllDriverLicense(response.data.data[0].overall_score);
       setCheckDriverLicense(true);
     } catch (error) {
-      setOverAllDriverLicense(t('shipper.cannotCheck'));
+      setOverAllDriverLicense(t("shipper.cannotCheck"));
       setCheckDriverLicense(true);
       console.error("Error checking Driver License:", error);
     } finally {
@@ -278,20 +273,31 @@ function AddShipper() {
     }
   };
 
-   //check giấy tờ xe (cà vẹt)
-   const handleCheckDrivingLicense = async () => {
+  //check giấy tờ xe (cà vẹt)
+  const handleCheckDrivingLicense = async () => {
     try {
-      setOverAllDrivingLicense(t('shipper.cannotCheck'));
+      setOverAllDrivingLicense(t("shipper.cannotCheck"));
       setCheckDrivingLicense(true);
     } catch (error) {
       console.error("Error checking Driving License:", error);
     }
   };
 
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
+
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
-        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('shipper.awaitApproval')}</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t("shipper.awaitApproval")}
+        </p>
         <div>
           <Tippy
             animation="fade"
@@ -300,10 +306,16 @@ function AddShipper() {
             onClickOutside={handleClickOutSide}
             visible={tippyVisible}
             render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={cx("search-result", { dark: theme === "dark" })}>
+              <div
+                tabIndex="-1"
+                {...attrs}
+                className={cx("search-result", { dark: theme === "dark" })}
+              >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}>{t('shipper.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {t("shipper.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((shipper) => (
                           <AccountItemShipper
@@ -325,7 +337,7 @@ function AddShipper() {
               />
               <input
                 className={cx("input", { dark: theme === "dark" })}
-                placeholder={t('shipper.searchByName')}
+                placeholder={t("shipper.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -334,28 +346,68 @@ function AddShipper() {
         <div className={cx("line-background")} />
         <div className={cx("grid-container")}>
           {data.map((item) => (
-            <div className={cx("box", { dark: theme === "dark" })} key={item._id}>
+            <div
+              className={cx("box", { dark: theme === "dark" })}
+              key={item._id}
+            >
               <div className={cx("titleBox")}>
-                <img src={item.avatar || noAvatar} alt="logoShipper" className={cx("logo")} />
+                <img
+                  src={item.avatar || noAvatar}
+                  alt="logoShipper"
+                  className={cx("logo")}
+                />
                 <div className={cx("line")} />
                 <div className={cx("textTitle")}>
-                  <p className={cx("nameShipper", fontSize, { dark: theme === "dark" })}>{item.fullName}</p>
+                  <p
+                    className={cx("nameShipper", fontSize, {
+                      dark: theme === "dark",
+                    })}
+                  >
+                    {item.fullName}
+                  </p>
                   <p className={cx("gender", fontSize)}>{item.sex}</p>
                 </div>
               </div>
               <div className={cx("line-bottom", { dark: theme === "dark" })} />
               <div className={cx("contentBox")}>
                 <div className={cx("item")}>
-                  <FontAwesomeIcon icon={faMap} className={cx("icon", fontSize, { dark: theme === "dark" })} />
-                  <p className={cx("textContent", fontSize, { dark: theme === "dark" })}>{item.address}</p>
+                  <FontAwesomeIcon
+                    icon={faMap}
+                    className={cx("icon", fontSize, { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx("textContent", fontSize, {
+                      dark: theme === "dark",
+                    })}
+                  >
+                    {item.address}
+                  </p>
                 </div>
                 <div className={cx("item")}>
-                  <FontAwesomeIcon icon={faBicycle} className={cx("icon", fontSize, { dark: theme === "dark" })} />
-                  <p className={cx("textContent", fontSize, { dark: theme === "dark" })}>{item.idBike}</p>
+                  <FontAwesomeIcon
+                    icon={faBicycle}
+                    className={cx("icon", fontSize, { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx("textContent", fontSize, {
+                      dark: theme === "dark",
+                    })}
+                  >
+                    {item.idBike}
+                  </p>
                 </div>
                 <div className={cx("item")}>
-                  <FontAwesomeIcon icon={faPalette} className={cx("icon", fontSize, { dark: theme === "dark" })} />
-                  <p className={cx("textContent", fontSize, { dark: theme === "dark" })}>{item.modeCode}</p>
+                  <FontAwesomeIcon
+                    icon={faPalette}
+                    className={cx("icon", fontSize, { dark: theme === "dark" })}
+                  />
+                  <p
+                    className={cx("textContent", fontSize, {
+                      dark: theme === "dark",
+                    })}
+                  >
+                    {item.modeCode}
+                  </p>
                 </div>
               </div>
               {theme === "dark" ? (
@@ -366,7 +418,7 @@ function AddShipper() {
                       selectDetail(item._id);
                     }}
                   >
-                    {t('shipper.detail')}
+                    {t("shipper.detail")}
                   </Button>
                 </div>
               ) : (
@@ -377,7 +429,7 @@ function AddShipper() {
                       selectDetail(item._id);
                     }}
                   >
-                    {t('shipper.detail')}
+                    {t("shipper.detail")}
                   </Button>
                 </div>
               )}
@@ -398,48 +450,64 @@ function AddShipper() {
               <img src={avatar} alt="Shipper" className={cx("img-shipper")} />
             </div>
             <div className={cx("content-modal")}>
-              <Button awaiting>{t('shipper.await')}</Button>
+              <Button awaiting>{t("shipper.await")}</Button>
               <div className={cx("container-content")}>
                 <p className={cx("name-shipper", fontSize)}>{fullName}</p>
                 <div className={cx("line", { dark: theme === "dark" })}></div>
                 <p className={cx("gender-modal", fontSize)}>{gender}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-shipper", fontSize)}>{t('shipper.address')}:</p>
+                <p className={cx("title-shipper", fontSize)}>
+                  {t("shipper.address")}:
+                </p>
                 <p className={cx("content-shipper", fontSize)}>{address}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-shipper", fontSize)}>{t('shipper.email')}:</p>
+                <p className={cx("title-shipper", fontSize)}>
+                  {t("shipper.email")}:
+                </p>
                 <p className={cx("content-shipper", fontSize)}>{email}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-shipper", fontSize)}>{t('shipper.phone')}:</p>
+                <p className={cx("title-shipper", fontSize)}>
+                  {t("shipper.phone")}:
+                </p>
                 <p className={cx("content-shipper", fontSize)}>{phoneNumber}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-shipper", fontSize)}>{t('shipper.birthDay')}:</p>
+                <p className={cx("title-shipper", fontSize)}>
+                  {t("shipper.birthDay")}:
+                </p>
                 <p className={cx("content-shipper", fontSize)}>{birthDay}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-shipper", fontSize)}>{t('shipper.motorbikeBrand')}:</p>
+                <p className={cx("title-shipper", fontSize)}>
+                  {t("shipper.motorbikeBrand")}:
+                </p>
                 <p className={cx("content-shipper", fontSize)}>{brandBike}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-shipper", fontSize)}>{t('shipper.motorbikeColor')}:</p>
+                <p className={cx("title-shipper", fontSize)}>
+                  {t("shipper.motorbikeColor")}:
+                </p>
                 <p className={cx("content-shipper", fontSize)}>{modeCode}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-shipper", fontSize)}>{t('shipper.numberPlate')}:</p>
+                <p className={cx("title-shipper", fontSize)}>
+                  {t("shipper.numberPlate")}:
+                </p>
                 <p className={cx("content-shipper", fontSize)}>{idBike}</p>
               </div>
               <div className={cx("wrapper-image-content")}>
                 <div className={cx("wrapper-title-document")}>
-                  <p className={cx("title-shipper", fontSize)}>{t('shipper.idCard')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {t("shipper.idCard")}:
+                  </p>
                   <div
                     className={cx("btn-check")}
                     onClick={() => handleCheckIDCard(idCardFrontSide)}
                   >
-                    <p className={cx("text-check")}>{t('shipper.check')}</p>
+                    <p className={cx("text-check")}>{t("shipper.check")}</p>
                   </div>
                 </div>
                 <div className={cx("wrapper-document")}>
@@ -472,8 +540,8 @@ function AddShipper() {
                   )}
                   {checkIDCard ? (
                     <h2 className={cx("text-overAll-id-card")}>
-                      {overAllIDCard === (t('shipper.shipperAwaitApproval')) ? (
-                        t('shipper.shipperAwaitApproval')
+                      {overAllIDCard === t("shipper.shipperAwaitApproval") ? (
+                        t("shipper.shipperAwaitApproval")
                       ) : (
                         <>
                           OverAll:
@@ -499,12 +567,14 @@ function AddShipper() {
 
               <div className={cx("wrapper-image-content")}>
                 <div className={cx("wrapper-title-document")}>
-                  <p className={cx("title-shipper", fontSize)}>{t('shipper.drivingLicense')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {t("shipper.drivingLicense")}:
+                  </p>
                   <div
                     className={cx("btn-check")}
                     onClick={() => handleCheckDrivingLicense()}
                   >
-                    <p className={cx("text-check")}>{t('shipper.check')}</p>
+                    <p className={cx("text-check")}>{t("shipper.check")}</p>
                   </div>
                 </div>
                 <div className={cx("wrapper-document")}>
@@ -520,8 +590,9 @@ function AddShipper() {
                   />
                   {checkDrivingLicense ? (
                     <h2 className={cx("text-overAll-id-card")}>
-                      {overAllDrivingLicense === t('shipper.shipperAwaitApproval') ? (
-                       t('shipper.shipperAwaitApproval')
+                      {overAllDrivingLicense ===
+                      t("shipper.shipperAwaitApproval") ? (
+                        t("shipper.shipperAwaitApproval")
                       ) : (
                         <>
                           OverAll:
@@ -547,12 +618,16 @@ function AddShipper() {
 
               <div className={cx("wrapper-image-content")}>
                 <div className={cx("wrapper-title-document")}>
-                  <p className={cx("title-shipper", fontSize)}>{t('shipper.driverLicense')}:</p>
+                  <p className={cx("title-shipper", fontSize)}>
+                    {t("shipper.driverLicense")}:
+                  </p>
                   <div
                     className={cx("btn-check")}
-                    onClick={() => handleCheckDriverLicense(driverLicenseFrontSide)}
+                    onClick={() =>
+                      handleCheckDriverLicense(driverLicenseFrontSide)
+                    }
                   >
-                    <p className={cx("text-check")}>{t('shipper.check')}</p>
+                    <p className={cx("text-check")}>{t("shipper.check")}</p>
                   </div>
                 </div>
                 <div className={cx("wrapper-document")}>
@@ -583,13 +658,13 @@ function AddShipper() {
                       />
                     </div>
                   )}
-                  {checkDriverLicense? (
+                  {checkDriverLicense ? (
                     <h2 className={cx("text-overAll-id-card")}>
                       {overAllDriverLicense === "Cannot check" ? (
                         "Cannot check"
                       ) : (
                         <>
-                          {t('shipper.overAll')}:
+                          {t("shipper.overAll")}:
                           <span
                             style={{
                               color:
@@ -612,7 +687,7 @@ function AddShipper() {
 
               <div className={cx("btn-delete")}>
                 <Button approve_btn onClick={() => handleApproval(id)}>
-                {t('shipper.approval')}
+                  {t("shipper.approval")}
                 </Button>
               </div>
             </div>

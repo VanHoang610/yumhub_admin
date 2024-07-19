@@ -10,7 +10,6 @@ const ItemOrder = ({ order, handleView }) => {
       return now.toLocaleDateString("vi-VN");
     }
   const { theme } = useTheme();
-  console.log(order);
   return (
     <div className={cx("wrapper", { dark: theme === "dark" })} onClick={() => handleView(order._id)}>
       <img

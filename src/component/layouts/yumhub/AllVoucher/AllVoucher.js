@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from "react";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import { FaEdit } from "react-icons/fa";
-import classNames from "classnames/bind";
-import styles from "./AllVoucher.module.scss";
-import { format } from "date-fns";
-import Modal from "react-modal";
-import Tippy from "@tippyjs/react";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
-import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import ellipse from "../../../../assets/images/ellipse.png";
-import voucherImage from "../../../../assets/images/voucheImage.png";
-import DiscountVoucher from "../../../AccountItem/DiscountVoucher/DiscountVoucher";
+import { ThreeDots } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faEye,
   faMagnifyingGlass,
-  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-
-import Swal from "sweetalert2";
-import Button from "../../../buttons/index";
-
 import DatePicker from "react-datepicker";
+import Swal from "sweetalert2";
+import Tippy from "@tippyjs/react";
+import Modal from "react-modal";
 import "react-datepicker/dist/react-datepicker.css";
+
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import { useTranslation } from "react-i18next";
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import AxiosInstance from "../../../../utils/AxiosInstance";
+import DiscountVoucher from "../../../AccountItem/DiscountVoucher/DiscountVoucher";
+import Button from "../../../buttons/index";
+import classNames from "classnames/bind";
+import styles from "./AllVoucher.module.scss";
+import ellipse from "../../../../assets/images/ellipse.png";
+import voucherImage from "../../../../assets/images/voucheImage.png";
+
 const cx = classNames.bind(styles);
 
 Modal.setAppElement("#root");
@@ -40,6 +38,14 @@ function AllVoucher() {
     return now.toLocaleDateString("vi-VN");
   };
 
+  const formatMoney = (number) => {
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND', 
+    });
+    return formatter.format(number);
+  };
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
@@ -50,7 +56,6 @@ function AllVoucher() {
 
   const [data, setData] = useState([{}]);
   const [selectVoucherById, setSelectVouhcerById] = useState({});
-
   const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -67,9 +72,7 @@ function AllVoucher() {
 
   //setVoucher
   useEffect(() => {
-    console.log(selectVoucherById);
     if (selectVoucherById) {
-      {
         setStartDate(formatDate(selectVoucherById.startDate));
         setEndDate(formatDate(selectVoucherById.endDate));
         setNameVoucher(selectVoucherById.nameVoucher);
@@ -81,7 +84,6 @@ function AllVoucher() {
         );
         setCode(selectVoucherById.code);
         setConditionsApply(selectVoucherById.conditionsApply);
-      }
     }
   }, [selectVoucherById]);
 
@@ -104,6 +106,8 @@ function AllVoucher() {
         console.error("Error fetching search results:", error);
         setSearchResult([]);
         setTippyVisible(false);
+      } finally {
+        setLoading(false);
       }
     } else {
       setSearchResult([]);
@@ -148,8 +152,8 @@ function AllVoucher() {
 
   //update voucher
   const handleUpdateVoucher = async () => {
+    setLoading(true);
     try {
-      console.log(startDateInput>endDateInput);
       if (startDateInput > endDateInput) {
         Swal.fire("Fail", "The end date must be after the start date", "error");
         return;
@@ -164,21 +168,24 @@ function AllVoucher() {
         );
         if (response.data.result === true) {
           const voucherUpdate = response.data.voucher;
-
           setData((prevData) =>
             prevData.map((voucher) =>
               voucher._id === voucherUpdate._id ? voucherUpdate : voucher
             )
           );
           Swal.fire("Success", "Merchant updated successfully.", "success");
+          setLoading(false);
           setShowModal(false);
         } else {
           Swal.fire("Fail", "Merchant updated Fail.", "error");
+          setLoading(false);
           setShowModal(false);
         }
       }
     } catch (err) {
       console.error("Failed to update voucher", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,6 +195,7 @@ function AllVoucher() {
   });
 
   const handleView = async (voucher) => {
+    setLoading(true);
     setSearchResult([]);
     try {
       if (voucher) {
@@ -199,10 +207,13 @@ function AllVoucher() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEdit = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.get(
         `vouchers/getVoucherById?id=${id}`
@@ -221,6 +232,8 @@ function AllVoucher() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -247,25 +260,45 @@ function AllVoucher() {
     setShowEditEndDate(false);
   };
 
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className={cx("container", {dark: theme === "dark"})}>
+    <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("wrapper-title")}>
-        <p className={cx("title", fontSize, { dark: theme === "dark" })}>{t('allVoucher.allVoucher')}</p>
+        <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+          {t("allVoucher.allVoucher")}
+        </p>
         <div className={cx("filter-container")}>
-          <label htmlFor="statusFilter" className={cx("statusFilter",fontSize, { dark: theme === "dark" })}>{t('allVoucher.filter')}:</label>
+          <label
+            htmlFor="statusFilter"
+            className={cx("statusFilter", fontSize, { dark: theme === "dark" })}
+          >
+            {t("allVoucher.filter")}:
+          </label>
           <select
             id="statusFilter"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             className={cx("select", fontSize, { dark: theme === "dark" })}
           >
-            <option  className={cx("option", fontSize)} value="all">{t('allVoucher.all')}</option>
-            <option  className={cx("option", fontSize)} value="valid">{t('allVoucher.valid')}</option>
-            <option  className={cx("option", fontSize)} value="notValid">{t('allVoucher.notValid')}</option>
+            <option className={cx("option", fontSize)} value="all">
+              {t("allVoucher.all")}
+            </option>
+            <option className={cx("option", fontSize)} value="valid">
+              {t("allVoucher.valid")}
+            </option>
+            <option className={cx("option", fontSize)} value="notValid">
+              {t("allVoucher.notValid")}
+            </option>
           </select>
         </div>
       </div>
@@ -285,7 +318,7 @@ function AllVoucher() {
               {searchResult.length > 0 && (
                 <ProperWrapper>
                   <h4 className={cx("search-title", fontSize)}>
-                  {t('allVoucher.discountVoucher')}
+                    {t("allVoucher.discountVoucher")}
                   </h4>
                   {searchResult.length > 0
                     ? searchResult.map((voucher) => (
@@ -320,12 +353,12 @@ function AllVoucher() {
           <thead>
             <tr>
               <th>#</th>
-              <th>{t('allVoucher.nameVoucher')}</th>
-              <th>{t('allVoucher.code')}</th>
-              <th>{t('allVoucher.startDate')}</th>
-              <th>{t('allVoucher.endDate')}</th>
-              <th>{t('allVoucher.status')}</th>
-              <th>{t('allVoucher.actions')}</th>
+              <th>{t("allVoucher.nameVoucher")}</th>
+              <th>{t("allVoucher.code")}</th>
+              <th>{t("allVoucher.startDate")}</th>
+              <th>{t("allVoucher.endDate")}</th>
+              <th>{t("allVoucher.status")}</th>
+              <th>{t("allVoucher.actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -397,19 +430,23 @@ function AllVoucher() {
                   selectVoucherById.startDate,
                   selectVoucherById.endDate
                 ) === "Valid" ? (
-                  <Button reviewed>{t('allVoucher.valid')}</Button>
+                  <Button reviewed>{t("allVoucher.valid")}</Button>
                 ) : (
-                  <Button awaiting>{t('allVoucher.notValid')}</Button>
+                  <Button awaiting>{t("allVoucher.notValid")}</Button>
                 )}
                 <div className={cx("container-content")}>
                   <p className={cx("name-merchant", fontSize)}>{nameVoucher}</p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>{t('allVoucher.code')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {t("allVoucher.code")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>{code}</p>
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>{t('allVoucher.startDate')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {t("allVoucher.startDate")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -435,7 +472,9 @@ function AllVoucher() {
                   )}
                 </div>
                 <div className={cx("wrapper-content")}>
-                  <p className={cx("title-merchant", fontSize)}>{t('allVoucher.endDate')}:</p>
+                  <p className={cx("title-merchant", fontSize)}>
+                    {t("allVoucher.endDate")}:
+                  </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
                       <input
@@ -462,7 +501,7 @@ function AllVoucher() {
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant", fontSize)}>
-                  {t('allVoucher.discountVoucher')}:
+                    {t("allVoucher.discountVoucher")}:
                   </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {discountAmount}
@@ -470,7 +509,7 @@ function AllVoucher() {
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant", fontSize)}>
-                  {t('allVoucher.typeOfVoucher')}:
+                    {t("allVoucher.typeOfVoucher")}:
                   </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {typeOfVoucher}
@@ -478,7 +517,7 @@ function AllVoucher() {
                 </div>
                 <div className={cx("wrapper-content")}>
                   <p className={cx("title-merchant", fontSize)}>
-                  {t('allVoucher.conditionsApply')}:
+                    {t("allVoucher.conditionsApply")}:
                   </p>
                   <p className={cx("content-merchant", fontSize)}>
                     {isEditModal ? (
@@ -489,14 +528,14 @@ function AllVoucher() {
                         onChange={(e) => setConditionsApply(e.target.value)}
                       />
                     ) : (
-                      conditionsApply
+                      formatMoney(conditionsApply)
                     )}
                   </p>
                 </div>
                 <div className={cx("btn-delete")}>
                   {isEditModal ? (
                     <Button approve_btn onClick={handleUpdateVoucher}>
-                      {t('allVoucher.update')}
+                      {t("allVoucher.update")}
                     </Button>
                   ) : (
                     " "

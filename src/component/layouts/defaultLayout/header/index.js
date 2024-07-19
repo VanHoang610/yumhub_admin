@@ -1,31 +1,31 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import "react-dropdown/style.css";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEyeSlash,
   faEarListen,
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Swal from "sweetalert2";
+import "react-dropdown/style.css";
+
 import { UserContext } from "../../../contexts/UserContext";
+import { useTheme } from "../header/Settings/Context/ThemeContext";
+import { useFontSize } from "../header/Settings/Context/FontSizeContext";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import { useTheme } from "../header/Settings/Context/ThemeContext";
-import { useFontSize } from "../header/Settings/Context/FontSizeContext";
 
 const cx = classNames.bind(styles);
 
 function Header({ showMenuProfile, setShowMenuProfile }) {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
-  const navigate = useNavigate();
   const { user, logoutUser } = useContext(UserContext);
 
   const [password, setPassword] = useState("");
@@ -146,7 +146,7 @@ function Header({ showMenuProfile, setShowMenuProfile }) {
   const handleEmployee = async () => {
     try {
       setShowMenuProfile(false);
-      const response = await AxiosInstance.get("admin/checkRole");
+      await AxiosInstance.get("admin/checkRole");
       navigate("/employee");
     } catch (error) {
       if (error.response && error.response.status === 403) {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-
+import { useTranslation } from "react-i18next";
+import { ThreeDots } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBowlFood,
@@ -9,22 +8,32 @@ import {
   faMagnifyingGlass,
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import Swal from "sweetalert2";
+import Tippy from "@tippyjs/react";
+
+import { Wrapper as ProperWrapper } from "../../../Proper/index";
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import AccountItemFood from "../../../AccountItem/AccountFood/AccountFood";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 import Button from "../../../buttons";
 import classNames from "classnames/bind";
 import styles from "./FoodRequest.module.scss";
 import logo from "../../../../assets/images/logoYumhub.png";
 import ellipse from "../../../../assets/images/ellipse.png";
-import AxiosInstance from "../../../../utils/AxiosInstance";
-import Tippy from "@tippyjs/react";
-import { Wrapper as ProperWrapper } from "../../../Proper/index";
-import AccountItemFood from "../../../AccountItem/AccountFood/AccountFood";
-import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
-import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
-import { useTranslation } from "react-i18next";
 
 const cx = classNames.bind(styles);
 
 function FoodRequest() {
+  const formatMoney = (number) => {
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return formatter.format(number);
+  };
+
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { fontSize } = useFontSize();
@@ -32,6 +41,7 @@ function FoodRequest() {
   const [searchResult, setSearchResult] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [detailFood, setDetailFood] = useState({});
   const [id, setId] = useState(0);
@@ -52,6 +62,8 @@ function FoodRequest() {
         setData(response.data.processingFood);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -71,6 +83,7 @@ function FoodRequest() {
   }, [detailFood]);
 
   const handleDetailFood = async (id) => {
+    setLoading(true);
     setSearchResult([]);
     try {
       const response = await AxiosInstance.get(`food/getFoodById/?id=${id}`);
@@ -78,6 +91,8 @@ function FoodRequest() {
       setShowModal(true);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,6 +130,7 @@ function FoodRequest() {
 
   // xác nhận food request
   const handleApproval = async (id) => {
+    setLoading(true);
     try {
       const response = await AxiosInstance.post("food/Status", {
         ID: id,
@@ -139,6 +155,8 @@ function FoodRequest() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -160,11 +178,21 @@ function FoodRequest() {
   };
 
   const groupedData = groupByMerchant(data);
+
+  if (loading)
+    return (
+      <div className={cx("container", { dark: theme === "dark" })}>
+        <div className={cx("container-loading")}>
+          <ThreeDots color="#00BFFF" height={80} width={80} />
+        </div>
+      </div>
+    );
+
   return (
     <div className={cx("container", { dark: theme === "dark" })}>
       <div className={cx("content")}>
         <p className={cx("title", fontSize, { dark: theme === "dark" })}>
-          {t('merchant.foodAwaitApproval')}
+          {t("merchant.foodAwaitApproval")}
         </p>
         <div>
           <Tippy
@@ -181,7 +209,10 @@ function FoodRequest() {
               >
                 {searchResult.length > 0 && (
                   <ProperWrapper>
-                    <h4 className={cx("search-title", fontSize)}> {t('merchant.accounts')}</h4>
+                    <h4 className={cx("search-title", fontSize)}>
+                      {" "}
+                      {t("merchant.accounts")}
+                    </h4>
                     {searchResult.length > 0
                       ? searchResult.map((food) => (
                           <AccountItemFood
@@ -203,7 +234,7 @@ function FoodRequest() {
               />
               <input
                 className={cx("input", { dark: theme === "dark" })}
-                placeholder= {t('merchant.searchByName')}
+                placeholder={t("merchant.searchByName")}
                 onChange={handleSearch}
               />
             </div>
@@ -212,7 +243,11 @@ function FoodRequest() {
         <div className={cx("line-background")} />
         {Object.keys(groupedData).map((merchantId) => (
           <div key={merchantId}>
-            <h2 className={cx("merchant-name-title", fontSize, { dark: theme === "dark" })}>
+            <h2
+              className={cx("merchant-name-title", fontSize, {
+                dark: theme === "dark",
+              })}
+            >
               {groupedData[merchantId].merchant.name}
             </h2>
             <div className={cx("grid-container")}>
@@ -243,23 +278,47 @@ function FoodRequest() {
                       <div className={cx("item")}>
                         <FontAwesomeIcon
                           icon={faBowlFood}
-                          className={cx("icon", fontSize, { dark: theme === "dark"})}
+                          className={cx("icon", fontSize, {
+                            dark: theme === "dark",
+                          })}
                         />
-                        <p className={cx("textContent", fontSize, { dark: theme === "dark" })}>{item.nameFood}</p>
+                        <p
+                          className={cx("textContent", fontSize, {
+                            dark: theme === "dark",
+                          })}
+                        >
+                          {item.nameFood}
+                        </p>
                       </div>
                       <div className={cx("item")}>
                         <FontAwesomeIcon
                           icon={faDollar}
-                          className={cx("icon", fontSize, { dark: theme === "dark"})}
+                          className={cx("icon", fontSize, {
+                            dark: theme === "dark",
+                          })}
                         />
-                        <p className={cx("textContent", fontSize, { dark: theme === "dark" })}>{item.price} đ</p>
+                        <p
+                          className={cx("textContent", fontSize, {
+                            dark: theme === "dark",
+                          })}
+                        >
+                          {formatMoney(item.price)}
+                        </p>
                       </div>
                       <div className={cx("item")}>
                         <FontAwesomeIcon
                           icon={faUtensils}
-                          className={cx("icon", fontSize, { dark: theme === "dark"})}
+                          className={cx("icon", fontSize, {
+                            dark: theme === "dark",
+                          })}
                         />
-                        <p className={cx("textContent", fontSize, { dark: theme === "dark"})}>Cơm</p>
+                        <p
+                          className={cx("textContent", fontSize, {
+                            dark: theme === "dark",
+                          })}
+                        >
+                          Cơm
+                        </p>
                       </div>
                     </div>
                     <div className={cx("line-content-food")} />
@@ -295,7 +354,7 @@ function FoodRequest() {
                           handleDetailFood(item._id);
                         }}
                       >
-                         {t('merchant.detail')}
+                        {t("merchant.detail")}
                       </Button>
                     </div>
                   )}
@@ -323,27 +382,39 @@ function FoodRequest() {
               />
             </div>
             <div className={cx("content-modal")}>
-              <Button awaiting> {t('merchant.await')}</Button>
+              <Button awaiting> {t("merchant.await")}</Button>
               <div className={cx("container-content")}>
                 <p className={cx("name-merchant", fontSize)}>{name}</p>
                 <div className={cx("line", { dark: theme === "dark" })}></div>
                 <p className={cx("type-merchant", fontSize)}>Đồ mặn</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant", fontSize)}> {t('merchant.address')}:</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.address")}:
+                </p>
                 <p className={cx("content-merchant", fontSize)}>{address}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant", fontSize)}> {t('merchant.price')}:</p>
-                <p className={cx("content-merchant", fontSize)}>{priceFood}</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.price")}:
+                </p>
+                <p className={cx("content-merchant", fontSize)}>{formatMoney(priceFood)}</p>
               </div>
               <div className={cx("wrapper-content")}>
-                <p className={cx("title-merchant", fontSize)}> {t('merchant.nameFood')}:</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.nameFood")}:
+                </p>
                 <p className={cx("content-merchant", fontSize)}>{nameFood}</p>
               </div>
 
               <div className={cx("wrapper-image-content")}>
-                <p className={cx("title-merchant", fontSize)}> {t('merchant.imageFood')}:</p>
+                <p className={cx("title-merchant", fontSize)}>
+                  {" "}
+                  {t("merchant.imageFood")}:
+                </p>
                 <p className={cx("content-merchant")}>
                   <img
                     src={imageFood}
@@ -354,7 +425,7 @@ function FoodRequest() {
               </div>
               <div className={cx("btn-delete")}>
                 <Button approve_btn onClick={() => handleApproval(id)}>
-                {t('merchant.approval')}
+                  {t("merchant.approval")}
                 </Button>
               </div>
             </div>
