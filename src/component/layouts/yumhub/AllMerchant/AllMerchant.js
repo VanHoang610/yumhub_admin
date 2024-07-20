@@ -66,7 +66,7 @@ function AllMerchant() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await AxiosInstance.get("merchants/getAllMerchant");
+        const response = await AxiosInstance.get("merchants/getAllMerchantAdmin");
         const merchants = response.data.merchants;
         setData(merchants);
 
