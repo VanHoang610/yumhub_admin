@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/yumhub_admin/static/css/main.b706d68b.css",
-    "main.js": "/yumhub_admin/static/js/main.8c3a0a84.js",
+    "main.css": "/yumhub_admin/static/css/main.69ad3cd4.css",
+    "main.js": "/yumhub_admin/static/js/main.54f947e5.js",
     "static/js/453.b93c8857.chunk.js": "/yumhub_admin/static/js/453.b93c8857.chunk.js",
     "static/media/backgroundLogin.png": "/yumhub_admin/static/media/backgroundLogin.772bc89f50a757915604.png",
     "static/media/logo_merchant.png": "/yumhub_admin/static/media/logo_merchant.a0cd5b947994be39338b.png",
@@ -12,12 +12,12 @@
     "static/media/backgroundForgetPassword.png": "/yumhub_admin/static/media/backgroundForgetPassword.f4ea97c79ac077d6b3f1.png",
     "static/media/logoYumhub.png": "/yumhub_admin/static/media/logoYumhub.459773ebacc881c1eb63.png",
     "index.html": "/yumhub_admin/index.html",
-    "main.b706d68b.css.map": "/yumhub_admin/static/css/main.b706d68b.css.map",
-    "main.8c3a0a84.js.map": "/yumhub_admin/static/js/main.8c3a0a84.js.map",
+    "main.69ad3cd4.css.map": "/yumhub_admin/static/css/main.69ad3cd4.css.map",
+    "main.54f947e5.js.map": "/yumhub_admin/static/js/main.54f947e5.js.map",
     "453.b93c8857.chunk.js.map": "/yumhub_admin/static/js/453.b93c8857.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b706d68b.css",
-    "static/js/main.8c3a0a84.js"
+    "static/css/main.69ad3cd4.css",
+    "static/js/main.54f947e5.js"
   ]
 }
