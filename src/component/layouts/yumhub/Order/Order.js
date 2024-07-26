@@ -51,7 +51,6 @@ function Orders() {
 
   // gọi api lấy orderStatus
   useEffect(() => {
-    setLoading(true);
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get("orders/getAllOrderStatus");
@@ -98,9 +97,9 @@ function Orders() {
 
   // nhấn xem chi tiết
   const handleView = async (id) => {
+    setLoading(true);
     setSearchResult([]);
     try {
-      setLoading(true);
       const response = await AxiosInstance.get(`orders/getOrderById/?id=${id}`);
       if (response.data.result === true) {
         const updatedOrder = {

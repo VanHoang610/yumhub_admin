@@ -174,7 +174,13 @@ function NewMerchant() {
         `merchants/updateMerchant?id=${id}`,
         { status: 3 }
       );
-      if (response.data.result === false) {
+
+      const responseVerify = await AxiosInstance.post(
+        "merchants/verifileMerchant",
+        { email: email }
+      );
+
+      if (response.data.result === false &&  responseVerify.data.result === false) {
         setShowModal(false);
         Swal.fire({
           icon: "info",
