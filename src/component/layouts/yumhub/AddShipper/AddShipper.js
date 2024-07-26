@@ -185,7 +185,7 @@ function AddShipper() {
         "shippers/verifileShipper",
         { email: email }
       );
-      console.log(responseUpdate, responseVerify);
+      
       if (
         responseUpdate.data.result === false &&
         responseVerify.data.result === false
