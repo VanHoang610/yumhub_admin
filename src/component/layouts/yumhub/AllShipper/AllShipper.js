@@ -425,7 +425,7 @@ function AllShipper() {
                     />
                   </td>
                   <td>
-                    <button
+                    {/* <button
                       className={cx("action-button")}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -433,7 +433,7 @@ function AllShipper() {
                       }}
                     >
                       <FontAwesomeIcon icon={faEdit} />
-                    </button>
+                    </button> */}
                     <button
                       className={cx("action-button")}
                       onClick={(e) => {

@@ -110,6 +110,7 @@ function NewMerchant() {
         )
       );
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "");
+      console.log(selectMerchantById)
       setType(selectMerchantById.type ? selectMerchantById.type.name : ""); // show type
     }
   }, [selectMerchantById]);

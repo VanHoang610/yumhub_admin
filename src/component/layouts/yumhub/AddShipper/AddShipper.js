@@ -68,6 +68,12 @@ function AddShipper() {
 
   // hiển thị chi tiết
   const selectDetail = async (id) => {
+    setCheckIDCard(false);
+    setOverAllIDCard(undefined);
+    setCheckDrivingLicense(false);
+    setOverAllDrivingLicense(undefined);
+    setCheckDriverLicense(false);
+    setOverAllDriverLicense(undefined);
     setLoading(true);
     try {
       setSearchResult([]);
