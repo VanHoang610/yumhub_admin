@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Tippy from "@tippyjs/react/headless";
 import Modal from "react-modal";
+import Swal from "sweetalert2";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
@@ -32,7 +33,7 @@ function DeletedShipper() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([{}]);
   const [selectShipperById, setSelectShipperId] = useState({});
-
+  const [id, setId] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -94,6 +95,7 @@ function DeletedShipper() {
 
   useEffect(() => {
     if (selectShipperById) {
+      setId(selectShipperById._id || "");
       setAddress(selectShipperById.address || "");
       setAvatar(selectShipperById.avatar || "");
       setBirthDay(new Date(selectShipperById.birthDay) || "");
@@ -138,6 +140,36 @@ function DeletedShipper() {
   const handleClickOutSide = () => {
     setSearchResult([]);
   };
+  const handleReactive = async (id) => {
+    setLoading(true);
+    try {
+      const responseRecovery = await AxiosInstance.post(
+        `shippers/data-recovery-Shipper?id=${id}`
+      );
+      if (responseRecovery.data.result === false) {
+        setShowModal(false);
+        Swal.fire({
+          icon: "info",
+          title: "Recovery Data Failed",
+          text: "There was an error Recovery Data the merchant!",
+        });
+      } else {
+        setShowModal(false);
+        Swal.fire({
+          icon: "success",
+          title: "Recovery Data Successful",
+          text: "The merchant has been successfully data restored!",
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   // search
   const handleSearch = async (e) => {
@@ -413,6 +445,11 @@ function DeletedShipper() {
                         className={cx("image-document")}
                       />
                     </div>
+                  </div>
+                  <div className={cx("btn-Reactive")}>
+                    <Button approve_btn onClick={() => handleReactive(id)}>
+                      {t("shipper.reactive")}
+                    </Button>
                   </div>
                 </div>
               </div>

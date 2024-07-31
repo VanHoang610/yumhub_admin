@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import Tippy from "@tippyjs/react";
+import Swal from "sweetalert2";
 
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
@@ -32,6 +33,7 @@ function DeletedMerchant() {
   const [selectMerchantById, setSelectMerchantId] = useState({});
 
   const [showModal, setShowModal] = useState(false);
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState("");
   const [address, setAddress] = useState("");
@@ -63,7 +65,37 @@ function DeletedMerchant() {
     fetchData();
   }, []);
 
-  const handleView = async (id) => {
+  const handleReactive = async (id) => {
+    setLoading(true);
+    try {
+      const responseRecovery = await AxiosInstance.post(
+        `merchants/data-recovery-Merchant?id=${id}`
+      );
+      if (responseRecovery.data.result === false) {
+        setShowModal(false);
+        Swal.fire({
+          icon: "info",
+          title: "Recovery Data Failed",
+          text: "There was an error Recovery Data the merchant!",
+        });
+      } else {
+        setShowModal(false);
+        Swal.fire({
+          icon: "success",
+          title: "Recovery Data Successful",
+          text: "The merchant has been successfully data restored!",
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleView = async (id) => {  
     setLoading(true);
     setSearchResult([]);
     try {
@@ -87,6 +119,7 @@ function DeletedMerchant() {
   //load data lên màn hình modal
   useEffect(() => {
     if (selectMerchantById) {
+      setId(selectMerchantById._id || "");
       setName(selectMerchantById.name || "");
       setAddress(selectMerchantById.address || "");
       setCloseTime(selectMerchantById.closeTime || "");
@@ -377,6 +410,11 @@ function DeletedMerchant() {
                         </div>
                       </div>
                     ))}
+                  </div>
+                  <div className={cx("btn-Reactive")}>
+                    <Button approve_btn onClick={() => handleReactive(id)}>
+                      {t("merchant.reactive")}
+                    </Button>
                   </div>
                 </div>
               </div>
