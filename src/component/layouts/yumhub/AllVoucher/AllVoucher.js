@@ -97,8 +97,10 @@ function AllVoucher() {
         });
         if (response.data.result && response.data.vouchers.length > 0) {
           setSearchResult(response.data.vouchers);
+          setData(response.data.vouchers);
           setTippyVisible(true);
         } else {
+          setData([]);
           setSearchResult([]);
           setTippyVisible(false);
         }
@@ -110,6 +112,7 @@ function AllVoucher() {
         setLoading(false);
       }
     } else {
+      fetchVouchers();
       setSearchResult([]);
       setTippyVisible(false);
     }
@@ -118,6 +121,7 @@ function AllVoucher() {
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   const handleModalClose = () => {
@@ -127,19 +131,18 @@ function AllVoucher() {
 
   //all voucher
   useEffect(() => {
-    const fetchVouchers = async () => {
-      try {
-        const response = await AxiosInstance.get("vouchers/allVoucher");
-        setData(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchVouchers();
   }, []);
+  const fetchVouchers = async () => {
+    try {
+      const response = await AxiosInstance.get("vouchers/allVoucher");
+      setData(response.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatus = (startDate, endDate) => {
     const now = new Date();

@@ -69,19 +69,20 @@ function AllShipper() {
 
   //gọi api all shipper
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("shippers/getAllShipper");
-        const shippers = response.data.AllShipper;
-        setData(shippers);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get("shippers/getAllShipper");
+      const shippers = response.data.AllShipper;
+      setData(shippers);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   //load data hiển thị lên modal
   useEffect(() => {
@@ -130,6 +131,7 @@ function AllShipper() {
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   // nhấn xem chi tiết
@@ -146,6 +148,7 @@ function AllShipper() {
         setShowModal(true);
         setIsEditModal(false);
       } else {
+        setData([]);
         console.log("Không tìm thấy thông tin ");
       }
     } catch (error) {
@@ -276,9 +279,11 @@ function AllShipper() {
         if (response.data.result && response.data.shippers.length > 0) {
           setSearchResult(response.data.shippers);
           setTippyVisible(true);
+          setData(response.data.shippers);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -286,6 +291,7 @@ function AllShipper() {
         setTippyVisible(false);
       }
     } else {
+      fetchData();
       setSearchResult([]);
       setTippyVisible(false);
     }

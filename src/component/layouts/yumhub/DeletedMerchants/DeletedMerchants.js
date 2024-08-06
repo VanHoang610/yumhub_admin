@@ -48,7 +48,10 @@ function DeletedMerchant() {
 
   //gọi api allMerchant đã xóa
   useEffect(() => {
-    setLoading(true);
+    
+    fetchData();
+  }, []);
+  setLoading(true);
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get(
@@ -62,8 +65,6 @@ function DeletedMerchant() {
         setLoading(false);
       }
     };
-    fetchData();
-  }, []);
 
   const handleReactive = async (id) => {
     setLoading(true);
@@ -148,6 +149,7 @@ function DeletedMerchant() {
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   // search
@@ -164,18 +166,20 @@ function DeletedMerchant() {
         if (response.data.result && response.data.merchants.length > 0) {
           setSearchResult(response.data.merchants);
           setTippyVisible(true);
+          setData(response.data.merchants);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
-        console.error("Error fetching search results:", error);
         setSearchResult([]);
         setTippyVisible(false);
       }
     } else {
       setSearchResult([]);
       setTippyVisible(false);
+      fetchData();
     }
   };
 

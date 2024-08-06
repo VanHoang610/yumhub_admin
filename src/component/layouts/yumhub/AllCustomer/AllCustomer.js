@@ -48,19 +48,20 @@ function AllCustomer() {
 
   //lấy danh sách customer
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("customers/getAllCustomer");
-        const customers = response.data.customer;
-        setData(customers);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get("customers/getAllCustomer");
+      const customers = response.data.customer;
+      setData(customers);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleView = async (id) => {
     setLoading(true);
@@ -167,9 +168,11 @@ function AllCustomer() {
         if (response.data.result && response.data.customers.length > 0) {
           setSearchResult(response.data.customers);
           setTippyVisible(true);
+          setData(response.data.customers);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -177,6 +180,7 @@ function AllCustomer() {
         setTippyVisible(false);
       }
     } else {
+      fetchData();
       setSearchResult([]);
       setTippyVisible(false);
     }
@@ -185,6 +189,7 @@ function AllCustomer() {
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   if (loading)
