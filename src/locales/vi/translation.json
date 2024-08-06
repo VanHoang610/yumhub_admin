@@ -158,12 +158,12 @@
     "male": "Nam",
     "famale": "Nữ",
     "update": "Thay đổi",
-
+    "reject": "Từ chối",
     "foodAwaitApproval": "Food Awaiting Approval",
     "nameFood": "Name Food",
     "imageFood": "Image Food",
     "price": "Price",
-
+    "note": "Ghi chú cho tài xế",
     "allDeletedShipper": "Tất cả Tài xế đã xóa",
     "deleted": "Đã xóa"
   },

@@ -58,10 +58,7 @@ function AddVoucher() {
     setShowEndDatePicker(false);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImageVoucher(URL.createObjectURL(file));
-  };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -316,31 +313,7 @@ function AddVoucher() {
           </div>
         </div>
         <div className={cx("line-info")}></div>
-        <div className={cx("image-info")}>
-          <img className={cx("avatar")} src={imageVoucher} alt="imageVoucher"></img>
-          <div
-            className={cx("box-text-select", { dark: theme === "dark" })}
-            onClick={() => document.getElementById("fileInput").click()}
-          >
-            <span>{t('newVoucher.selectImage')}</span>
-            <input
-              id="fileInput"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-            />
-          </div>
-          <p
-            style={{ marginTop: 16 }}
-            className={cx("note-image", fontSize, { dark: theme === "dark" })}
-          >
-           {t('newVoucher.fileSize')}
-          </p>
-          <p className={cx("note-image", fontSize, { dark: theme === "dark" })}>
-          {t('newVoucher.fileExtension')}
-          </p>
-        </div>
+        
       </div>
     </div>
   );

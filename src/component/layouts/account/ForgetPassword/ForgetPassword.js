@@ -52,15 +52,15 @@ function ForgetPassword() {
           <img src={icon_username} alt="Username" className={cx("iconStart")} />
           <input
           className={cx('input')}
-            placeholder="lv.hoang610@gmail.com"
+            placeholder="usernameb@email.com"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <img src={cricle} alt="Cricle" className={cx("iconEnd")} />
         </div>
-        <div className={cx("btnSummit")}>
+        <div className={cx("btnSubmit")}>
           <Button login forget_btn onClick={handleSubmit}>
-            SUMMIT
+            SUBMIT
           </Button>
         </div>
         <div className={cx("btnBackLogin")}>

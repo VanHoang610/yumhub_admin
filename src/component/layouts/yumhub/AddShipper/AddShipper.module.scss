@@ -57,7 +57,7 @@
   .wrapper-loading {
     flex: 1;
     display: flex;
-    margin-top: 30px;
+    margin-top: -60px;
     margin-left: 30px;
   }
 
@@ -80,6 +80,7 @@
 }
 
 //content modal
+
 .content-modal {
   flex: 1;
   padding: 0;
@@ -93,6 +94,7 @@
   align-items: center;
   margin: 0;
   margin-top: 20px;
+  justify-content: space-between;
 }
 
 .name-shipper {
@@ -106,6 +108,7 @@
   &.small {
     font-size: $fs-21;
   }
+
   &.large {
     font-size: $fs-29;
   }
@@ -156,6 +159,7 @@
   &.small {
     font-size: $fs-16;
   }
+
   &.large {
     font-size: $fs-24;
   }
@@ -176,6 +180,7 @@
   &.small {
     font-size: $fs-16;
   }
+
   &.large {
     font-size: $fs-24;
   }
@@ -191,17 +196,52 @@
 
 .text-overAll-id-card {
   color: $color-black;
-  margin-top: 20px;
-  margin-left: 50px;
+  margin-top: -60px;
+  margin-left: 0px;
   width: 200px;
   font-size: $fs-18;
   font-family: $ff-montserrat;
 }
 
-.btn-delete {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
+.approval-btn {
+  margin-left: 600px;
+  margin-top: 20px;
+  margin-right: 20px;
+
+  border-radius: 10px;
+
+  Button {
+    width: 150px;
+    font-weight: 600;
+    padding: 15px;
+    background-color: #597afc;
+  }
+}
+
+.reject-btn {
+
+  margin-left: 600px;
+  margin-top: 20px;
+  margin-right: 20px;
+
+  Button {
+    display: flex;
+    align-items: center;
+    width: 150px;
+    height: 50px;
+    color: #333;
+    font-size: 25px;
+    font-weight: 700;
+    padding: 15px;
+    background-color: #fc5959;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color:$bg-check;
+    color: #333;
+    }
+  }
 }
 
 .wrapper-image-content {
@@ -220,6 +260,8 @@
   display: flex;
   width: 90px;
   height: 30px;
+  margin-right: 300px;
+  margin-top: 20px;
   border-radius: 20px;
   justify-content: center;
   align-items: center;
@@ -241,9 +283,12 @@
 // box
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 cột */
-  column-gap: 40px; /* Khoảng cách giữa các cột */
-  row-gap: 24px; /* Khoảng cách giữa các hàng */
+  grid-template-columns: repeat(4, 1fr);
+  /* 4 cột */
+  column-gap: 40px;
+  /* Khoảng cách giữa các cột */
+  row-gap: 24px;
+  /* Khoảng cách giữa các hàng */
   margin-top: 35px;
 }
 
@@ -414,7 +459,8 @@
   flex: 1;
   height: 800px;
   padding: 51px 94px;
-  overflow: auto; /* Để có thể cuộn nếu nội dung quá dài */
+  overflow: auto;
+  /* Để có thể cuộn nếu nội dung quá dài */
   scrollbar-width: none;
 }
 
@@ -512,4 +558,32 @@
 
 .container.dark {
   background-color: $bg-black;
+}
+
+.checkbox {
+  width: 30px;
+  height: 30px;
+  float: right;
+}
+
+.divcheckbox {
+  flex: 1;
+  padding-right: 100px;
+}
+
+.divcheckbox-name {
+  flex: 1;
+  padding-right: 175px;
+}
+
+.textbox{
+  width: 70%;
+  min-height: 80px;
+}
+.wrapper-footer {
+  margin-top: 20px;
+  flex-direction: row;
+}
+.checkImage{
+  margin-top: 500px;
 }

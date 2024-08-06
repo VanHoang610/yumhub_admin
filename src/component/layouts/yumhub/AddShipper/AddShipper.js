@@ -56,6 +56,8 @@ function AddShipper() {
   const [drivingLicenseFrontSide, setDrivingLicenseFrontSide] = useState([]);
   const [driverLicenseFrontSide, setDriverLicenseFrontSide] = useState([]);
   const [idCardBackSide, setIdCardBackSide] = useState([]);
+  const [drivingLicenseBackSide, setDrivingLicenseBackSide] = useState([]);
+  const [driverLicenseBackSide, setDriverLicenseBackSide] = useState([]);
 
   const [checkIDCard, setCheckIDCard] = useState(false); // nhấn nút check
   const [overAllIDCard, setOverAllIDCard] = useState(""); // hiển thị overAll(% căn cước)
@@ -111,6 +113,7 @@ function AddShipper() {
       setIdCardFrontSide(
         selectShipperById.idCard ? selectShipperById.idCard.front : ""
       );
+
       setDriverLicenseFrontSide(
         selectShipperById.driverLicense
           ? selectShipperById.driverLicense.front
@@ -124,6 +127,34 @@ function AddShipper() {
       setIdCardBackSide(
         selectShipperById.idCard ? selectShipperById.idCard.back : ""
       );
+      setDriverLicenseBackSide(
+        selectShipperById.driverLicense
+          ? selectShipperById.driverLicense.back
+          : ""
+      );
+      setDrivingLicenseBackSide(
+        selectShipperById.vehicleCertificate
+          ? selectShipperById.vehicleCertificate.back
+          : ""
+      );
+      setCheckedFields({
+        image: false,
+        fullName: false,
+        address: false,
+        email: false,
+        phoneNumber: false,
+        birthDay: false,
+        brandBike: false,
+        modeCode: false,
+        idBike: false,
+        idCard: false,
+        drivingLicense: false,
+        driverLicense: false,
+        note: "",
+      });
+      setCheckDriverLicense(false);
+      setCheckIDCard(false);
+      setCheckDrivingLicense(false);
     }
   }, [selectShipperById]);
 
@@ -178,6 +209,96 @@ function AddShipper() {
     }
   };
 
+  const [checkedFields, setCheckedFields] = useState({
+    image: false,
+    fullName: false,
+    address: false,
+    email: false,
+    phoneNumber: false,
+    birthDay: false,
+    brandBike: false,
+    modeCode: false,
+    idBike: false,
+    idCard: false,
+    drivingLicense: false,
+    driverLicense: false,
+    note: "",
+  });
+  const allFieldsChecked = () => {
+    return (
+      checkedFields.image &&
+      checkedFields.fullName &&
+      checkedFields.address &&
+      checkedFields.email &&
+      checkedFields.phoneNumber &&
+      checkedFields.birthDay &&
+      checkedFields.brandBike &&
+      checkedFields.modeCode &&
+      checkedFields.idBike &&
+      checkDrivingLicense &&
+      checkIDCard &&
+      checkDriverLicense &&
+      checkedFields.idCard &&
+      checkedFields.drivingLicense &&
+      checkedFields.driverLicense
+    );
+  };
+  const handleNoteChange = (event) => {
+    const { value } = event.target;
+    setCheckedFields((prevState) => ({
+      ...prevState,
+      note: value,
+    }));
+  };
+  
+  const handleCheckboxChange = (field) => {
+    setCheckedFields((prevState) => ({
+      ...prevState,
+      [field]: !prevState[field],
+    }));
+  };
+  // từ chối shipper
+  const handleReject = async () => {
+    setLoading(true);
+    try {
+      const update = await AxiosInstance.patch(`shippers/reject?id=${id}`, {
+        image: checkedFields.image,
+        fullName: checkedFields.fullName,
+        address: checkedFields.address,
+        email: checkedFields.email,
+        phoneNumber: checkedFields.phoneNumber,
+        birthDay:  checkedFields.birthDay,
+        brandBike: checkedFields.brandBike,
+        modeCode: checkedFields.modeCode,
+        idBike: checkedFields.idBike,
+        idCard: checkedFields.idCard,
+        driverLicense: checkedFields.driverLicense,
+        vehicleCertificate: checkedFields.drivingLicense,
+        note: checkedFields.note,
+      });
+      if (update.data.result === false) {
+        setShowModal(false);
+        Swal.fire({
+          icon: "info",
+          title: "Reject Failed",
+          text: "There was an error reject the shipper!",
+        });
+      } else {
+        setShowModal(false);
+        Swal.fire({
+          icon: "success",
+          title: "Reject Successful",
+          text: "The shipper has been successfully updated!",
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // xác nhận shipper
   const handleApproval = async (id) => {
     setLoading(true);
@@ -191,7 +312,7 @@ function AddShipper() {
         "shippers/verifileShipper",
         { email: email }
       );
-      
+
       if (
         responseUpdate.data.result === false &&
         responseVerify.data.result === false
@@ -223,7 +344,7 @@ function AddShipper() {
   const handleCheckIDCard = async (imageUrl) => {
     try {
       setLoadingIdCard(true);
-      const apiKey = "a898FrZpkeYGYYPfz046hRervrSm2woD";
+      const apiKey = "m2xEU6uVQjKYbrm0vF6e2XxIEsX0TFJC";
       const apiUrl = "https://api.fpt.ai/vision/idr/vnm";
 
       // Gửi FormData đến API
@@ -237,10 +358,10 @@ function AddShipper() {
           },
         }
       );
+      console.log("response----", response);
       setOverAllIDCard(response.data.data[0].overall_score);
       setCheckIDCard(true);
     } catch (error) {
-      console.log(overAllIDCard);
       console.log(checkIDCard);
       setOverAllIDCard(t("shipper.cannotCheck"));
       setCheckIDCard(true);
@@ -254,7 +375,7 @@ function AddShipper() {
   const handleCheckDriverLicense = async (imageUrl) => {
     try {
       setLoadingDriverLicense(true);
-      const apiKey = "Y3n5OWk2LJukIzk08KGDipA5oIwzW73V";
+      const apiKey = "m2xEU6uVQjKYbrm0vF6e2XxIEsX0TFJC";
       const apiUrl = "https://api.fpt.ai/vision/dlr/vnm";
 
       // Gửi FormData đến API
@@ -363,6 +484,7 @@ function AddShipper() {
                   className={cx("logo")}
                 />
                 <div className={cx("line")} />
+
                 <div className={cx("textTitle")}>
                   <p
                     className={cx("nameShipper", fontSize, {
@@ -454,6 +576,12 @@ function AddShipper() {
             <div className={cx("logo-shipper", { dark: theme === "dark" })}>
               <img src={ellipse} alt="Ellipse" className={cx("ellipse")} />
               <img src={avatar} alt="Shipper" className={cx("img-shipper")} />
+              <input
+                className={cx("checkbox", "checkImage")}
+                type="checkbox"
+                checked={checkedFields.image}
+                onChange={() => handleCheckboxChange("image")}
+              />
             </div>
             <div className={cx("content-modal")}>
               <Button awaiting>{t("shipper.await")}</Button>
@@ -461,61 +589,133 @@ function AddShipper() {
                 <p className={cx("name-shipper", fontSize)}>{fullName}</p>
                 <div className={cx("line", { dark: theme === "dark" })}></div>
                 <p className={cx("gender-modal", fontSize)}>{gender}</p>
+                <div className={cx("divcheckbox-name")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.fullName}
+                    onChange={() => handleCheckboxChange("fullName")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-shipper", fontSize)}>
                   {t("shipper.address")}:
                 </p>
                 <p className={cx("content-shipper", fontSize)}>{address}</p>
+                <div className={cx("divcheckbox")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.address}
+                    onChange={() => handleCheckboxChange("address")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-shipper", fontSize)}>
                   {t("shipper.email")}:
                 </p>
                 <p className={cx("content-shipper", fontSize)}>{email}</p>
+                <div className={cx("divcheckbox")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.email}
+                    onChange={() => handleCheckboxChange("email")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-shipper", fontSize)}>
                   {t("shipper.phone")}:
                 </p>
                 <p className={cx("content-shipper", fontSize)}>{phoneNumber}</p>
+                <div className={cx("divcheckbox")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.phoneNumber}
+                    onChange={() => handleCheckboxChange("phoneNumber")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-shipper", fontSize)}>
                   {t("shipper.birthDay")}:
                 </p>
                 <p className={cx("content-shipper", fontSize)}>{birthDay}</p>
+                <div className={cx("divcheckbox")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.birthDay}
+                    onChange={() => handleCheckboxChange("birthDay")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-shipper", fontSize)}>
                   {t("shipper.motorbikeBrand")}:
                 </p>
                 <p className={cx("content-shipper", fontSize)}>{brandBike}</p>
+                <div className={cx("divcheckbox")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.brandBike}
+                    onChange={() => handleCheckboxChange("brandBike")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-shipper", fontSize)}>
                   {t("shipper.motorbikeColor")}:
                 </p>
                 <p className={cx("content-shipper", fontSize)}>{modeCode}</p>
+                <div className={cx("divcheckbox")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.modeCode}
+                    onChange={() => handleCheckboxChange("modeCode")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-shipper", fontSize)}>
                   {t("shipper.numberPlate")}:
                 </p>
                 <p className={cx("content-shipper", fontSize)}>{idBike}</p>
+                <div className={cx("divcheckbox")}>
+                  <input
+                    className={cx("checkbox")}
+                    type="checkbox"
+                    checked={checkedFields.idBike}
+                    onChange={() => handleCheckboxChange("idBike")}
+                  />
+                </div>
               </div>
               <div className={cx("wrapper-image-content")}>
                 <div className={cx("wrapper-title-document")}>
                   <p className={cx("title-shipper", fontSize)}>
                     {t("shipper.idCard")}:
                   </p>
-                  <div
-                    className={cx("btn-check")}
-                    onClick={() => handleCheckIDCard(idCardFrontSide)}
-                  >
-                    <p className={cx("text-check")}>{t("shipper.check")}</p>
-                  </div>
+                  {!checkIDCard && (
+                    <div
+                      className={cx("btn-check")}
+                      onClick={() => handleCheckIDCard(idCardFrontSide)}
+                    >
+                      <p className={cx("text-check")}>{t("shipper.check")}</p>
+                    </div>
+                  )}
                 </div>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.idCard}
+                  onChange={() => handleCheckboxChange("idCard")}
+                />
                 <div className={cx("wrapper-document")}>
                   <img
                     src={idCardFrontSide}
@@ -524,14 +724,11 @@ function AddShipper() {
                   />
                   <img
                     src={idCardBackSide}
-                    alt="Document Front Side"
+                    alt="Document Back Side"
                     className={cx("image-document")}
                   />
                   {loadingIdCard && (
                     <div className={cx("wrapper-loading")}>
-                      <span className={cx("text-loading")}>
-                        Đang loading...
-                      </span>
                       <TailSpin
                         height="40"
                         width="40"
@@ -546,11 +743,11 @@ function AddShipper() {
                   )}
                   {checkIDCard ? (
                     <h2 className={cx("text-overAll-id-card")}>
-                      {overAllIDCard === t("shipper.shipperAwaitApproval") ? (
-                        t("shipper.shipperAwaitApproval")
+                      {overAllIDCard === t("shipper.cannotCheck") ? (
+                        t("shipper.cannotCheck")
                       ) : (
                         <>
-                          OverAll:
+                          Overall:
                           <span
                             style={{
                               color:
@@ -576,13 +773,21 @@ function AddShipper() {
                   <p className={cx("title-shipper", fontSize)}>
                     {t("shipper.drivingLicense")}:
                   </p>
-                  <div
-                    className={cx("btn-check")}
-                    onClick={() => handleCheckDrivingLicense()}
-                  >
-                    <p className={cx("text-check")}>{t("shipper.check")}</p>
-                  </div>
+                  {!checkDrivingLicense && (
+                    <div
+                      className={cx("btn-check")}
+                      onClick={() => handleCheckDrivingLicense()}
+                    >
+                      <p className={cx("text-check")}>{t("shipper.check")}</p>
+                    </div>
+                  )}
                 </div>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.drivingLicense}
+                  onChange={() => handleCheckboxChange("drivingLicense")}
+                />
                 <div className={cx("wrapper-document")}>
                   <img
                     src={drivingLicenseFrontSide}
@@ -590,18 +795,17 @@ function AddShipper() {
                     className={cx("image-document")}
                   />
                   <img
-                    src={drivingLicenseFrontSide}
-                    alt="Document Front Side"
+                    src={drivingLicenseBackSide}
+                    alt="Document Back Side"
                     className={cx("image-document")}
                   />
                   {checkDrivingLicense ? (
                     <h2 className={cx("text-overAll-id-card")}>
-                      {overAllDrivingLicense ===
-                      t("shipper.shipperAwaitApproval") ? (
-                        t("shipper.shipperAwaitApproval")
+                      {overAllDrivingLicense === t("shipper.cannotCheck") ? (
+                        t("shipper.cannotCheck")
                       ) : (
                         <>
-                          OverAll:
+                          Overall:
                           <span
                             style={{
                               color:
@@ -627,15 +831,23 @@ function AddShipper() {
                   <p className={cx("title-shipper", fontSize)}>
                     {t("shipper.driverLicense")}:
                   </p>
-                  <div
-                    className={cx("btn-check")}
-                    onClick={() =>
-                      handleCheckDriverLicense(driverLicenseFrontSide)
-                    }
-                  >
-                    <p className={cx("text-check")}>{t("shipper.check")}</p>
-                  </div>
+                  {!checkDriverLicense && (
+                    <div
+                      className={cx("btn-check")}
+                      onClick={() =>
+                        handleCheckDriverLicense(driverLicenseFrontSide)
+                      }
+                    >
+                      <p className={cx("text-check")}>{t("shipper.check")}</p>
+                    </div>
+                  )}
                 </div>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.driverLicense}
+                  onChange={() => handleCheckboxChange("driverLicense")}
+                />
                 <div className={cx("wrapper-document")}>
                   <img
                     src={driverLicenseFrontSide}
@@ -643,15 +855,12 @@ function AddShipper() {
                     className={cx("image-document")}
                   />
                   <img
-                    src={driverLicenseFrontSide}
-                    alt="Document Front Side"
+                    src={driverLicenseBackSide}
+                    alt="Document Back Side"
                     className={cx("image-document")}
                   />
                   {loadingDriverLicense && (
                     <div className={cx("wrapper-loading")}>
-                      <span className={cx("text-loading")}>
-                        Đang loading...
-                      </span>
                       <TailSpin
                         height="40"
                         width="40"
@@ -666,11 +875,11 @@ function AddShipper() {
                   )}
                   {checkDriverLicense ? (
                     <h2 className={cx("text-overAll-id-card")}>
-                      {overAllDriverLicense === "Cannot check" ? (
-                        "Cannot check"
+                      {overAllDriverLicense === t("shipper.cannotCheck") ? (
+                        t("shipper.cannotCheck")
                       ) : (
                         <>
-                          {t("shipper.overAll")}:
+                          Overall:
                           <span
                             style={{
                               color:
@@ -680,7 +889,7 @@ function AddShipper() {
                               marginLeft: "10px",
                             }}
                           >
-                            {overAllDriverLicense} %
+                            {overAllDriverLicense}%
                           </span>
                         </>
                       )}
@@ -690,11 +899,38 @@ function AddShipper() {
                   )}
                 </div>
               </div>
-
-              <div className={cx("btn-delete")}>
-                <Button approve_btn onClick={() => handleApproval(id)}>
-                  {t("shipper.approval")}
-                </Button>
+              <div className={cx("wrapper-footer")}>
+                <div>
+                  <input
+                    className={cx("textbox")}
+                    type="text"
+                    placeholder={t("shipper.note")}
+                    value={checkedFields.note}
+                    onChange={handleNoteChange}
+                  />
+                </div>
+                <div>
+                  {allFieldsChecked() ? (
+                    <div className={cx("approval-btn")}>
+                      <Button
+                        approve_btn={allFieldsChecked()}
+                        onClick={() => handleApproval(id)}
+                      >
+                        {t("shipper.approval")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className={cx("reject-btn")}>
+                      {" "}
+                      <Button
+                        approve_btn={allFieldsChecked()}
+                        onClick={() => handleReject()}
+                      >
+                        {t("shipper.reject")}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
