@@ -56,21 +56,22 @@ function DeletedShipper() {
 
   //gọi api allshipper đã xóa
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get(
-          "shippers/listShipperIsDeleted"
-        );
-        const shippers = response.data.deletedShipper;
-        setData(shippers);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "shippers/listShipperIsDeleted"
+      );
+      const shippers = response.data.deletedShipper;
+      setData(shippers);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // nhấn xem chi tiết
   const handleView = async (id) => {
@@ -186,9 +187,11 @@ function DeletedShipper() {
         if (response.data.result && response.data.shippers.length > 0) {
           setSearchResult(response.data.shippers);
           setTippyVisible(true);
+          setData(response.data.shippers);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -198,6 +201,7 @@ function DeletedShipper() {
     } else {
       setSearchResult([]);
       setTippyVisible(false);
+      fetchData();
     }
   };
 

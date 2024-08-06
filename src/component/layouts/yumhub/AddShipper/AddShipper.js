@@ -160,24 +160,26 @@ function AddShipper() {
 
   //list shipper
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get(
-          "/shippers/listShipperApproval"
-        );
-        setData(response.data.listShipper);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/shippers/listShipperApproval"
+      );
+      setData(response.data.listShipper);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(true);
   };
 
   // search
@@ -194,7 +196,9 @@ function AddShipper() {
         if (response.data.result && response.data.shippers.length > 0) {
           setSearchResult(response.data.shippers);
           setTippyVisible(true);
+          setData(response.data.shippers);
         } else {
+          setData([]);
           setSearchResult([]);
           setTippyVisible(false);
         }
@@ -204,6 +208,7 @@ function AddShipper() {
         setTippyVisible(false);
       }
     } else {
+      fetchData();
       setSearchResult([]);
       setTippyVisible(false);
     }
@@ -290,7 +295,7 @@ function AddShipper() {
           title: "Reject Successful",
           text: "The shipper has been successfully updated!",
         }).then(() => {
-          window.location.reload();
+          fetchData();
         });
       }
       setLoading(false);

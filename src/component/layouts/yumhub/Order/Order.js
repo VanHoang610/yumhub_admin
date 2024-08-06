@@ -51,16 +51,17 @@ function Orders() {
 
   // gọi api lấy orderStatus
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("orders/getAllOrderStatus");
-        setOrderStatuses(response.data.orderStatus);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    
   }, [orderStatuses]);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get("orders/getAllOrderStatus");
+      setOrderStatuses(response.data.orderStatus);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchData();
 
   // lấy ra tên của status trong order
   function getOrderStatusName(statusId) {
@@ -93,6 +94,7 @@ function Orders() {
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   // nhấn xem chi tiết
@@ -130,9 +132,11 @@ function Orders() {
         if (response.data.result && response.data.orders.length > 0) {
           setSearchResult(response.data.orders);
           setTippyVisible(true);
+          setData(response.data.orders);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -140,6 +144,7 @@ function Orders() {
         setTippyVisible(false);
       }
     } else {
+      fetchData();
       setSearchResult([]);
       setTippyVisible(false);
     }

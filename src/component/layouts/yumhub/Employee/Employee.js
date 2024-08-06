@@ -86,6 +86,8 @@ function Employee() {
     } else {
       fetchAdmins();
     }
+  };const handleClick = (admin) => {
+    navigate(`/employee/${admin._id}`, { state: { employee: admin } });
   };
 
   // nhấn vào từng item
@@ -128,6 +130,7 @@ function Employee() {
             <div
               className={cx("box", { dark: theme === "dark" })}
               key={item._id}
+              onClick={() => handleClick(item)}
             >
               <div className={cx("titleBox")}>
                 <img

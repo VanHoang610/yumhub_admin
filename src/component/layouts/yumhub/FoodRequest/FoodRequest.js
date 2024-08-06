@@ -54,20 +54,21 @@ function FoodRequest() {
 
   //load data
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.post("/food/getFoodByStatus", {
-          status: 1,
-        });
-        setData(response.data.processingFood);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.post("/food/getFoodByStatus", {
+        status: 1,
+      });
+      setData(response.data.processingFood);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //set data
   useEffect(() => {
@@ -99,6 +100,7 @@ function FoodRequest() {
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   // search
@@ -109,13 +111,14 @@ function FoodRequest() {
         const response = await AxiosInstance.post("/food/findApproveFood", {
           keyword,
         });
-        console.log(response.data);
         if (response.data.result && response.data.foods.length > 0) {
-          setSearchResult(response.data.foods);
+          setSearchResult(response.data.foods.slice(0, 5));
           setTippyVisible(true);
+          setData(response.data.foods);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -125,6 +128,7 @@ function FoodRequest() {
     } else {
       setSearchResult([]);
       setTippyVisible(false);
+      fetchData();
     }
   };
 

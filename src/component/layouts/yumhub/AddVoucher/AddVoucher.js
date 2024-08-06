@@ -61,16 +61,17 @@ function AddVoucher() {
   
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await AxiosInstance.get("vouchers/getTypeOfVoucher");
-      if (response.data.result) {
-        setTypeVoucher(response.data.typeVoucher);
-      } else {
-        console.error("Error");
-      }
-    };
+    
     fetchData();
   }, [typeOfVoucher]);
+  const fetchData = async () => {
+    const response = await AxiosInstance.get("vouchers/getTypeOfVoucher");
+    if (response.data.result) {
+      setTypeVoucher(response.data.typeVoucher);
+    } else {
+      console.error("Error");
+    }
+  };
 
   //lỗi
   const handleAddVoucher = async () => {

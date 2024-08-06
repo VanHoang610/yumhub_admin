@@ -64,25 +64,26 @@ function AllMerchant() {
 
   //gọi api allMerchant
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get("merchants/getAllMerchantAdmin");
-        const merchants = response.data.merchants;
-        setData(merchants);
-
-        const responseType = await AxiosInstance.get(
-          "merchants/getAllTypeOfMerchant"
-        );
-        setTypes(responseType.data.types);
-      } catch (error) {
-        setTypes([]);
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get("merchants/getAllMerchantAdmin");
+      const merchants = response.data.merchants;
+      setData(merchants);
+
+      const responseType = await AxiosInstance.get(
+        "merchants/getAllTypeOfMerchant"
+      );
+      setTypes(responseType.data.types);
+    } catch (error) {
+      setTypes([]);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //load data lên màn hình
   useEffect(() => {
@@ -250,9 +251,11 @@ function AllMerchant() {
         if (response.data.result && response.data.merchants.length > 0) {
           setSearchResult(response.data.merchants);
           setTippyVisible(true);
+          setData(response.data.merchants);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -262,12 +265,14 @@ function AllMerchant() {
     } else {
       setSearchResult([]);
       setTippyVisible(false);
+      fetchData();
     }
   };
 
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   // show history merchant

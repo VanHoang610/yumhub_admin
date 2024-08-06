@@ -117,24 +117,26 @@ function NewMerchant() {
 
   //list mercahnt
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get(
-          "/merchants/listMerchantApproval"
-        );
-        setData(response.data.listMerchantApproval);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/merchants/listMerchantApproval"
+      );
+      setData(response.data.listMerchantApproval);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
 
   // search
@@ -152,9 +154,11 @@ function NewMerchant() {
         if (response.data.result && response.data.merchants.length > 0) {
           setSearchResult(response.data.merchants);
           setTippyVisible(true);
+          setData(response.data.merchants);
         } else {
           setSearchResult([]);
           setTippyVisible(false);
+          setData([]);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -162,6 +166,7 @@ function NewMerchant() {
         setTippyVisible(false);
       }
     } else {
+      fetchData();
       setSearchResult([]);
       setTippyVisible(false);
     }
