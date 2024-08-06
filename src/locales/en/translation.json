@@ -144,7 +144,7 @@
     "accounts": "Accounts",
     "overAll": "Over all",
     "cannotCheck": "Cannot check",
-
+    "reject": "Reject",
     "allShipper": "All Shipper",
     "name": "Name",
     "avatar": "Avatar",
@@ -161,7 +161,7 @@
     "male": "Male",
     "famale": "Famale",
     "update": "Update",
-
+    "note": "Notes for Shipper",
     "allDeletedShipper": "All Deleted Shippers",
     "deleted": "Deleted"
   },

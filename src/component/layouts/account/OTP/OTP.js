@@ -82,7 +82,7 @@ function OTP() {
             />
           ))}
         </div>
-        <div className={cx("btnSummit")}>
+        <div className={cx("btnSubmit")}>
           <Button login forget_btn onClick={handleSubmit}>
             VERIFY
           </Button>

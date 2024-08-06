@@ -73,13 +73,13 @@ function Login() {
       </div>
       <div className={cx("rightBackground")}>
         <div>
-          <p className={cx("titleLogin")}>TIME TO CONNERT</p>
+          <p className={cx("titleLogin")}>TIME TO CONNECT</p>
         </div>
         <div className={cx("enterInfo")}>
           <img src={icon_username} alt="Username" className={cx("iconStart")} />
           <input
             type="text"
-            placeholder="lv.hoang610@gmail.com"
+            placeholder="Username"
             value={userName}
             onChange={handleEmailChange}
           />
@@ -91,7 +91,7 @@ function Login() {
           <img src={icon_password} alt="Password" className={cx("iconStart")} />
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="lv.hoang0610"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

@@ -119,7 +119,7 @@
 
 .approve_btn {
   display: flex;
-  width: 23.8%;
+  // width: 23.8%;
   height: 50px;
   align-items: center;
   border-radius: 10px;
@@ -129,7 +129,8 @@
   cursor: pointer;
 
   &:hover {
-    background-color: #6c7afc;
+    background-color:$bg-check;
+    color: #333;
   }
 }
 

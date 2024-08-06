@@ -31,7 +31,7 @@ function ResetPassword() {
           password: password,
         });
         if (response.data.result === true) {
-          navigate("/");
+          navigate("/yumhub_admin");
         } else {
           alert("Reset Password Fail");
         }
@@ -100,9 +100,9 @@ function ResetPassword() {
             onClick={toggolePasswordNew}
           />
         </div>
-        <div className={cx("btnSummit")}>
+        <div className={cx("btnSubmit")}>
           <Button login forget_btn onClick={handleSubmit}>
-            SUMMIT
+            SUBMIT
           </Button>
         </div>
         <div className={cx("btnBackLogin")}>
