@@ -51,10 +51,10 @@ function FoodRequest() {
   const [nameFood, setNameFood] = useState("");
   const [priceFood, setPriceFood] = useState("");
   const [imageFood, setImageFood] = useState("");
+  const [note, setNote] = useState("");
 
   //load data
   useEffect(() => {
-    
     fetchData();
   }, []);
   const fetchData = async () => {
@@ -81,6 +81,7 @@ function FoodRequest() {
     setNameFood(detailFood ? detailFood.nameFood : "N/A");
     setPriceFood(detailFood ? detailFood.price : "N/A");
     setImageFood(detailFood ? detailFood.image : "N/A");
+    setNote("");
   }, [detailFood]);
 
   const handleDetailFood = async (id) => {
@@ -132,6 +133,41 @@ function FoodRequest() {
     }
   };
 
+  const handleNoteChange = (event) => {
+    const { value } = event.target;
+    setNote(value);
+  };
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      const response = await AxiosInstance.post(
+        `food/deleteFood?id=${id}`,
+        {note: note},
+      );
+      if (response.data.result) {
+        setShowModal(false);
+        Swal.fire({
+          icon: "success",
+          title: "Reject Successful",
+          text: "The food has been successfully Rejected!",
+        }).then(() => {
+          fetchData();
+        });
+      } else {
+        setShowModal(false);
+        Swal.fire({
+          icon: "info",
+          title: "Reject Failed",
+          text: "There was an error rejecting the food!",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // xác nhận food request
   const handleApproval = async (id) => {
     setLoading(true);
@@ -154,7 +190,7 @@ function FoodRequest() {
           title: "Approval Successful",
           text: "The food has been successfully updated!",
         }).then(() => {
-          window.location.reload();
+          fetchData();
         });
       }
     } catch (error) {
@@ -404,7 +440,9 @@ function FoodRequest() {
                   {" "}
                   {t("merchant.price")}:
                 </p>
-                <p className={cx("content-merchant", fontSize)}>{formatMoney(priceFood)}</p>
+                <p className={cx("content-merchant", fontSize)}>
+                  {formatMoney(priceFood)}
+                </p>
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-merchant", fontSize)}>
@@ -427,10 +465,26 @@ function FoodRequest() {
                   />
                 </p>
               </div>
-              <div className={cx("btn-delete")}>
-                <Button approve_btn onClick={() => handleApproval(id)}>
-                  {t("merchant.approval")}
-                </Button>
+              <div>
+                <input
+                  className={cx("textbox")}
+                  type="text"
+                  placeholder={t("merchant.note")}
+                  value={note}
+                  onChange={handleNoteChange}
+                />
+              </div>
+              <div className={cx("wrapper-btn")}>
+                <div className={cx("button-delete")}>
+                  <Button approve_btn onClick={() => handleDelete(id)}>
+                    {t("merchant.cancel")}
+                  </Button>
+                </div>
+                <div className={cx("button-Approve")}>
+                  <Button approve_btn onClick={() => handleApproval(id)}>
+                    {t("merchant.approval")}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

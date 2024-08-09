@@ -112,12 +112,12 @@
     "timeBook": "Time Book",
     "totalPrice": "Total Price",
     "status": "Status",
-
+    "note":"Notes for Merchant",
     "foodAwaitApproval": "Food Awaiting Approval",
     "nameFood": "Name Food",
     "imageFood": "Image Food",
     "price": "Price",
-
+    "cancel":"Cancel",
     "allDeletedMerchant": "All Deleted Merchant",
     "deleted": "Deleted"
   },
@@ -273,9 +273,9 @@
     "subWithdrawalShipper": "Are you sure you want to approve this withdrawal request?",
     "yes": "Yes, approve it!",
     "no": "No, cancel",
-    "swalTileFail": "Approval Failed",
+    "swalTitleFail": "Approval Failed",
     "swalTextFail": "There was an error updating the withdrawal shipper!",
-    "swalTileSuccess": "Approval Successful",
+    "swalTitleSuccess": "Approval Successful",
     "swalTextSuccess": "The withdrawal shipper has been successfully updated!"
   },
 
@@ -286,9 +286,9 @@
     "subWithdrawalMerchant": "Are you sure you want to approve this withdrawal request?",
     "yes": "Yes, approve it!",
     "no": "No, cancel",
-    "swalTileFail": "Approval Failed",
+    "swalTitleFail": "Approval Failed",
     "swalTextFail": "There was an error updating the withdrawal merchant!",
-    "swalTileSuccess": "Approval Successful",
+    "swalTitleSuccess": "Approval Successful",
     "swalTextSuccess": "The withdrawal merchant has been successfully updated!"
   }
 }

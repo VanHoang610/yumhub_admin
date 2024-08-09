@@ -510,3 +510,16 @@
 .container.dark {
   background-color: $bg-black;
 }
+.wrapper-btn{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-inline-start: 20px;
+  margin-inline-end: 20px;
+}
+.textbox{
+  margin-inline-start: 20px;
+  width: 94%;
+  min-height: 80px;
+}
