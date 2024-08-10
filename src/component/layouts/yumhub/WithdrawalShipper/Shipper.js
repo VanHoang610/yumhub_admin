@@ -93,7 +93,7 @@ function WithdrawalShipper() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await AxiosInstance.get(
-            `merchants/withdrawalApproval?id=${id}`
+            `shippers/withdrawalApproval?id=${id}`
           );
           if (response.data.result === false) {
             Swal.fire({
@@ -202,7 +202,7 @@ function WithdrawalShipper() {
                       fontSize
                     )}
                   >
-                    {item.nameBank ? item.nameBank : "N/A"}
+                    {item.nameBank ? item.nameBank.split(" ")[0] : "N/A"}
                   </p>
                 </div>
                 <div className={cx("item")}>

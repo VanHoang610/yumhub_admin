@@ -293,7 +293,7 @@ function AllCustomer() {
                     >
                       <FontAwesomeIcon icon={faClockRotateLeft} />
                     </button>
-                    <button
+                    {/* <button
                       className={cx("action-button")}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -301,7 +301,7 @@ function AllCustomer() {
                       }}
                     >
                       <FontAwesomeIcon icon={faTrash} />
-                    </button>
+                    </button> */}
                     <button
                       className={cx("action-button")}
                       onClick={(e) => {

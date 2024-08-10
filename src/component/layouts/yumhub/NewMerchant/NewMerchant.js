@@ -13,7 +13,6 @@ import Tippy from "@tippyjs/react";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-
 import { Wrapper as ProperWrapper } from "../../../Proper/index";
 import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
 import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
@@ -54,6 +53,84 @@ function NewMerchant() {
   const [overAllIDCard, setOverAllIDCard] = useState();
   const [messageBusiness, setMessageBusiness] = useState();
   const [loading, setLoading] = useState(true);
+
+  const [checkedFields, setCheckedFields] = useState({
+    image: false,
+    name: false,
+    address: false,
+    email: false,
+    phoneNumber: false,
+    nameOwner: false,
+    IDCard: false,
+    businessLicense: false,
+    note: "",
+  });
+
+  const allFieldsChecked = () => {
+    return (
+      checkedFields.image &&
+      checkedFields.name &&
+      checkedFields.address &&
+      checkedFields.email &&
+      checkedFields.phoneNumber &&
+      checkedFields.nameOwner &&
+      checkedFields.IDCard &&
+      checkedFields.businessLicense
+    );
+  };
+  const handleNoteChange = (event) => {
+    const { value } = event.target;
+    setCheckedFields((prevState) => ({
+      ...prevState,
+      note: value,
+    }));
+  };
+
+  const handleCheckboxChange = (field) => {
+    setCheckedFields((prevState) => ({
+      ...prevState,
+      [field]: !prevState[field],
+    }));
+  };
+
+  // từ chối merchant
+  const handleReject = async () => {
+    setLoading(true);
+    try {
+      const update = await AxiosInstance.patch(`merchants/rejectMerchant?id=${id}`, {
+        image: checkedFields.image,
+        name: checkedFields.name,
+        address: checkedFields.address,
+        email: checkedFields.email,
+        phoneNumber: checkedFields.phoneNumber,
+        nameOwner: checkedFields.nameOwner,
+        IDCard: checkedFields.IDCard,
+        businessLicense: checkedFields.businessLicense,
+        note: checkedFields.note,
+      });
+      console.log(update.data);
+      if (update.data.result === false) {
+        setShowModal(false);
+        Swal.fire({
+          icon: "info",
+          title: "Reject Failed",
+          text: "There was an error reject the shipper!",
+        });
+      } else {
+        setShowModal(false);
+        Swal.fire({
+          icon: "success",
+          title: "Reject Successful",
+          text: "The shipper has been successfully updated!",
+        }).then(() => {
+          fetchData();
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // hiển thị chi tiết
   const selectDetail = async (id) => {
@@ -109,15 +186,25 @@ function NewMerchant() {
           (doc) => doc.documentTypeID.name === "Business License"
         )
       );
+      setCheckedFields({
+        image: false,
+        name: false,
+        address: false,
+        email: false,
+        phoneNumber: false,
+        nameOwner: false,
+        IDCard: false,
+        businessLicense: false,
+        note: "",
+      });
       setEmail(selectMerchantById.user ? selectMerchantById.user.email : "");
-      console.log(selectMerchantById)
+      console.log(selectMerchantById);
       setType(selectMerchantById.type ? selectMerchantById.type.name : ""); // show type
     }
   }, [selectMerchantById]);
 
   //list mercahnt
   useEffect(() => {
-    
     fetchData();
   }, []);
   const fetchData = async () => {
@@ -186,7 +273,10 @@ function NewMerchant() {
         { email: email }
       );
 
-      if (response.data.result === false &&  responseVerify.data.result === false) {
+      if (
+        response.data.result === false &&
+        responseVerify.data.result === false
+      ) {
         setShowModal(false);
         Swal.fire({
           icon: "info",
@@ -323,6 +413,7 @@ function NewMerchant() {
                   alt="logoMerchant"
                   className={cx("logo")}
                 />
+
                 <div className={cx("line", { dark: theme === "dark" })} />
                 <div className={cx("textTitle")}>
                   <p
@@ -412,13 +503,26 @@ function NewMerchant() {
                 alt="Merchant"
                 className={cx("img-merchant")}
               />
+              <input
+                className={cx("checkbox")}
+                type="checkbox"
+                checked={checkedFields.image}
+                onChange={() => handleCheckboxChange("image")}
+              />
             </div>
+
             <div className={cx("content-modal")}>
               <Button awaiting> {t("merchant.await")}</Button>
               <div className={cx("container-content")}>
                 <p className={cx("name-merchant", fontSize)}>{name}</p>
                 <div className={cx("line", { dark: theme === "dark" })}></div>
                 <p className={cx("type-merchant", fontSize)}>{type}</p>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.name}
+                  onChange={() => handleCheckboxChange("name")}
+                />
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-merchant", fontSize)}>
@@ -426,6 +530,12 @@ function NewMerchant() {
                   {t("merchant.address")}:
                 </p>
                 <p className={cx("content-merchant", fontSize)}>{address}</p>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.address}
+                  onChange={() => handleCheckboxChange("address")}
+                />
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-merchant", fontSize)}>
@@ -433,6 +543,12 @@ function NewMerchant() {
                   {t("merchant.email")}:
                 </p>
                 <p className={cx("content-merchant", fontSize)}>{email}</p>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.email}
+                  onChange={() => handleCheckboxChange("email")}
+                />
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-merchant", fontSize)}>
@@ -440,6 +556,12 @@ function NewMerchant() {
                   {t("merchant.storeOwner")}:
                 </p>
                 <p className={cx("content-merchant", fontSize)}>{fullName}</p>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.phoneNumber}
+                  onChange={() => handleCheckboxChange("phoneNumber")}
+                />
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-merchant", fontSize)}>
@@ -449,6 +571,12 @@ function NewMerchant() {
                 <p className={cx("content-merchant", fontSize)}>
                   {phoneNumber}
                 </p>
+                <input
+                  className={cx("checkbox")}
+                  type="checkbox"
+                  checked={checkedFields.nameOwner}
+                  onChange={() => handleCheckboxChange("nameOwner")}
+                />
               </div>
               <div className={cx("wrapper-content")}>
                 <p className={cx("title-merchant", fontSize)}>
@@ -480,6 +608,12 @@ function NewMerchant() {
                           {t("merchant.check")}
                         </p>
                       </div>
+                      <input
+                        className={cx("checkbox")}
+                        type="checkbox"
+                        checked={checkedFields.IDCard}
+                        onChange={() => handleCheckboxChange("IDCard")}
+                      />
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img
@@ -553,6 +687,12 @@ function NewMerchant() {
                           {t("merchant.check")}
                         </p>
                       </div>
+                      <input
+                        className={cx("checkbox")}
+                        type="checkbox"
+                        checked={checkedFields.businessLicense}
+                        onChange={() => handleCheckboxChange("businessLicense")}
+                      />
                     </div>
                     <div className={cx("wrapper-document")}>
                       <img
@@ -576,10 +716,38 @@ function NewMerchant() {
                   </div>
                 ))}
               </div>
-              <div className={cx("btn-delete")}>
-                <Button approve_btn onClick={() => handleApproval(id)}>
-                  {t("merchant.approval")}
-                </Button>
+              <div className={cx("wrapper-footer")}>
+                <div>
+                  <input
+                    className={cx("textbox")}
+                    type="text"
+                    placeholder={t("merchant.note")}
+                    value={checkedFields.note}
+                    onChange={handleNoteChange}
+                  />
+                </div>
+                <div>
+                  {allFieldsChecked() ? (
+                    <div className={cx("approval-btn")}>
+                      <Button
+                        approve_btn={allFieldsChecked()}
+                        onClick={() => handleApproval(id)}
+                      >
+                        {t("shipper.approval")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className={cx("reject-btn")}>
+                      {" "}
+                      <Button
+                        approve_btn={allFieldsChecked()}
+                        onClick={() => handleReject()}
+                      >
+                        {t("shipper.reject")}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

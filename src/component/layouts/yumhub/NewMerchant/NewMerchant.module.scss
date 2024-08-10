@@ -246,14 +246,17 @@
   font-family: $ff-montserrat;
   background-color: $bg-check;
 }
-
+.checkbox{
+  width: 30px;
+  height: 30px;
+}
 .text-check {
   color: #fff;
 }
 
 .image-document {
-  width: 120px;
-  height: 180px;
+  width: 200px;
+  height: 280px;
   margin-left: 20px;
 }
 
@@ -261,6 +264,54 @@
   width: 200px;
   height: 150px;
   margin-left: 20px;
+}
+.approval-btn {
+  margin-left: 600px;
+  margin-top: 20px;
+  margin-right: 20px;
+
+  border-radius: 10px;
+
+  Button {
+    width: 150px;
+    font-weight: 600;
+    padding: 15px;
+    background-color: #597afc;
+  }
+}
+
+.reject-btn {
+
+  margin-left: 600px;
+  margin-top: 20px;
+  margin-right: 20px;
+
+  Button {
+    display: flex;
+    align-items: center;
+    width: 150px;
+    height: 50px;
+    color: #333;
+    font-size: 25px;
+    font-weight: 700;
+    padding: 15px;
+    background-color: #fc5959;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color:$bg-check;
+    color: #333;
+    }
+  }
+}
+.wrapper-footer {
+  margin-top: 20px;
+  flex-direction: row;
+}
+.textbox{
+  width: 70%;
+  min-height: 80px;
 }
 
 .line-background {
