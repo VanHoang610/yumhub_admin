@@ -140,6 +140,7 @@ function DeletedShipper() {
   // nhấn ra ngoài thanh search
   const handleClickOutSide = () => {
     setSearchResult([]);
+    setTippyVisible(false);
   };
   const handleReactive = async (id) => {
     setLoading(true);

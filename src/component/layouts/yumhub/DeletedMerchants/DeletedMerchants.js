@@ -51,7 +51,7 @@ function DeletedMerchant() {
     
     fetchData();
   }, []);
-  setLoading(true);
+  
     const fetchData = async () => {
       try {
         const response = await AxiosInstance.get(
