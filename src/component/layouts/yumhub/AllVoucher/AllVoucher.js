@@ -59,14 +59,11 @@ function AllVoucher() {
   const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [startDateInput, setStartDateInput] = useState("");
-  const [endDateInput, setEndDateInput] = useState("");
   const [nameVoucher, setNameVoucher] = useState("");
   const [discountAmount, setDiscountAmount] = useState("");
   const [typeOfVoucher, setTypeOfVoucher] = useState("");
   const [code, setCode] = useState("");
   const [conditionsApply, setConditionsApply] = useState("");
-
   const [showEditStartDate, setShowEditStartDate] = useState(false);
   const [showEditEndDate, setShowEditEndDate] = useState(false);
 
@@ -157,15 +154,15 @@ function AllVoucher() {
   const handleUpdateVoucher = async () => {
     setLoading(true);
     try {
-      if (startDateInput > endDateInput) {
+      if (startDate> endDate) {
         Swal.fire("Fail", "The end date must be after the start date", "error");
         return;
       } else {
         const response = await AxiosInstance.patch(
           `vouchers/updateVoucher?id=${selectVoucherById._id}`,
           {
-            startDate: startDateInput,
-            endDate: endDateInput,
+            startDate: startDate,
+            endDate: endDate,
             conditionsApply,
           }
         );
@@ -252,14 +249,14 @@ function AllVoucher() {
   const handleStartDateChange = (date) => {
     const day = formatDate(date);
     setStartDate(day);
-    setStartDateInput(new Date(date));
+   
     setShowEditStartDate(false);
   };
 
   const handleEndDateChange = (date) => {
     const day = formatDate(date);
     setEndDate(day);
-    setEndDateInput(new Date(date));
+
     setShowEditEndDate(false);
   };
 
@@ -498,7 +495,7 @@ function AllVoucher() {
                       dateFormat="dd/mm/yyyy"
                       inline
                       value={endDate ? endDate : null}
-                      minDate={Date.parse(startDateInput)}
+                      minDate={Date.parse(startDate)}
                     />
                   )}
                 </div>
