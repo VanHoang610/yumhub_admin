@@ -86,7 +86,7 @@ function DeletedMerchant() {
           title: "Recovery Data Successful",
           text: "The merchant has been successfully data restored!",
         }).then(() => {
-          window.location.reload();
+          fetchData();
         });
       }
     } catch (error) {
