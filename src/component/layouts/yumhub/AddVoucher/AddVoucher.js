@@ -22,7 +22,6 @@ function AddVoucher() {
     return now.toLocaleDateString("vi-VN");
   };
 
-  const [imageVoucher, setImageVoucher] = useState(voucher);
   const [nameVoucher, setNameVoucher] = useState("");
   const [code, setCode] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -78,25 +77,35 @@ function AddVoucher() {
     const newErrors = {};
 
     if (!nameVoucher) {
-      newErrors.nameVoucher = "Name Voucher is required";
+      // newErrors.nameVoucher = "Name Voucher is required";
+      newErrors.nameVoucher = t('newVoucher.errorNameVoucher')
     }
     if (!code) {
-      newErrors.code = "Code is required";
+      // newErrors.code = "Code is required";
+      newErrors.code = t('newVoucher.errorCode')
     }
     if (!startDate) {
-      newErrors.startDate = "Invalid format date";
+      // newErrors.startDate = "Invalid format date";
+      newErrors.startDate = t('newVoucher.errorStartDate')
     }
     if (!endDate) {
-      newErrors.endDate = "Invalid format date";
+      // newErrors.endDate = "Invalid format date";
+      newErrors.endDate = t('newVoucher.errorEndDate')
     }
 
-    if (!discountAmount || discountAmount < 10000) {
-      newErrors.discountAmount =
-        "Discount Amount is required and must be greater than 10000";
+    if (!discountAmount || discountAmount < 1000) {
+      // newErrors.discountAmount =
+      //   "Discount Amount is required and must be greater than 1000";
+      newErrors.discountAmount = t('newVoucher.errorDiscountAmount1')
+
+    }
+    if (!discountAmount){
+      newErrors.discountAmount = t('newVoucher.errorDiscountAmount2')
     }
 
     if (!conditionsApply) {
-      newErrors.conditionsApply = "Conditions Apply is required";
+      // newErrors.conditionsApply = "Conditions Apply is required";
+      newErrors.conditionsApply = t('newVoucher.errorConditionsApply')
     }
     setErrors(newErrors);
 

@@ -246,7 +246,14 @@
     "add": "Add",
     "selectImage": "Select Image",
     "fileSize":"File size: maximum 1 MB",
-    "fileExtension":"File extension: .JPEG, .PNG"
+    "fileExtension":"File extension: .JPEG, .PNG",
+    "errorNameVoucher": "Name Voucher is required",
+    "errorCode": "Code is required",
+    "errorStartDate": "Start Date is required",
+    "errorEndDate": "End Date is required",
+    "errorDiscountAmount1": "Discount Amount must be greater than 1000",
+    "errorDiscountAmount2": "Discount Amount is required",
+    "errorConditionsApply": "Conditions Apply is required"
   },
 
   "profile" : {

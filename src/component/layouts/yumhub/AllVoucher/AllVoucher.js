@@ -109,9 +109,9 @@ function AllVoucher() {
         setLoading(false);
       }
     } else {
-      fetchVouchers();
-      setSearchResult([]);
       setTippyVisible(false);
+      fetchVouchers();
+      setSearchResult([]); 
     }
   };
 
@@ -429,7 +429,7 @@ function AllVoucher() {
                 {getStatus(
                   selectVoucherById.startDate,
                   selectVoucherById.endDate
-                ) === "Valid" ? (
+                ) === "valid" ? (
                   <Button reviewed>{t("allVoucher.valid")}</Button>
                 ) : (
                   <Button awaiting>{t("allVoucher.notValid")}</Button>

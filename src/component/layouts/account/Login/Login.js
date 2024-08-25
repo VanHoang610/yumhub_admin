@@ -73,7 +73,7 @@ function Login() {
       </div>
       <div className={cx("rightBackground")}>
         <div>
-          <p className={cx("titleLogin")}>TIME TO CONNECT</p>
+          <p className={cx("titleLogin")}></p>
         </div>
         <div className={cx("enterInfo")}>
           <img src={icon_username} alt="Username" className={cx("iconStart")} />
