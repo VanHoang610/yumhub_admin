@@ -33,6 +33,10 @@
   background-color: $bg-gray-light;
 }
 
+.dp-n {
+  display: none;
+}
+
 // modal
 .modal-container {
   display: flex;
@@ -281,7 +285,6 @@
 }
 
 .reject-btn {
-
   margin-left: 600px;
   margin-top: 20px;
   margin-right: 20px;
@@ -289,19 +292,17 @@
   Button {
     display: flex;
     align-items: center;
-    width: 150px;
-    height: 50px;
-    color: #333;
-    font-size: 25px;
+    color: #191c24;
+    font-size: 23px;
     font-weight: 700;
-    padding: 15px;
+    padding: 10px 30px;
     background-color: #fc5959;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
-
+    border: none;
+    opacity: 0.8;
     &:hover {
-      background-color:$bg-check;
-    color: #333;
+      opacity: 1;
     }
   }
 }
@@ -311,7 +312,12 @@
 }
 .textbox{
   width: 70%;
-  min-height: 80px;
+  min-height: 70px;
+  margin-left: 50px;
+  padding: 0 15px;
+  outline: none;
+  border: none;
+  font-size: 15px;
 }
 
 .line-background {

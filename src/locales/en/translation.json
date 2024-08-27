@@ -297,5 +297,21 @@
     "swalTextFail": "There was an error updating the withdrawal merchant!",
     "swalTitleSuccess": "Approval Successful",
     "swalTextSuccess": "The withdrawal merchant has been successfully updated!"
+  },
+
+  "detailEmployee": {
+    "title": "Detail Employee",
+    "subTitle": "Role and Responsibilities",
+    "userName": "Username",
+    "fullName": "Full Name",
+    "gender": "Gender",
+    "email": "Email",
+    "phoneNumber":"Phone Number",
+    "address": "Address",
+    "position": "Position",
+    "save": "Save",
+    "delete": "Deleted",
+    "employee":"Employee",
+    "manager": "Manager"
   }
 }

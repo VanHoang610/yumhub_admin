@@ -397,8 +397,25 @@
 .container.dark {
   background-color: $bg-black;
 }
-.btn-Reactive{
+.btn-reactive-wrapper{
   display: flex;
   justify-content: flex-end;
   margin-top: 30px;
+}
+
+.btn-reactive {
+  display: flex;
+  align-items: center;
+  color: #191c24;
+  font-size: 23px;
+  font-weight: 700;
+  padding: 10px 30px;
+  background-color: #6c7afc;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
 }

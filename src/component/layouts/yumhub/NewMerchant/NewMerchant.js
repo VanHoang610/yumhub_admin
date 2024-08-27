@@ -679,7 +679,7 @@ function NewMerchant() {
                         {t("merchant.businessLicense")}:
                       </p>
                       <div
-                        className={cx("btn-check")}
+                        className={cx("btn-check dp-n")}
                         onClick={() => handleCheckBusinessLicense()}
                       >
                         <p className={cx("text-check")}>
@@ -738,13 +738,13 @@ function NewMerchant() {
                     </div>
                   ) : (
                     <div className={cx("reject-btn")}>
-                      {" "}
-                      <Button
+                      <button
+                        className={cx('btn-reject')}
                         approve_btn={allFieldsChecked()}
                         onClick={() => handleReject()}
                       >
                         {t("shipper.reject")}
-                      </Button>
+                      </button>
                     </div>
                   )}
                 </div>

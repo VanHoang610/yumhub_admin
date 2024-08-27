@@ -475,15 +475,15 @@ function FoodRequest() {
                 />
               </div>
               <div className={cx("wrapper-btn")}>
-                <div className={cx("button-delete")}>
-                  <Button approve_btn onClick={() => handleDelete(id)}>
+                <div >
+                  <button className={cx("button-delete")} approve_btn onClick={() => handleDelete(id)}>
                     {t("merchant.cancel")}
-                  </Button>
+                  </button>
                 </div>
-                <div className={cx("button-Approve")}>
-                  <Button approve_btn onClick={() => handleApproval(id)}>
+                <div>
+                  <button className={cx("button-approve")} approve_btn onClick={() => handleApproval(id)}>
                     {t("merchant.approval")}
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>

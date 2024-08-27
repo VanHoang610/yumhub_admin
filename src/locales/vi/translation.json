@@ -61,7 +61,7 @@
     "profit": "Lợi nhuận",
     "food": "Thức ăn",
     "ship": "Phí",
-    "voucher": "Phiếu",
+    "voucher": "Ưu đãi",
     "merchant": "Cửa hàng",
     "shipper": "Tài xế",
     "revenueChart": "Biểu đồ doanh thu",
@@ -199,7 +199,7 @@
     "merchant": "Cửa hàng",
     "shipper": "Tài xế",
     "customer": "Khách hàng",
-    "voucher": "Phiếu",
+    "voucher": "Ưu đãi",
     "timeBook": "Thời gian đặt hàng",
     "status": "Trạng thái",
     "actions": "Chức năng",
@@ -216,7 +216,7 @@
   },
 
   "allVoucher": {
-    "allVoucher": "Tất cả Phiếu",
+    "allVoucher": "Tất cả Ưu đãi",
     "filter": "Tìm kiếm theo trạng thái",
     "searchByName": "Tìm kiếm theo tên",
     "discountVoucher": "Số lượng giảm giá",
@@ -298,5 +298,21 @@
     "swalTextFail": "Đã xảy ra lỗi khi cập nhật thông tin rút tiền của cửa hàng!",
     "swalTitleSuccess": "Duyệt thành công",
     "swalTextSuccess": "Thông tin rút tiền của cửa hàng đã được cập nhật thành công!"
+  },
+
+  "detailEmployee": {
+    "title": "Chi tiết Nhân Viên",
+    "subTitle": "Vai trò và trách nhiệm",
+    "userName": "Tên người dùng",
+    "fullName": "Họ và tên",
+    "gender": "Giới tính",
+    "email": "Email",
+    "phoneNumber":"Số điện thoại",
+    "address": "Địa chỉ",
+    "position": "Vai trò",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "employee":"Nhân viên",
+    "manager": "Quản lý"
   }
 }

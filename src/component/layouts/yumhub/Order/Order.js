@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -49,10 +49,6 @@ function Orders() {
   const [showModal, setShowModal] = useState(false);
   const [orderStatuses, setOrderStatuses] = useState([]);
 
-  // gọi api lấy orderStatus
-  useEffect(() => {
-    
-  }, [orderStatuses]);
   const fetchData = async () => {
     try {
       const response = await AxiosInstance.get("orders/getAllOrderStatus");
@@ -60,14 +56,22 @@ function Orders() {
     } catch (error) {
       console.log(error);
     }
-  };
-  fetchData();
-
+  }
+  
+  // gọi api lấy orderStatus
+  useEffect(() => {
+    fetchData()
+    return () => {
+      console.log('Component is unmounted or route is left');
+    };
+  }, [orderStatuses]);
+  
   // lấy ra tên của status trong order
   function getOrderStatusName(statusId) {
     const matchingStatus = orderStatuses.find(
       (status) => status._id === statusId._id
     );
+    console.log("matching", matchingStatus)
     return matchingStatus ? matchingStatus.name : "Loading...";
   }
 

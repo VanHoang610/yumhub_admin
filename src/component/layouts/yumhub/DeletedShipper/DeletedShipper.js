@@ -451,10 +451,10 @@ function DeletedShipper() {
                       />
                     </div>
                   </div>
-                  <div className={cx("btn-Reactive")}>
-                    <Button approve_btn onClick={() => handleReactive(id)}>
+                  <div className={cx("btn-reactive-wrapper")}>
+                    <button className={cx("btn-reactive")} approve_btn onClick={() => handleReactive(id)}>
                       {t("shipper.reactive")}
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </div>
