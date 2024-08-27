@@ -53,24 +53,26 @@ function Orders() {
     try {
       const response = await AxiosInstance.get("orders/getAllOrderStatus");
       setOrderStatuses(response.data.orderStatus);
+      
     } catch (error) {
       console.log(error);
     }
   }
   
   // gọi api lấy orderStatus
-  useEffect(() => {
-    fetchData()
-    return () => {
-      console.log('Component is unmounted or route is left');
-    };
-  }, [orderStatuses]);
+  // useEffect(() => {
+  //   fetchData()
+  //   return () => {
+  //     console.log('Component is unmounted or route is left');
+  //   };
+  // }, [orderStatuses]);
   
   // lấy ra tên của status trong order
   function getOrderStatusName(statusId) {
     const matchingStatus = orderStatuses.find(
       (status) => status._id === statusId._id
     );
+    
     console.log("matching", matchingStatus)
     return matchingStatus ? matchingStatus.name : "Loading...";
   }
@@ -83,7 +85,7 @@ function Orders() {
         const updatedOrder = response.data.order.map((item) => ({
           ...item,
           timeBook: formatDate(item.timeBook),
-          nameStatus: getOrderStatusName(item.status),
+          nameStatus: item.status,
         }));
         setData(updatedOrder);
       } catch (error) {
@@ -246,14 +248,16 @@ function Orders() {
                   <td>{item.shipperID ? item.shipperID.fullName : "N/A"}</td>
                   <td>{item.customerID ? item.customerID.fullName : "N/A"}</td>
                   <td>{item.voucherID ? item.voucherID.nameVoucher : "N/A"}</td>
-                  <td>{item.customerID ? item.timeBook : "N/A"}</td>
+                  <td>{item.timeBook ? item.timeBook : "N/A"}</td>
                   <td>
                     <p
                       className={cx("status", {
-                        "status-cancel": item.nameStatus === "cancel",
+                        "status-cancel": item.status.name === "cancel",
+                         "status-fakeOrder": item.status.name === "fakeOrder",
+                         "status-processing": item.status.name === "processing"
                       })}
                     >
-                      {item.nameStatus}
+                      {item.status.name?item.status.name:"N/A"}
                     </p>
                   </td>
                   <td>
@@ -289,10 +293,11 @@ function Orders() {
                 />
               </div>
               <div className={cx("content-modal")}>
-                {selectedOrder.nameStatus === "cancel" ? (
-                  <Button awaiting>{selectedOrder.nameStatus}</Button>
+                {selectedOrder.status.name === "cancel" ? (
+                  <Button awaiting>{selectedOrder.status.name}</Button>
+                  
                 ) : (
-                  <Button reviewed>{selectedOrder.nameStatus}</Button>
+                  <Button reviewed>{selectedOrder.status.name}</Button>
                 )}
 
                 <div className={cx("wrapper-content")}>

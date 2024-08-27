@@ -242,8 +242,16 @@
   }
 
   .status-cancel {
-    background-color: $bg-awaiting;
+    background-color: rgb(97, 97, 97);
     color: $color-white;
+  }
+  .status-fakeOrder {
+    background-color: rgb(255, 0, 0);
+    color: $color-white;
+  }
+  .status-processing {
+    background-color: rgb(255, 251, 0);
+    color: #333;
   }
 
   th,
