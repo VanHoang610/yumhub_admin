@@ -1,235 +1,273 @@
-import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import React, { useState, useContext } from "react";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
+import "react-datepicker/dist/react-datepicker.css";
+
+import { useTheme } from "../../../../component/layouts/defaultLayout/header/Settings/Context/ThemeContext";
+import { useFontSize } from "../../../../component/layouts/defaultLayout/header/Settings/Context/FontSizeContext";
+import AxiosInstance from "../../../../utils/AxiosInstance";
 import classNames from "classnames/bind";
 import styles from "./EmployeeDetails.module.scss";
-import { format } from "date-fns";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import AxiosInstance from "../../../../utils/AxiosInstance";
+
+import { UserContext } from "../../../contexts/UserContext";
 
 const cx = classNames.bind(styles);
 
 function EmployeeDetails() {
+  
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
   const location = useLocation();
+  
   const { state } = location;
   const { employee } = state || {};
-  const navigate = useNavigate();
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [selectedPosition, setSelectedPosition] = useState(employee?.position || "Position 1");
-  const [actionType, setActionType] = useState(""); // "edit" or "delete"
 
-  if (!employee) {
-    return <p>Employee details not found.</p>;
-  }
-
-  const handleConfirm = async () => {
-    setConfirmDialogOpen(false);
-    if (actionType === "edit") {
-      handleEdit();
-    } else if (actionType === "delete") {
-      handleDelete();
-    }
-  };
+  console.log(employee);
+  const [selectedPosition, setSelectedPosition] = useState(
+    employee?.position || "Position 1"
+  );
 
   const handleEdit = async () => {
     try {
-      await AxiosInstance.post(`admin/updateEmployee?id=${employee._id}`, {
-        position: selectedPosition
-      });
-      setSnackbarMessage("Employee details updated successfully.");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      setEditDialogOpen(false);
+
+      
+      const response = await AxiosInstance.post(
+        `admin/updateEmployee?id=${employee._id}`,
+        {
+          position: selectedPosition,
+        }
+      );
+      if (response.data.result) {
+        if(user._id === employee._id ) {
+          console.log(response.data.data);
+          setUser(response.data.data);
+        }
+        Swal.fire({
+          icon: "success",
+          title: "Update employee success",
+          text: "User has been successfully repaired ",
+        });
+        setTimeout(() => {
+          navigate(`/employee`);
+        }, 1000);
+      }
     } catch (error) {
-      setSnackbarMessage("Failed to update employee details.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+      Swal.fire({
+        icon: "fail",
+        title: "Update employee fail",
+        text: "User has been failed repaired ",
+      });
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async () => {    
     try {
-      await AxiosInstance.post(`admin/deleteAdmin?id=${employee._id}`);
-      setSnackbarMessage("Employee deleted successfully.");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      setDeleteDialogOpen(false);
-
-      // Delay navigation to ensure snackbar is visible
-      setTimeout(() => {
-        navigate(`/employee`);
-      }, 800);
+      Swal.fire({
+        title: "Xóa Nhân viên",
+        text: "Bạn có chắc là xóa nhân viên không?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "CÓ",
+        cancelButtonText: "Không",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await AxiosInstance.post(
+            `admin/deleteAdmin?id=${employee._id}`
+          );
+          if (response.data.result === false) {
+            Swal.fire({
+              icon: "info",
+              title: "Xóa thất bại",
+              text: "Bạn xóa Nhân viên không thành công",
+            });
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "Xóa thành công",
+              text: "Bạn xóa Nhân viên thành công",
+            })
+            setTimeout(() => {
+              navigate(`/employee`);
+            }, 1000);
+          }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.close();
+        }
+      });
     } catch (error) {
-      setSnackbarMessage("Failed to delete employee.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+      Swal.fire({
+        icon: "fail",
+        title: "Deleted employee fail",
+        text: "User has been failed repaired ",
+      });
     }
   };
 
   const handlePositionChange = (event) => {
-    setSelectedPosition(event.target.value);
+    if (event.target.value) {
+      setSelectedPosition(event.target.value);
+    }
+  };
+
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const { fontSize } = useFontSize();
+
+  const [avatar, setAvatar] = useState("");
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setAvatar(URL.createObjectURL(file));
+    console.log(file);
   };
 
   return (
-    <div className={cx("container")}>
-      <div className={cx("card")}>
-        <div className={cx("profile-wrapper")}>
-          <div className={cx("profile")}>
-            <img
-              src={
-                employee.avatar ||
-                "https://scontent.fsgn19-1.fna.fbcdn.net/v/t39.30808-6/252397505_197007939245865_5889774168621917087_n.png?_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_ohc=XAM0kfbPjJQQ7kNvgFG8RAB&_nc_ht=scontent.fsgn19-1.fna&oh=00_AYAIEyXfIv5mbu2aGMIrC6MGf9N-rMoSQ2r4LtZKb5YW7w&oe=665F6755"
-              }
-              alt={employee.fullName}
-              className={cx("avatar")}
-            />
-            <p className={cx("id")}>
-              <i className="fas fa-phone-alt"></i>id: {employee._id}
+    <div className={cx("container", { dark: theme === "dark" })}>
+      <p className={cx("title", fontSize, { dark: theme === "dark" })}>
+      {t('detailEmployee.title')}
+      </p>
+      <p className={cx("sub-title", fontSize, { dark: theme === "dark" })}>
+      {t('detailEmployee.subTitle')}
+      </p>
+      <div className={cx("line")} />
+
+      <div className={cx("wrapper-info")}>
+        <div className={cx("info-container")}>
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+               {t('detailEmployee.userName')}
             </p>
-            <h2 className={cx("name")}>{employee.fullName}</h2>
-            <p className={cx("contact")}>
-              <i className="fas fa-phone-alt"></i> {employee.phoneNumber}
-            </p>
-            <p className={cx("contact")}>
-              <i className="fas fa-envelope"></i> {employee.email}
-            </p>
-          </div>
-          <div className={cx("info-container")}>
-            <h3>Information</h3>
-            <div className={cx("info")}>
-              <p>
-                <strong>Date of Birth:</strong>{" "}
-                {format(new Date(employee.dob), "dd/MM/yyyy")}
-              </p>
-              <p>
-                <strong>Gender:</strong> {employee.gender}
-              </p>
-              <p>
-                <strong>Address:</strong> {employee.address}
-              </p>
-              <p>
-                <strong>Position:</strong> {employee.position}
+            <div className={cx("text-info")}>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {employee.userName}
               </p>
             </div>
           </div>
-        </div>
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+               {t('detailEmployee.fullName')}
+            </p>
+            <div className={cx("text-info")}>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {employee.fullName}
+              </p>
+            </div>
+          </div>
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('detailEmployee.gender')}
+            </p>
+            <div className={cx("text-info")}>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {employee.gender}
+              </p>
+            </div>
+          </div>
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+               {t('detailEmployee.email')}
+            </p>
+            <div className={cx("text-info")}>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {employee.email}
+              </p>
+            </div>
+          </div>
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+              {t('detailEmployee.phoneNumber')}
+            </p>
+            <div className={cx("text-info")}>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {employee.phoneNumber}
+              </p>
+            </div>
+          </div>
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+               {t('detailEmployee.address')}
+            </p>
+            <div className={cx("text-info")}>
+              <p className={cx("info", fontSize, { dark: theme === "dark" })}>
+                {employee.address}
+              </p>
+            </div>
+          </div>
 
-        <div className={cx("btn")}>
-          <button
-            className={cx("btn-edit")}
-            onClick={() => {
-              setActionType("edit");
-              setEditDialogOpen(true);
-            }}
+          <div className={cx("box-info")}>
+            <p
+              className={cx("title-info", fontSize, { dark: theme === "dark" })}
+            >
+               {t('detailEmployee.position')}
+            </p>
+            <div className={cx("text-info")}>
+              <select
+                defaultValue={employee.position}
+                onChange={handlePositionChange}
+                className={cx("input")}
+              >
+                <option value="employee"> {t('detailEmployee.employee')}</option>
+                <option value="manager"> {t('detailEmployee.manager')}</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={cx("wrapper-btn")}>
+          <div className={cx("btn-update")} onClick={handleEdit}>
+            <span> {t('detailEmployee.save')}</span>
+          </div>
+          <div className={cx("btn-deleted")} onClick={handleDelete}>
+            <span> {t('detailEmployee.delete')}</span>
+          </div>
+          </div>
+          <span style={{ marginTop: 500 }}></span>
+        </div>
+        <div className={cx("line-info")}></div>
+        <div className={cx("image-info")}>
+          <p className={cx("role", fontSize, { dark: theme === "dark" })}></p>
+          <img
+            className={cx("avatar")}
+            src={employee.avatar}
+            alt="Avatar"
+          ></img>
+          <div
+            className={cx("box-text-select", { dark: theme === "dark" })}
+            onClick={() => document.getElementById("fileInput").click()}
           >
-            Edit
-          </button>
-          <button
-            className={cx("btn-delete")}
-            onClick={() => {
-              setActionType("delete");
-              setDeleteDialogOpen(true);
-            }}
+            <span>{t("profile.selectImage")}</span>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </div>
+          <p
+            style={{ marginTop: 16 }}
+            className={cx("note-image", fontSize, { dark: theme === "dark" })}
           >
-            Delete
-          </button>
+            {t("profile.fileSize")}
+          </p>
+          <p className={cx("note-image", fontSize, { dark: theme === "dark" })}>
+            {t("profile.fileExtension")}
+          </p>
         </div>
       </div>
-
-      {/* Edit Dialog */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
-        <DialogTitle>Edit Employee</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please select the new position for the employee.
-          </DialogContentText>
-          <div className={cx("divider")}>
-            <p className={cx("label")}>Current Position: </p>
-            <select
-              value={selectedPosition}
-              onChange={handlePositionChange}
-              className={cx("select")}
-            >
-              <option value="employee">Employee</option>
-              <option value="manager">Manager</option>
-            </select>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
-          <Button onClick={() => {
-            setConfirmDialogOpen(true);
-            setEditDialogOpen(false);
-          }} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Delete Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DialogTitle>Delete Employee</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this employee?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={() => {
-            setConfirmDialogOpen(true);
-            setDeleteDialogOpen(false);
-          }} color="primary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Confirmation Dialog */}
-      <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
-        <DialogTitle>Confirm {actionType === "edit" ? "Edit" : "Delete"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to {actionType === "edit" ? "edit the employee's position" : "delete this employee"}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleConfirm} color="primary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Snackbar for Success/Error Messages */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-        >
-          {snackbarMessage}
-        </MuiAlert>
-      </Snackbar>
     </div>
   );
 }

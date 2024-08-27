@@ -402,7 +402,7 @@ function AllMerchant() {
                   </td>
                   <td>
                     <button
-                      className={cx("action-button")}
+                      className={cx("action-button", "dp-n")}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleEdit(item._id);
