@@ -202,7 +202,7 @@ function WithdrawalShipper() {
                       fontSize
                     )}
                   >
-                    {item.nameBank ? item.nameBank : "N/A"}
+                    {item.nameBank ? item.nameBank.split(" ")[0] : "N/A"}
                   </p>
                 </div>
                 <div className={cx("item")}>

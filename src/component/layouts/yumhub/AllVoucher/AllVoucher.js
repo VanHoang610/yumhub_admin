@@ -155,15 +155,18 @@ function AllVoucher() {
   const handleUpdateVoucher = async () => {
     setLoading(true);
     try {
-      if (startDateInput > endDateInput) {
+      const start = new Date(startDateInput).setHours(0, 0, 0, 0); // Set start time to 00:00:00.000
+      const end = new Date(endDateInput).setHours(23, 59, 59, 999); // Set end time to 23:59:59.999
+  
+      if (start > end) {
         Swal.fire("Fail", "The end date must be after the start date", "error");
         return;
       } else {
         const response = await AxiosInstance.patch(
           `vouchers/updateVoucher?id=${selectVoucherById._id}`,
           {
-            startDate: startDateInput,
-            endDate: endDateInput,
+            startDate: start,
+            endDate: end,
             conditionsApply,
           }
         );
@@ -174,18 +177,17 @@ function AllVoucher() {
               voucher._id === voucherUpdate._id ? voucherUpdate : voucher
             )
           );
-          Swal.fire("Success", "Merchant updated successfully.", "success");
-          setLoading(false);
+          Swal.fire("Success", "Voucher updated successfully.", "success");
           setShowModal(false);
         } else {
-          Swal.fire("Fail", "Merchant updated Fail.", "error");
-          setLoading(false);
+          Swal.fire("Fail", "Voucher update failed.", "error");
           setShowModal(false);
         }
       }
     } catch (err) {
       console.error("Failed to update voucher", err);
     } finally {
+      fetchVouchers();
       setLoading(false);
     }
   };
@@ -213,11 +215,12 @@ function AllVoucher() {
     }
   };
 
-  const handleEdit = async (id) => {
+  const handleEdit = async (item) => {
+   
     setLoading(true);
     try {
       const response = await AxiosInstance.get(
-        `vouchers/getVoucherById?id=${id}`
+        `vouchers/getVoucherById?id=${item._id}`
       );
       const detailVoucher = response.data.voucher;
       if (detailVoucher) {
@@ -248,16 +251,14 @@ function AllVoucher() {
   };
 
   const handleStartDateChange = (date) => {
-    const day = formatDate(date);
-    setStartDate(day);
-    setStartDateInput(new Date(date));
+    setStartDate(formatDate(date));
+    setStartDateInput(date);
     setShowEditStartDate(false);
   };
 
   const handleEndDateChange = (date) => {
-    const day = formatDate(date);
-    setEndDate(day);
-    setEndDateInput(new Date(date));
+    setEndDate(formatDate(date));
+    setEndDateInput(date);
     setShowEditEndDate(false);
   };
 
@@ -390,7 +391,7 @@ function AllVoucher() {
                     className={cx("action-button")}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleEdit(item._id);
+                      handleEdit(item);
                     }}
                   >
                     <FontAwesomeIcon icon={faEdit} />

@@ -75,48 +75,43 @@ function AddVoucher() {
   //lỗi
   const handleAddVoucher = async () => {
     const newErrors = {};
-
+  
     if (!nameVoucher) {
-      // newErrors.nameVoucher = "Name Voucher is required";
-      newErrors.nameVoucher = t('newVoucher.errorNameVoucher')
+      newErrors.nameVoucher = t('newVoucher.errorNameVoucher');
     }
     if (!code) {
-      // newErrors.code = "Code is required";
-      newErrors.code = t('newVoucher.errorCode')
+      newErrors.code = t('newVoucher.errorCode');
     }
     if (!startDate) {
-      // newErrors.startDate = "Invalid format date";
-      newErrors.startDate = t('newVoucher.errorStartDate')
+      newErrors.startDate = t('newVoucher.errorStartDate');
     }
     if (!endDate) {
-      // newErrors.endDate = "Invalid format date";
-      newErrors.endDate = t('newVoucher.errorEndDate')
+      newErrors.endDate = t('newVoucher.errorEndDate');
     }
-
+  
     if (!discountAmount || discountAmount < 1000) {
-      // newErrors.discountAmount =
-      //   "Discount Amount is required and must be greater than 1000";
-      newErrors.discountAmount = t('newVoucher.errorDiscountAmount1')
-
+      newErrors.discountAmount = t('newVoucher.errorDiscountAmount1');
     }
-    if (!discountAmount){
-      newErrors.discountAmount = t('newVoucher.errorDiscountAmount2')
+    if (!discountAmount) {
+      newErrors.discountAmount = t('newVoucher.errorDiscountAmount2');
     }
-
+  
     if (!conditionsApply) {
-      // newErrors.conditionsApply = "Conditions Apply is required";
-      newErrors.conditionsApply = t('newVoucher.errorConditionsApply')
+      newErrors.conditionsApply = t('newVoucher.errorConditionsApply');
     }
     setErrors(newErrors);
-
+  
     if (Object.keys(newErrors).length === 0) {
-      if (startDateInput > endDateInput) {
+      const start = new Date(startDateInput).setHours(0, 0, 0, 0); // Set start time to 00:00:00.000
+      const end = new Date(endDateInput).setHours(23, 59, 59, 999); // Set end time to 23:59:59.999
+  
+      if (start > end) {
         Swal.fire("info", "The end date must be after the start date", "error");
       } else {
         const response = await AxiosInstance.post("vouchers/createVoucher", {
           nameVoucher,
-          startDate: Date.parse(startDateInput),
-          endDate: Date.parse(endDateInput),
+          startDate: start,
+          endDate: end,
           code,
           discountAmount,
           typeOfVoucherID: typeOfVoucher,
