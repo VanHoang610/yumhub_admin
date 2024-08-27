@@ -780,7 +780,7 @@ function AddShipper() {
                   </p>
                   {!checkDrivingLicense && (
                     <div
-                      className={cx("btn-check dp-n")}
+                      className={cx("btn-check"," dp-n")}
                       onClick={() => handleCheckDrivingLicense()}
                     >
                       <p className={cx("text-check")}>{t("shipper.check")}</p>
