@@ -304,7 +304,7 @@ function NewMerchant() {
   const handleCheckIDCard = async (imageUrl) => {
     try {
       setLoading(true);
-      const apiKey = "a898FrZpkeYGYYPfz046hRervrSm2woD";
+      const apiKey = "WTNAr9oCEk4rNkUCR7rhVAGfeNSjRHgM";
       const apiUrl = "https://api.fpt.ai/vision/idr/vnm";
 
       // Gửi FormData đến API
@@ -321,8 +321,6 @@ function NewMerchant() {
       setOverAllIDCard(response.data.data[0].overall_score);
       setCheckIDCard(true);
     } catch (error) {
-      console.log(overAllIDCard);
-      console.log(checkIDCard);
       setOverAllIDCard(t("merchant.cannotCheck"));
       setCheckIDCard(true);
       console.error("Error checking ID card:", error);
