@@ -677,7 +677,7 @@ function NewMerchant() {
                         {t("merchant.businessLicense")}:
                       </p>
                       <div
-                        className={cx("btn-check dp-n")}
+                        className={cx("btn-check", "dp-n")}
                         onClick={() => handleCheckBusinessLicense()}
                       >
                         <p className={cx("text-check")}>
