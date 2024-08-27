@@ -349,7 +349,7 @@ function AddShipper() {
   const handleCheckIDCard = async (imageUrl) => {
     try {
       setLoadingIdCard(true);
-      const apiKey = "m2xEU6uVQjKYbrm0vF6e2XxIEsX0TFJC";
+      const apiKey = "WTNAr9oCEk4rNkUCR7rhVAGfeNSjRHgM";
       const apiUrl = "https://api.fpt.ai/vision/idr/vnm";
 
       // Gửi FormData đến API
@@ -380,7 +380,7 @@ function AddShipper() {
   const handleCheckDriverLicense = async (imageUrl) => {
     try {
       setLoadingDriverLicense(true);
-      const apiKey = "m2xEU6uVQjKYbrm0vF6e2XxIEsX0TFJC";
+      const apiKey = "WTNAr9oCEk4rNkUCR7rhVAGfeNSjRHgM";
       const apiUrl = "https://api.fpt.ai/vision/dlr/vnm";
 
       // Gửi FormData đến API
