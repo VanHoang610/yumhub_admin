@@ -53,7 +53,8 @@ function AllVoucher() {
   const [isEditModal, setIsEditModal] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [tippyVisible, setTippyVisible] = useState(false);
-
+  const [startDateInput, setStartDateInput] = useState("");
+  const [endDateInput, setEndDateInput] = useState("");
   const [data, setData] = useState([{}]);
   const [selectVoucherById, setSelectVouhcerById] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -154,15 +155,15 @@ function AllVoucher() {
   const handleUpdateVoucher = async () => {
     setLoading(true);
     try {
-      if (startDate> endDate) {
+      if (startDateInput > endDateInput) {
         Swal.fire("Fail", "The end date must be after the start date", "error");
         return;
       } else {
         const response = await AxiosInstance.patch(
           `vouchers/updateVoucher?id=${selectVoucherById._id}`,
           {
-            startDate: startDate,
-            endDate: endDate,
+            startDate: startDateInput,
+            endDate: endDateInput,
             conditionsApply,
           }
         );
@@ -249,14 +250,14 @@ function AllVoucher() {
   const handleStartDateChange = (date) => {
     const day = formatDate(date);
     setStartDate(day);
-   
+    setStartDateInput(new Date(date));
     setShowEditStartDate(false);
   };
 
   const handleEndDateChange = (date) => {
     const day = formatDate(date);
     setEndDate(day);
-
+    setEndDateInput(new Date(date));
     setShowEditEndDate(false);
   };
 
@@ -494,8 +495,8 @@ function AllVoucher() {
                       onChange={handleEndDateChange}
                       dateFormat="dd/mm/yyyy"
                       inline
-                      value={endDate ? endDate : null}
-                      minDate={Date.parse(startDate)}
+                      value={endDate}
+                      minDate={Date.parse(startDateInput)}
                     />
                   )}
                 </div>
